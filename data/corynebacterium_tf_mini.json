@@ -1,0 +1,38 @@
+{
+  "GlxR": {
+    "description": "Global cAMP-dependent transcriptional regulator controlling carbon, energy, and stress metabolism in C. glutamicum",
+    "targets": ["NCgl0908", "NCgl1936", "NCgl2248", "NCgl2249", "NCgl1997", "NCgl0896", "NCgl2806", "NCgl1857", "NCgl2008", "NCgl0935", "NCgl2544", "NCgl2543", "NCgl0367", "NCgl1408"]
+  },
+  "SugR": {
+    "description": "DeoR-type transcriptional repressor of genes encoding enzymes of glycolysis and sugar transport",
+    "targets": ["NCgl1936", "NCgl1193", "NCgl2008", "NCgl0935", "NCgl2812", "NCgl0896"]
+  },
+  "Lrp": {
+    "description": "Leucine-responsive regulatory protein controlling amino acid biosynthesis and exporter genes",
+    "targets": ["NCgl1208", "NCgl0247", "NCgl1896", "NCgl1586", "NCgl1216", "NCgl1100"]
+  },
+  "AmtR": {
+    "description": "Master repressor of nitrogen starvation response genes including ammonium and urea transport",
+    "targets": ["NCgl0460", "NCgl1834", "NCgl0461", "NCgl0456", "NCgl1101", "NCgl1997"]
+  },
+  "RamA": {
+    "description": "LuxR-type transcriptional activator of acetate, ethanol, and gluconeogenesis pathways",
+    "targets": ["NCgl2544", "NCgl2543", "NCgl2248", "NCgl2249", "NCgl2533", "NCgl2806"]
+  },
+  "RamB": {
+    "description": "Transcriptional repressor of acetate and fatty acid metabolism genes during growth on glucose",
+    "targets": ["NCgl2248", "NCgl2249", "NCgl0831", "NCgl2743", "NCgl2544", "NCgl2533"]
+  },
+  "McbR": {
+    "description": "TetR-family regulator controlling sulfur assimilation and methionine/cysteine biosynthesis",
+    "targets": ["NCgl0651", "NCgl0652", "NCgl2469", "NCgl1216", "NCgl0145", "NCgl0146"]
+  },
+  "DtxR": {
+    "description": "Iron-dependent global regulator controlling iron acquisition, storage, and heme utilization",
+    "targets": ["NCgl0216", "NCgl1606", "NCgl0177", "NCgl0763", "NCgl2065", "NCgl0764"]
+  },
+  "RipA": {
+    "description": "Iron-responsive AraC-family regulator repressing aconitase and succinate dehydrogenase under iron deficiency",
+    "targets": ["NCgl0367", "NCgl0368", "NCgl1408", "NCgl2089", "NCgl1997"]
+  }
+}

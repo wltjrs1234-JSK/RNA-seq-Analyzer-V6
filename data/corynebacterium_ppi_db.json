@@ -1,0 +1,20 @@
+[
+  {"source": "NCgl0908", "target": "NCgl2008", "score": 980, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0908", "target": "NCgl2806", "score": 950, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0908", "target": "NCgl0247", "score": 930, "type": "functional", "db": "STRING"},
+  {"source": "NCgl0247", "target": "NCgl1216", "score": 990, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0247", "target": "NCgl1896", "score": 970, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl1896", "target": "NCgl1208", "score": 920, "type": "genetic", "db": "BioGRID"},
+  {"source": "NCgl1936", "target": "NCgl1193", "score": 960, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl1193", "target": "NCgl0896", "score": 950, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0896", "target": "NCgl0935", "score": 940, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0935", "target": "NCgl2008", "score": 960, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl2008", "target": "NCgl2812", "score": 910, "type": "functional", "db": "STRING"},
+  {"source": "NCgl1997", "target": "NCgl1834", "score": 950, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl1997", "target": "NCgl1408", "score": 930, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl2248", "target": "NCgl2249", "score": 995, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl2248", "target": "NCgl2544", "score": 920, "type": "genetic", "db": "BioGRID"},
+  {"source": "NCgl2544", "target": "NCgl2543", "score": 985, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0367", "target": "NCgl0368", "score": 990, "type": "physical", "db": "BioGRID"},
+  {"source": "NCgl0367", "target": "NCgl1408", "score": 940, "type": "physical", "db": "BioGRID"}
+]

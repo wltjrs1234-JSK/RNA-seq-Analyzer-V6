@@ -1,0 +1,4344 @@
+{
+  "yeast_gsh_pathway": {
+    "name": "Yeast GSH Pathway",
+    "width": 1024,
+    "height": 580,
+    "nodes": [],
+    "arrows": [],
+    "deletedDefaultGenes": [
+      "gene_1783475028472_196",
+      "OPT1",
+      "gene_1783475975021_548",
+      "GLR1",
+      "gene_1783476018190_789",
+      "DUG2, DUG3",
+      "gene_1783476168024_253",
+      "GPX1/2",
+      "gene_1783476304085_432",
+      "HXT1",
+      "HXK1/2",
+      "PGI1",
+      "PFK1/2",
+      "FBA1",
+      "TPI1",
+      "TDH3",
+      "PGK1",
+      "GPM1",
+      "ENO1/2",
+      "PYK1/2",
+      "ZWF1",
+      "GND1/2",
+      "GPD1",
+      "GPD2",
+      "GUT2",
+      "GPP1, GPP2",
+      "GUT1",
+      "MET3",
+      "MET14",
+      "MET16",
+      "MET5",
+      "MET10",
+      "HOM3",
+      "HOM2",
+      "HOM6",
+      "MET2",
+      "MET17",
+      "MET6",
+      "SAM1",
+      "SAM2",
+      "SAH1",
+      "STR3",
+      "CYS4",
+      "STR2",
+      "CYS3",
+      "SER1",
+      "SER2",
+      "SER3/33",
+      "GSH1",
+      "GSH2",
+      "DUG1",
+      "SHM1/2",
+      "GEX1",
+      "CIT1/2/3",
+      "ACO1/2",
+      "IDH1/2",
+      "KGD1/2",
+      "LSC1/2",
+      "ACH1",
+      "SDH1/2",
+      "FRD1",
+      "FUM1",
+      "MDH1/2/3",
+      "GDH1/3",
+      "AAT1/2",
+      "PDA1",
+      "PDB1",
+      "ACS1/2",
+      "ALD2-6",
+      "PDC1/5/6",
+      "ADH1-7",
+      "PYC1/2",
+      "gene_1783476403579_203",
+      "gene_1783476414798_887",
+      "gene_1783476395476_594"
+    ],
+    "customGenes": [
+      {
+        "id": "gene_1783476395476_594",
+        "symbol": "NPT1",
+        "x": 43.73515884260687,
+        "y": 36.72112495723761,
+        "rep_log2fc": 0,
+        "genes": []
+      },
+      {
+        "id": "gene_1783476403579_203",
+        "symbol": "PRS1",
+        "x": 53.85265470613446,
+        "y": 36.3201717592031,
+        "rep_log2fc": 0,
+        "genes": []
+      },
+      {
+        "id": "gene_1783476414798_887",
+        "symbol": "PNC1",
+        "x": 31.456713903877002,
+        "y": 16.775285563347904,
+        "rep_log2fc": 0,
+        "genes": []
+      }
+    ],
+    "geneOffsets": {},
+    "species": "sce"
+  },
+  "yeast_nmn_pathway": {
+    "name": "Yeast NMN Pathway",
+    "width": 1600,
+    "height": 900,
+    "nodes": [
+      {
+        "id": "node_1783477604692",
+        "label": "NA",
+        "x": 1133.1542776998597,
+        "y": 58.76437587657783,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477609270",
+        "label": "NAM",
+        "x": 1290.767180925666,
+        "y": 58.76437587657783,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477612574",
+        "label": "NAR",
+        "x": 1053.1220196353436,
+        "y": 146.43178410794604,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477618950",
+        "label": "NAMN",
+        "x": 1053.6322237169763,
+        "y": 247.4154621175258,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477622666",
+        "label": "NAAD",
+        "x": 1143.5892053973014,
+        "y": 345.28050490883584,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477629649",
+        "label": "NAD+",
+        "x": 1291.5736325385692,
+        "y": 345.28050490883584,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477633440",
+        "label": "NR",
+        "x": 1385.9869858769039,
+        "y": 143.74986362782602,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783477638890",
+        "label": "NMN",
+        "x": 1385.986985876904,
+        "y": 247.56932711438725,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783478190025",
+        "label": "PRPP",
+        "x": 1220.2682926829268,
+        "y": 148.26829268292678,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#fffbeb",
+        "strokeColor": "#f59e0b",
+        "textColor": "#78350f"
+      },
+      {
+        "id": "node_1783478234636",
+        "label": "QA",
+        "x": 890,
+        "y": 247.4154621175258,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783478250861",
+        "label": "TRP",
+        "x": 891.0204081632653,
+        "y": 71.87755102040819,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783478446837",
+        "label": "PRPP",
+        "x": 953.6734693877551,
+        "y": 280.83673469387753,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#fffbeb",
+        "strokeColor": "#f59e0b",
+        "textColor": "#78350f"
+      },
+      {
+        "id": "node_1783479012240",
+        "label": "Glucose",
+        "x": 259.98039215686276,
+        "y": 65.6078431372549,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479023162",
+        "label": "G6P",
+        "x": 259.98039215686276,
+        "y": 129.60784313725492,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479028700",
+        "label": "F6P",
+        "x": 259.98039215686276,
+        "y": 202.6078431372549,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479035534",
+        "label": "F1,6P",
+        "x": 259.98039215686276,
+        "y": 279.6078431372549,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479042516",
+        "label": "DHAP",
+        "x": 194.9858641130871,
+        "y": 347.5380756953945,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479047187",
+        "label": "GA3P",
+        "x": 339.3059735522115,
+        "y": 350.44505243958054,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479053780",
+        "label": "1,3- DPG",
+        "x": 334.2010387819337,
+        "y": 438.41863861793126,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479062844",
+        "label": "3-PG",
+        "x": 334.2010387819337,
+        "y": 523.9321521314448,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479071360",
+        "label": "2-PG",
+        "x": 334.2010387819337,
+        "y": 599.3916115909043,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479244517",
+        "label": "PEP",
+        "x": 334.2010387819337,
+        "y": 678.7687741137015,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479260022",
+        "label": "Pyruvate",
+        "x": 471.2089552238806,
+        "y": 679.1419084420597,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479269437",
+        "label": "Acetaldehyde",
+        "x": 471.2089552238806,
+        "y": 601.4472615402186,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479274604",
+        "label": "Ethanol",
+        "x": 471.2089552238806,
+        "y": 524.305286459803,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479338789",
+        "label": "Acetate",
+        "x": 608.2089552238806,
+        "y": 601.4472615402186,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479343805",
+        "label": "Acetyl-CoA",
+        "x": 608.2089552238806,
+        "y": 679.1419084420597,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479352820",
+        "label": "Glycerol\t-3-P",
+        "x": 49.68627450980392,
+        "y": 344.5968992248063,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1783479357024",
+        "label": "Glycerol",
+        "x": 49.68627450980392,
+        "y": 276.6666666666667,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1784591235003",
+        "label": "6-PG",
+        "x": 395.0769230769231,
+        "y": 129.60784313725492,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1784591240521",
+        "label": "Ru5P",
+        "x": 538.5384615384615,
+        "y": 127.60784313725492,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1784592618170",
+        "label": "Oxaloacetate",
+        "x": 865.394727106334,
+        "y": 684.8747006250366,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592623355",
+        "label": "Citrate",
+        "x": 1027.243783710108,
+        "y": 684.8747006250366,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592634962",
+        "label": "Isocitrate",
+        "x": 1118.3910826136114,
+        "y": 602.911066837519,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592643676",
+        "label": "α-Ketoglutarate",
+        "x": 1117.3272528263774,
+        "y": 493.2936992160425,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592648946",
+        "label": "Succinyl-CoA",
+        "x": 1027.243783710108,
+        "y": 406.3617021276596,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592657261",
+        "label": "Succinate",
+        "x": 865.394727106334,
+        "y": 406.3617021276596,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592662586",
+        "label": "Fumarate",
+        "x": 781.7615299495108,
+        "y": 493.2936992160425,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      },
+      {
+        "id": "node_1784592666919",
+        "label": "L-malate",
+        "x": 785.6033841540589,
+        "y": 601.315322156668,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#ecfdf5",
+        "strokeColor": "#10b981",
+        "textColor": "#065f46"
+      }
+    ],
+    "arrows": [
+      {
+        "id": "arrow_1783477750733",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1312.3478260869565,
+          "y": 73.08695652173914
+        },
+        "toCoords": {
+          "x": 1214.3478260869565,
+          "y": 73.08695652173914
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477762796",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1431.3478260869565,
+          "y": 157.08695652173913
+        },
+        "toCoords": {
+          "x": 1347.3478260869565,
+          "y": 78.08695652173914
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477775129",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1085.3478260869565,
+          "y": 157.08695652173913
+        },
+        "toCoords": {
+          "x": 1168.3478260869565,
+          "y": 76.08695652173914
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477779285",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1080.3478260869565,
+          "y": 164.08695652173913
+        },
+        "toCoords": {
+          "x": 1080.3478260869565,
+          "y": 249.08695652173913
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477785689",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1094.3478260869565,
+          "y": 264.0869565217391
+        },
+        "toCoords": {
+          "x": 1175.3478260869565,
+          "y": 345.0869565217391
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477792197",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1367.3478260869565,
+          "y": 349.0869565217391
+        },
+        "toCoords": {
+          "x": 1429.3478260869565,
+          "y": 265.0869565217391
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477794039",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1437.3478260869565,
+          "y": 273.0869565217391
+        },
+        "toCoords": {
+          "x": 1371.3478260869565,
+          "y": 364.0869565217391
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477799067",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1430.3478260869565,
+          "y": 171.08695652173913
+        },
+        "toCoords": {
+          "x": 1432.3478260869565,
+          "y": 254.08695652173913
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477801762",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1441.3478260869565,
+          "y": 259.0869565217391
+        },
+        "toCoords": {
+          "x": 1441.3478260869565,
+          "y": 171.08695652173913
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477811313",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1354.3478260869565,
+          "y": 357.0869565217391
+        },
+        "toCoords": {
+          "x": 1334.3478260869565,
+          "y": 360.0869565217391
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477833721",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1312.3478260869565,
+          "y": 343.0869565217391
+        },
+        "toCoords": {
+          "x": 1312.3478260869565,
+          "y": 88.08695652173914
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477838705",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1328.3478260869565,
+          "y": 81.08695652173914
+        },
+        "toCoords": {
+          "x": 1402.3478260869565,
+          "y": 256.0869565217391
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477854804",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1195.3478260869565,
+          "y": 84.08695652173914
+        },
+        "toCoords": {
+          "x": 1119.3478260869565,
+          "y": 252.08695652173913
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477869897",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1093.3478260869565,
+          "y": 250.08695652173913
+        },
+        "toCoords": {
+          "x": 1093.3478260869565,
+          "y": 169.08695652173913
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477902441",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1174.3478260869565,
+          "y": 3.0869565217391397
+        },
+        "toCoords": {
+          "x": 1173.3478260869565,
+          "y": 68.08695652173914
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783477907165",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1429.3478260869565,
+          "y": 146.08695652173913
+        },
+        "toCoords": {
+          "x": 1429.3478260869565,
+          "y": -4.91304347826086
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478074555",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1214.3478260869565,
+          "y": 356.0869565217391
+        },
+        "toCoords": {
+          "x": 1294.3478260869565,
+          "y": 356.0869565217391
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478167392",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1221,
+          "y": 167
+        },
+        "toCoords": {
+          "x": 1140,
+          "y": 196
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478175641",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1301,
+          "y": 165
+        },
+        "toCoords": {
+          "x": 1388,
+          "y": 208
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478275752",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 961,
+          "y": 260
+        },
+        "toCoords": {
+          "x": 1054,
+          "y": 260
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478287140",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 930.5714285714286,
+          "y": 97.46938775510203
+        },
+        "toCoords": {
+          "x": 930.5714285714286,
+          "y": 130.46938775510205
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478357452",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 930.5714285714286,
+          "y": 123.46938775510203
+        },
+        "toCoords": {
+          "x": 930.5714285714286,
+          "y": 162.46938775510205
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478359781",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 930.5714285714286,
+          "y": 156.46938775510205
+        },
+        "toCoords": {
+          "x": 930.5714285714286,
+          "y": 191.46938775510205
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478371504",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 930.5714285714286,
+          "y": 185.46938775510205
+        },
+        "toCoords": {
+          "x": 930.5714285714286,
+          "y": 221.46938775510205
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478373601",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 930.5714285714286,
+          "y": 216.46938775510205
+        },
+        "toCoords": {
+          "x": 930.5714285714286,
+          "y": 247.46938775510205
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783478437530",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 998,
+          "y": 282
+        },
+        "toCoords": {
+          "x": 1032,
+          "y": 254
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479192594",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 300.9803921568627,
+          "y": 77.6078431372549
+        },
+        "toCoords": {
+          "x": 300.9803921568627,
+          "y": 133.6078431372549
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479195489",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 298.9803921568627,
+          "y": 144.6078431372549
+        },
+        "toCoords": {
+          "x": 298.9803921568627,
+          "y": 205.6078431372549
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479197192",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 298.9803921568627,
+          "y": 220.6078431372549
+        },
+        "toCoords": {
+          "x": 298.9803921568627,
+          "y": 285.6078431372549
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479200646",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 288.9803921568627,
+          "y": 295.6078431372549
+        },
+        "toCoords": {
+          "x": 234.98039215686276,
+          "y": 351.6078431372549
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479202780",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 324.9803921568627,
+          "y": 293.6078431372549
+        },
+        "toCoords": {
+          "x": 376.9803921568627,
+          "y": 353.6078431372549
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479231588",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 372.87545738658486,
+          "y": 376.55565935960317
+        },
+        "toCoords": {
+          "x": 372.87545738658486,
+          "y": 443.55565935960317
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479233072",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 374.87545738658486,
+          "y": 455.55565935960317
+        },
+        "toCoords": {
+          "x": 374.87545738658486,
+          "y": 523.5556593596032
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479234382",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 375.87545738658486,
+          "y": 541.5556593596032
+        },
+        "toCoords": {
+          "x": 375.87545738658486,
+          "y": 601.5556593596032
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1783479254394",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 374.87545738658486,
+          "y": 612.5556593596032
+        },
+        "toCoords": {
+          "x": 374.87545738658486,
+          "y": 681.5556593596032
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784590957899",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 417,
+          "y": 693
+        },
+        "toCoords": {
+          "x": 477,
+          "y": 693
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784590998459",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 547,
+          "y": 691
+        },
+        "toCoords": {
+          "x": 612,
+          "y": 691
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591007168",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 645,
+          "y": 616
+        },
+        "toCoords": {
+          "x": 645,
+          "y": 683
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591017477",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 557,
+          "y": 617
+        },
+        "toCoords": {
+          "x": 615,
+          "y": 617
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591022719",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 602,
+          "y": 611
+        },
+        "toCoords": {
+          "x": 545,
+          "y": 611
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591039731",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 512,
+          "y": 682
+        },
+        "toCoords": {
+          "x": 512,
+          "y": 623
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591069356",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 198,
+          "y": 353
+        },
+        "toCoords": {
+          "x": 128,
+          "y": 353
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591071163",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 121,
+          "y": 361
+        },
+        "toCoords": {
+          "x": 193,
+          "y": 361
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591077087",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 84,
+          "y": 348
+        },
+        "toCoords": {
+          "x": 84,
+          "y": 299
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591079524",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 93,
+          "y": 291
+        },
+        "toCoords": {
+          "x": 93,
+          "y": 342
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591252815",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 328,
+          "y": 142
+        },
+        "toCoords": {
+          "x": 400,
+          "y": 142
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591254825",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 467,
+          "y": 141
+        },
+        "toCoords": {
+          "x": 535,
+          "y": 141
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591301954",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 278,
+          "y": 360
+        },
+        "toCoords": {
+          "x": 341,
+          "y": 360
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591304540",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 330,
+          "y": 360
+        },
+        "toCoords": {
+          "x": 268,
+          "y": 360
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591474785",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 512,
+          "y": 593
+        },
+        "toCoords": {
+          "x": 512,
+          "y": 549
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784591477550",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 512,
+          "y": 559
+        },
+        "toCoords": {
+          "x": 513,
+          "y": 605
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592750408",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 937,
+          "y": 696
+        },
+        "toCoords": {
+          "x": 1029,
+          "y": 696
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592755366",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1095,
+          "y": 693
+        },
+        "toCoords": {
+          "x": 1155,
+          "y": 625
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592758820",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1161,
+          "y": 606
+        },
+        "toCoords": {
+          "x": 1161,
+          "y": 516
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592762390",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1161,
+          "y": 497
+        },
+        "toCoords": {
+          "x": 1079,
+          "y": 427
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592767920",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 1024,
+          "y": 416
+        },
+        "toCoords": {
+          "x": 942,
+          "y": 416
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592771233",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 958,
+          "y": 417
+        },
+        "toCoords": {
+          "x": 1029,
+          "y": 417
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592775847",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 868,
+          "y": 426
+        },
+        "toCoords": {
+          "x": 808,
+          "y": 493
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592779089",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 824,
+          "y": 492
+        },
+        "toCoords": {
+          "x": 878,
+          "y": 433
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592786709",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 822,
+          "y": 519
+        },
+        "toCoords": {
+          "x": 822,
+          "y": 604
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592789693",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 821,
+          "y": 588
+        },
+        "toCoords": {
+          "x": 821,
+          "y": 512
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592809737",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 864,
+          "y": 677
+        },
+        "toCoords": {
+          "x": 822,
+          "y": 625
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592829860",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 831,
+          "y": 637
+        },
+        "toCoords": {
+          "x": 874,
+          "y": 689
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592914943",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 512,
+          "y": 706
+        },
+        "toCoords": {
+          "x": 512,
+          "y": 833
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592918803",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 510,
+          "y": 819
+        },
+        "toCoords": {
+          "x": 910,
+          "y": 819
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592922589",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 899,
+          "y": 819
+        },
+        "toCoords": {
+          "x": 899,
+          "y": 713
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592936099",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 648,
+          "y": 705
+        },
+        "toCoords": {
+          "x": 648,
+          "y": 789
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592939697",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 647,
+          "y": 778
+        },
+        "toCoords": {
+          "x": 983,
+          "y": 778
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1784592941654",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 973,
+          "y": 779
+        },
+        "toCoords": {
+          "x": 973,
+          "y": 700
+        },
+        "type": "straight",
+        "direction": "forward"
+      }
+    ],
+    "deletedDefaultGenes": [
+      "HXK1/2",
+      "PGI1",
+      "PFK1/2",
+      "FBA1",
+      "TPI1",
+      "TDH3",
+      "PGK1",
+      "GPM1",
+      "ENO1/2",
+      "PYK1/2",
+      "ZWF1",
+      "GND1/2",
+      "GPD1",
+      "GPD2",
+      "GUT2",
+      "GPP1, GPP2",
+      "GUT1",
+      "GPX1/2",
+      "GLR1",
+      "PDA1",
+      "PDB1",
+      "ACS1/2",
+      "ALD2-6",
+      "PDC1/5/6",
+      "ADH1-7",
+      "MET3",
+      "MET14",
+      "MET16",
+      "MET5",
+      "MET10",
+      "HOM3",
+      "HOM2",
+      "HOM6",
+      "MET2",
+      "MET17",
+      "MET6",
+      "SAM1",
+      "SAM2",
+      "SAH1",
+      "STR3",
+      "CYS4",
+      "STR2",
+      "CYS3",
+      "SER1",
+      "SER2",
+      "SER3/33",
+      "GSH1",
+      "GSH2",
+      "DUG1",
+      "DUG2, DUG3",
+      "SHM1/2",
+      "GEX1",
+      "OPT1",
+      "CIT1/2/3",
+      "ACO1/2",
+      "IDH1/2",
+      "KGD1/2",
+      "LSC1/2",
+      "ACH1",
+      "SDH1/2",
+      "FRD1",
+      "FUM1",
+      "MDH1/2/3",
+      "GDH1/3",
+      "AAT1/2",
+      "PYC1/2",
+      "HXT1"
+    ],
+    "customGenes": [
+      {
+        "id": "gene_1784591093003_935",
+        "symbol": "GUT1",
+        "x": 8.104604157511059,
+        "y": 36.03904416856595,
+        "rep_log2fc": -2.4917,
+        "genes": [
+          {
+            "locus_tag": "YHL032C",
+            "gene_symbol": "GUT1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 38.3,
+            "mutant_val": 6.8,
+            "log2fc": -2.4917,
+            "pvalue": 0.007326,
+            "fdr": 0.115075,
+            "wt_reps": [
+              38.71,
+              30.17,
+              46.01
+            ],
+            "mut_reps": [
+              3.64,
+              12.48,
+              4.28
+            ],
+            "original_index": 2374
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591104840_11",
+        "symbol": "GPP1",
+        "x": 10.51659777309326,
+        "y": 22.75254093402533,
+        "rep_log2fc": 0.0405,
+        "genes": [
+          {
+            "locus_tag": "YIL053W",
+            "gene_symbol": "GPP1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 680.49,
+            "mutant_val": 699.86,
+            "log2fc": 0.0405,
+            "pvalue": 0.94307,
+            "fdr": 0.962689,
+            "wt_reps": [
+              650.35,
+              647.8,
+              743.31
+            ],
+            "mut_reps": [
+              417.51,
+              1175.41,
+              506.67
+            ],
+            "original_index": 240
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591107636_781",
+        "symbol": "GPP2",
+        "x": 9.3592987573471,
+        "y": 25.495768674258297,
+        "rep_log2fc": -1.573,
+        "genes": [
+          {
+            "locus_tag": "YER062C",
+            "gene_symbol": "GPP2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 74.15,
+            "mutant_val": 24.92,
+            "log2fc": -1.573,
+            "pvalue": 0.039198,
+            "fdr": 0.131207,
+            "wt_reps": [
+              77.71,
+              69.03,
+              75.72
+            ],
+            "mut_reps": [
+              13.46,
+              46.68,
+              14.61
+            ],
+            "original_index": 1390
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591123256_649",
+        "symbol": "GUT2",
+        "x": 9.360769464752268,
+        "y": 43.9763497691477,
+        "rep_log2fc": -3.7614,
+        "genes": [
+          {
+            "locus_tag": "YIL155C",
+            "gene_symbol": "GUT2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 78.76,
+            "mutant_val": 5.8,
+            "log2fc": -3.7614,
+            "pvalue": 0.017855,
+            "fdr": 0.118978,
+            "wt_reps": [
+              85.5,
+              57.04,
+              93.75
+            ],
+            "mut_reps": [
+              3.02,
+              11.21,
+              3.17
+            ],
+            "original_index": 1337
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591130525_14",
+        "symbol": "GPD1",
+        "x": 10.980591189451122,
+        "y": 24.538487649246584,
+        "rep_log2fc": 0.0182,
+        "genes": [
+          {
+            "locus_tag": "YDL022W",
+            "gene_symbol": "GPD1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 41.15,
+            "mutant_val": 41.67,
+            "log2fc": 0.0182,
+            "pvalue": 0.97941,
+            "fdr": 0.995862,
+            "wt_reps": [
+              36.21,
+              34.25,
+              52.98
+            ],
+            "mut_reps": [
+              25.77,
+              76.31,
+              22.93
+            ],
+            "original_index": 2255
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591134541_907",
+        "symbol": "GPD2",
+        "x": 10.879352331657444,
+        "y": 32.09765625143036,
+        "rep_log2fc": -0.1692,
+        "genes": [
+          {
+            "locus_tag": "YOL059W",
+            "gene_symbol": "GPD2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 24.3,
+            "mutant_val": 21.61,
+            "log2fc": -0.1692,
+            "pvalue": 0.766316,
+            "fdr": 0.798236,
+            "wt_reps": [
+              17.35,
+              25.68,
+              29.86
+            ],
+            "mut_reps": [
+              14.48,
+              36.38,
+              13.96
+            ],
+            "original_index": 3218
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591157932_363",
+        "symbol": "HXK1",
+        "x": 9.900711069506803,
+        "y": 2.5209092603462437,
+        "rep_log2fc": -3.6923,
+        "genes": [
+          {
+            "locus_tag": "YFR053C",
+            "gene_symbol": "HXK1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 32.75,
+            "mutant_val": 2.52,
+            "log2fc": -3.6923,
+            "pvalue": 0.022612,
+            "fdr": 0.122189,
+            "wt_reps": [
+              39.9,
+              23.04,
+              35.31
+            ],
+            "mut_reps": [
+              0.96,
+              4.57,
+              2.04
+            ],
+            "original_index": 2626
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591161357_919",
+        "symbol": "HXK2",
+        "x": 14.186489382772521,
+        "y": 19.37905511124814,
+        "rep_log2fc": -0.8597,
+        "genes": [
+          {
+            "locus_tag": "YGL253W",
+            "gene_symbol": "HXK2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 631.76,
+            "mutant_val": 348.14,
+            "log2fc": -0.8597,
+            "pvalue": 0.179636,
+            "fdr": 0.256803,
+            "wt_reps": [
+              590.66,
+              623.97,
+              680.66
+            ],
+            "mut_reps": [
+              209.83,
+              631.47,
+              203.11
+            ],
+            "original_index": 252
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591176849_778",
+        "symbol": "PGI1",
+        "x": 10.27192021475029,
+        "y": 12.479813926715336,
+        "rep_log2fc": -0.8138,
+        "genes": [
+          {
+            "locus_tag": "YBR196C",
+            "gene_symbol": "PGI1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 937.74,
+            "mutant_val": 533.46,
+            "log2fc": -0.8138,
+            "pvalue": 0.136055,
+            "fdr": 0.217212,
+            "wt_reps": [
+              803.12,
+              967.55,
+              1042.55
+            ],
+            "mut_reps": [
+              363.39,
+              886.15,
+              350.86
+            ],
+            "original_index": 203
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591184331_843",
+        "symbol": "PFK1",
+        "x": 9.327024208675958,
+        "y": 7.020414380693725,
+        "rep_log2fc": -0.9018,
+        "genes": [
+          {
+            "locus_tag": "YGR240C",
+            "gene_symbol": "PFK1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 412.11,
+            "mutant_val": 220.57,
+            "log2fc": -0.9018,
+            "pvalue": 0.194838,
+            "fdr": 0.270803,
+            "wt_reps": [
+              401.36,
+              398.59,
+              436.39
+            ],
+            "mut_reps": [
+              110.15,
+              420.84,
+              130.72
+            ],
+            "original_index": 332
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591191006_64",
+        "symbol": "PKF2",
+        "x": 12.262951084692633,
+        "y": 11.57991290264584,
+        "rep_log2fc": 0,
+        "genes": []
+      },
+      {
+        "id": "gene_1784591267939_757",
+        "symbol": "ZWF1",
+        "x": 27.380614201664844,
+        "y": 9.511210191122482,
+        "rep_log2fc": -1.4554,
+        "genes": [
+          {
+            "locus_tag": "YNL241C",
+            "gene_symbol": "ZWF1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 97.81,
+            "mutant_val": 35.66,
+            "log2fc": -1.4554,
+            "pvalue": 0.03016,
+            "fdr": 0.125817,
+            "wt_reps": [
+              78.77,
+              99.74,
+              114.93
+            ],
+            "mut_reps": [
+              20.19,
+              64.83,
+              21.97
+            ],
+            "original_index": 1117
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591274796_507",
+        "symbol": "GND1",
+        "x": 31.598066675701723,
+        "y": 7.626973157231745,
+        "rep_log2fc": -0.8137,
+        "genes": [
+          {
+            "locus_tag": "YHR183W",
+            "gene_symbol": "GND1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 4648.12,
+            "mutant_val": 2644.47,
+            "log2fc": -0.8137,
+            "pvalue": 0.187932,
+            "fdr": 0.264559,
+            "wt_reps": [
+              4785.69,
+              4376.66,
+              4782.01
+            ],
+            "mut_reps": [
+              1580.8,
+              4694.21,
+              1658.4
+            ],
+            "original_index": 26
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591277342_623",
+        "symbol": "GND2",
+        "x": 27.910555873795133,
+        "y": 12.573095371194926,
+        "rep_log2fc": -2.3069,
+        "genes": [
+          {
+            "locus_tag": "YGR256W",
+            "gene_symbol": "GND2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 3.48,
+            "mutant_val": 0.69,
+            "log2fc": -2.3069,
+            "pvalue": 0.058934,
+            "fdr": 0.152286,
+            "wt_reps": [
+              2.05,
+              4.67,
+              3.71
+            ],
+            "mut_reps": [
+              0.42,
+              1.12,
+              0.54
+            ],
+            "original_index": 5590
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591317512_130",
+        "symbol": "FBA1",
+        "x": 20.091774423095295,
+        "y": 38.41883936710028,
+        "rep_log2fc": -0.7374,
+        "genes": [
+          {
+            "locus_tag": "YKL060C",
+            "gene_symbol": "FBA1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 7897.81,
+            "mutant_val": 4737.13,
+            "log2fc": -0.7374,
+            "pvalue": 0.185759,
+            "fdr": 0.262412,
+            "wt_reps": [
+              7730.06,
+              7518.58,
+              8444.79
+            ],
+            "mut_reps": [
+              2846.31,
+              7943.27,
+              3421.8
+            ],
+            "original_index": 9
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591324477_982",
+        "symbol": "TPI1",
+        "x": 16.062143097492886,
+        "y": 41.7517256369579,
+        "rep_log2fc": -0.3929,
+        "genes": [
+          {
+            "locus_tag": "YDR050C",
+            "gene_symbol": "TPI1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 1603.74,
+            "mutant_val": 1221.42,
+            "log2fc": -0.3929,
+            "pvalue": 0.45205,
+            "fdr": 0.502739,
+            "wt_reps": [
+              2180.8,
+              1102.36,
+              1528.05
+            ],
+            "mut_reps": [
+              932.99,
+              1890.04,
+              841.22
+            ],
+            "original_index": 148
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591339270_470",
+        "symbol": "TDH3",
+        "x": 25.367313133845293,
+        "y": 43.13622650742228,
+        "rep_log2fc": -0.7684,
+        "genes": [
+          {
+            "locus_tag": "YGR192C",
+            "gene_symbol": "TDH3",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 11565.04,
+            "mutant_val": 6789.66,
+            "log2fc": -0.7684,
+            "pvalue": 0.215571,
+            "fdr": 0.28992,
+            "wt_reps": [
+              8699.62,
+              11178.02,
+              14817.46
+            ],
+            "mut_reps": [
+              3915.38,
+              12025.32,
+              4428.28
+            ],
+            "original_index": 3
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591346788_587",
+        "symbol": "PGK1",
+        "x": 27.198964751138867,
+        "y": 54.39908355728594,
+        "rep_log2fc": -0.6741,
+        "genes": [
+          {
+            "locus_tag": "YCR012W",
+            "gene_symbol": "PGK1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 2327.21,
+            "mutant_val": 1458.55,
+            "log2fc": -0.6741,
+            "pvalue": 0.237624,
+            "fdr": 0.309761,
+            "wt_reps": [
+              2878.75,
+              1765.08,
+              2337.78
+            ],
+            "mut_reps": [
+              937.94,
+              2485.08,
+              952.62
+            ],
+            "original_index": 107
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591360026_623",
+        "symbol": "GPM1",
+        "x": 25.659716928070566,
+        "y": 64.7806265188669,
+        "rep_log2fc": -0.4074,
+        "genes": [
+          {
+            "locus_tag": "YKL152C",
+            "gene_symbol": "GPM1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 4965.58,
+            "mutant_val": 3743.93,
+            "log2fc": -0.4074,
+            "pvalue": 0.233745,
+            "fdr": 0.306348,
+            "wt_reps": [
+              6236.8,
+              4110.39,
+              4549.55
+            ],
+            "mut_reps": [
+              3401.11,
+              4875.63,
+              2955.05
+            ],
+            "original_index": 20
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591372492_927",
+        "symbol": "ENO1",
+        "x": 15.810424515178997,
+        "y": 69.22342482078793,
+        "rep_log2fc": 0.2479,
+        "genes": [
+          {
+            "locus_tag": "YGR254W",
+            "gene_symbol": "ENO1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 393.88,
+            "mutant_val": 467.72,
+            "log2fc": 0.2479,
+            "pvalue": 0.71956,
+            "fdr": 0.755113,
+            "wt_reps": [
+              479.85,
+              294.82,
+              406.96
+            ],
+            "mut_reps": [
+              255.21,
+              813.86,
+              334.1
+            ],
+            "original_index": 342
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591377018_409",
+        "symbol": "ENO2",
+        "x": 18.530005256052043,
+        "y": 67.00202566982742,
+        "rep_log2fc": -0.9064,
+        "genes": [
+          {
+            "locus_tag": "YHR174W",
+            "gene_symbol": "ENO2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 7134.59,
+            "mutant_val": 3806.32,
+            "log2fc": -0.9064,
+            "pvalue": 0.158497,
+            "fdr": 0.23654,
+            "wt_reps": [
+              7802,
+              5716.4,
+              7885.37
+            ],
+            "mut_reps": [
+              1981.12,
+              6961.03,
+              2476.8
+            ],
+            "original_index": 12
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591400138_883",
+        "symbol": "PYK1",
+        "x": 28.30579623446072,
+        "y": 79.67706788413156,
+        "rep_log2fc": 0,
+        "genes": []
+      },
+      {
+        "id": "gene_1784591409260_573",
+        "symbol": "PYK2",
+        "x": 27.154262046883844,
+        "y": 80.67887534436866,
+        "rep_log2fc": -1.9704,
+        "genes": [
+          {
+            "locus_tag": "YOR347C",
+            "gene_symbol": "PYK2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 13.35,
+            "mutant_val": 3.4,
+            "log2fc": -1.9704,
+            "pvalue": 0.065202,
+            "fdr": 0.155522,
+            "wt_reps": [
+              11.36,
+              9.46,
+              19.23
+            ],
+            "mut_reps": [
+              2,
+              5.64,
+              2.56
+            ],
+            "original_index": 4501
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591428724_2",
+        "symbol": "PDC1",
+        "x": 31.66239588761033,
+        "y": 83.37939980239909,
+        "rep_log2fc": -1.1355,
+        "genes": [
+          {
+            "locus_tag": "YLR044C",
+            "gene_symbol": "PDC1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 7944.95,
+            "mutant_val": 3616.26,
+            "log2fc": -1.1355,
+            "pvalue": 0.078473,
+            "fdr": 0.165455,
+            "wt_reps": [
+              6882.6,
+              7533.12,
+              9419.13
+            ],
+            "mut_reps": [
+              1879.76,
+              6524.48,
+              2444.53
+            ],
+            "original_index": 8
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591431616_690",
+        "symbol": "PDC5",
+        "x": 32.78942934779195,
+        "y": 87.473743335542,
+        "rep_log2fc": -1.0737,
+        "genes": [
+          {
+            "locus_tag": "YLR134W",
+            "gene_symbol": "PDC5",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 10.19,
+            "mutant_val": 4.84,
+            "log2fc": -1.0737,
+            "pvalue": 0.146578,
+            "fdr": 0.226044,
+            "wt_reps": [
+              12.36,
+              7.2,
+              11.01
+            ],
+            "mut_reps": [
+              1.92,
+              9.61,
+              2.98
+            ],
+            "original_index": 4909
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591434305_166",
+        "symbol": "PDC6",
+        "x": 34.749487539412165,
+        "y": 86.60260641359672,
+        "rep_log2fc": -1.9642,
+        "genes": [
+          {
+            "locus_tag": "YGR087C",
+            "gene_symbol": "PDC6",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 0.76,
+            "mutant_val": 0.19,
+            "log2fc": -1.9642,
+            "pvalue": 0.055136,
+            "fdr": 0.149047,
+            "wt_reps": [
+              0.63,
+              1.09,
+              0.57
+            ],
+            "mut_reps": [
+              0.08,
+              0.33,
+              0.16
+            ],
+            "original_index": 5987
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591503538_686",
+        "symbol": "ADH1",
+        "x": 34.612627045158575,
+        "y": 62.19162430164587,
+        "rep_log2fc": -0.249,
+        "genes": [
+          {
+            "locus_tag": "YOL086C",
+            "gene_symbol": "ADH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 4020.25,
+            "mutant_val": 3382.97,
+            "log2fc": -0.249,
+            "pvalue": 0.615125,
+            "fdr": 0.656997,
+            "wt_reps": [
+              4673.87,
+              3234.27,
+              4152.62
+            ],
+            "mut_reps": [
+              2402.28,
+              5464.56,
+              2282.06
+            ],
+            "original_index": 36
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591519375_62",
+        "symbol": "PDA1",
+        "x": 35.57042585865652,
+        "y": 82.44474776751372,
+        "rep_log2fc": -1.3173,
+        "genes": [
+          {
+            "locus_tag": "YER178W",
+            "gene_symbol": "PDA1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 439.71,
+            "mutant_val": 176.44,
+            "log2fc": -1.3173,
+            "pvalue": 0.04742,
+            "fdr": 0.140678,
+            "wt_reps": [
+              376.08,
+              409.68,
+              533.37
+            ],
+            "mut_reps": [
+              92.19,
+              321.67,
+              115.47
+            ],
+            "original_index": 317
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591522744_143",
+        "symbol": "PDB1",
+        "x": 35.247332382863966,
+        "y": 78.54711199132008,
+        "rep_log2fc": -1.334,
+        "genes": [
+          {
+            "locus_tag": "YBR221C",
+            "gene_symbol": "PDB1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 262.58,
+            "mutant_val": 104.15,
+            "log2fc": -1.334,
+            "pvalue": 0.050392,
+            "fdr": 0.143784,
+            "wt_reps": [
+              198.92,
+              272.18,
+              316.63
+            ],
+            "mut_reps": [
+              60.87,
+              192.32,
+              59.26
+            ],
+            "original_index": 473
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591538282_760",
+        "symbol": "ALD2",
+        "x": 38.824438721995826,
+        "y": 65.25412260724909,
+        "rep_log2fc": -2.41,
+        "genes": [
+          {
+            "locus_tag": "YMR170C",
+            "gene_symbol": "ALD2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 27.45,
+            "mutant_val": 5.16,
+            "log2fc": -2.41,
+            "pvalue": 0.046894,
+            "fdr": 0.13991,
+            "wt_reps": [
+              29.16,
+              17.13,
+              36.05
+            ],
+            "mut_reps": [
+              3.15,
+              8.38,
+              3.94
+            ],
+            "original_index": 2951
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591548935_314",
+        "symbol": "ACS1",
+        "x": 42.56309179902396,
+        "y": 71.08006239903328,
+        "rep_log2fc": -6.2815,
+        "genes": [
+          {
+            "locus_tag": "YAL054C",
+            "gene_symbol": "ACS1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 316.82,
+            "mutant_val": 4.06,
+            "log2fc": -6.2815,
+            "pvalue": 0.046562,
+            "fdr": 0.139699,
+            "wt_reps": [
+              404.84,
+              178.62,
+              367.01
+            ],
+            "mut_reps": [
+              3.44,
+              4.53,
+              4.22
+            ],
+            "original_index": 407
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591551641_246",
+        "symbol": "ACS2",
+        "x": 44.36318402129677,
+        "y": 73.04939415963639,
+        "rep_log2fc": -1.5439,
+        "genes": [
+          {
+            "locus_tag": "YLR153C",
+            "gene_symbol": "ACS2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 612.91,
+            "mutant_val": 210.19,
+            "log2fc": -1.5439,
+            "pvalue": 0.016368,
+            "fdr": 0.118231,
+            "wt_reps": [
+              683.27,
+              525.65,
+              629.81
+            ],
+            "mut_reps": [
+              144.06,
+              361.81,
+              124.7
+            ],
+            "original_index": 255
+          }
+        ]
+      },
+      {
+        "id": "gene_1784591603745_104",
+        "symbol": "NPT1",
+        "x": 64.95842460544563,
+        "y": 42.70288595679733,
+        "rep_log2fc": 3.4763,
+        "genes": [
+          {
+            "locus_tag": "YOR209C",
+            "gene_symbol": "NPT1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 153.93,
+            "mutant_val": 1713.18,
+            "log2fc": 3.4763,
+            "pvalue": 0.143875,
+            "fdr": 0.223848,
+            "wt_reps": [
+              158.8,
+              148.17,
+              154.81
+            ],
+            "mut_reps": [
+              1165.57,
+              3037.63,
+              936.33
+            ],
+            "original_index": 764
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592251599_470",
+        "symbol": "NPT1",
+        "x": 62.852502860525014,
+        "y": 44.98301380060616,
+        "rep_log2fc": 3.4763,
+        "genes": [
+          {
+            "locus_tag": "YOR209C",
+            "gene_symbol": "NPT1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 153.93,
+            "mutant_val": 1713.18,
+            "log2fc": 3.4763,
+            "pvalue": 0.143875,
+            "fdr": 0.223848,
+            "wt_reps": [
+              158.8,
+              148.17,
+              154.81
+            ],
+            "mut_reps": [
+              1165.57,
+              3037.63,
+              936.33
+            ],
+            "original_index": 764
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592262754_752",
+        "symbol": "SIR2",
+        "x": 63.257458291699734,
+        "y": 41.44340264821948,
+        "rep_log2fc": -1.5718,
+        "genes": [
+          {
+            "locus_tag": "YDL042C",
+            "gene_symbol": "SIR2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 17.7,
+            "mutant_val": 5.95,
+            "log2fc": -1.5718,
+            "pvalue": 0.026805,
+            "fdr": 0.123826,
+            "wt_reps": [
+              15.69,
+              17.68,
+              19.74
+            ],
+            "mut_reps": [
+              3.23,
+              10.96,
+              3.66
+            ],
+            "original_index": 3907
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592271193_969",
+        "symbol": "NPY1",
+        "x": 66.73332574261602,
+        "y": 39.16365338724342,
+        "rep_log2fc": -1.3349,
+        "genes": [
+          {
+            "locus_tag": "YGL067W",
+            "gene_symbol": "NPY1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 52.21,
+            "mutant_val": 20.69,
+            "log2fc": -1.3349,
+            "pvalue": 0.025669,
+            "fdr": 0.123139,
+            "wt_reps": [
+              60.51,
+              49.1,
+              47.02
+            ],
+            "mut_reps": [
+              15.02,
+              34.52,
+              12.54
+            ],
+            "original_index": 1853
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592278004_929",
+        "symbol": "ISN1",
+        "x": 63.257458291699734,
+        "y": 50.082452479286644,
+        "rep_log2fc": -1.5509,
+        "genes": [
+          {
+            "locus_tag": "YOR155C",
+            "gene_symbol": "ISN1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 40.44,
+            "mutant_val": 13.8,
+            "log2fc": -1.5509,
+            "pvalue": 0.027225,
+            "fdr": 0.123836,
+            "wt_reps": [
+              40.21,
+              41.59,
+              39.52
+            ],
+            "mut_reps": [
+              9.67,
+              23.05,
+              8.67
+            ],
+            "original_index": 2274
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592282334_986",
+        "symbol": "SDT1",
+        "x": 65.07975773198595,
+        "y": 43.00323108993994,
+        "rep_log2fc": -1.0679,
+        "genes": [
+          {
+            "locus_tag": "YGL224C",
+            "gene_symbol": "SDT1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 26.75,
+            "mutant_val": 12.75,
+            "log2fc": -1.0679,
+            "pvalue": 0.070091,
+            "fdr": 0.158931,
+            "wt_reps": [
+              22.9,
+              26.79,
+              30.55
+            ],
+            "mut_reps": [
+              10.02,
+              21.52,
+              6.72
+            ],
+            "original_index": 2994
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592288044_399",
+        "symbol": "PHO5",
+        "x": 65.07975773198595,
+        "y": 38.623712772801724,
+        "rep_log2fc": -1.357,
+        "genes": [
+          {
+            "locus_tag": "YBR093C",
+            "gene_symbol": "PHO5",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 92.43,
+            "mutant_val": 36.08,
+            "log2fc": -1.357,
+            "pvalue": 0.018868,
+            "fdr": 0.119487,
+            "wt_reps": [
+              77.03,
+              108,
+              92.28
+            ],
+            "mut_reps": [
+              25.4,
+              58.54,
+              24.3
+            ],
+            "original_index": 1154
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592294846_74",
+        "symbol": "PHO8",
+        "x": 66.02465373806028,
+        "y": 39.58360719847585,
+        "rep_log2fc": -2.6995,
+        "genes": [
+          {
+            "locus_tag": "YDR481C",
+            "gene_symbol": "PHO8",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 199.56,
+            "mutant_val": 30.71,
+            "log2fc": -2.6995,
+            "pvalue": 0.000758,
+            "fdr": 0.113764,
+            "wt_reps": [
+              213.92,
+              172.94,
+              211.83
+            ],
+            "mut_reps": [
+              20.29,
+              51.16,
+              20.68
+            ],
+            "original_index": 617
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592326918_794",
+        "symbol": "NKR1",
+        "x": 65.04601144605472,
+        "y": 37.24386453589516,
+        "rep_log2fc": 0,
+        "genes": []
+      },
+      {
+        "id": "gene_1784592337802_757",
+        "symbol": "URH1",
+        "x": 66.47043768508973,
+        "y": 41.649968853676675,
+        "rep_log2fc": -1.3427,
+        "genes": [
+          {
+            "locus_tag": "YDR400W",
+            "gene_symbol": "URH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 43.71,
+            "mutant_val": 17.23,
+            "log2fc": -1.3427,
+            "pvalue": 0.038528,
+            "fdr": 0.130584,
+            "wt_reps": [
+              42.8,
+              44.08,
+              44.27
+            ],
+            "mut_reps": [
+              13.18,
+              27.96,
+              10.55
+            ],
+            "original_index": 2145
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592345564_592",
+        "symbol": "PNC1",
+        "x": 64.20737036767716,
+        "y": 50.02088385930512,
+        "rep_log2fc": -2.8735,
+        "genes": [
+          {
+            "locus_tag": "YGL037C",
+            "gene_symbol": "PNC1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 122.41,
+            "mutant_val": 16.7,
+            "log2fc": -2.8735,
+            "pvalue": 0.00363,
+            "fdr": 0.113764,
+            "wt_reps": [
+              143.59,
+              110.26,
+              113.39
+            ],
+            "mut_reps": [
+              11.43,
+              26.57,
+              12.08
+            ],
+            "original_index": 908
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592353424_874",
+        "symbol": "NMA1",
+        "x": 65.37540511214816,
+        "y": 36.26403129191575,
+        "rep_log2fc": -1.1634,
+        "genes": [
+          {
+            "locus_tag": "YLR328W",
+            "gene_symbol": "NMA1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 38.78,
+            "mutant_val": 17.31,
+            "log2fc": -1.1634,
+            "pvalue": 0.08173,
+            "fdr": 0.169072,
+            "wt_reps": [
+              37.56,
+              38.94,
+              39.84
+            ],
+            "mut_reps": [
+              11.97,
+              30.45,
+              9.49
+            ],
+            "original_index": 2344
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592357862_824",
+        "symbol": "NMA2",
+        "x": 67.60197134379602,
+        "y": 44.440273855552825,
+        "rep_log2fc": -1.4503,
+        "genes": [
+          {
+            "locus_tag": "YGR010W",
+            "gene_symbol": "NMA2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 23.33,
+            "mutant_val": 8.53,
+            "log2fc": -1.4503,
+            "pvalue": 0.028839,
+            "fdr": 0.125817,
+            "wt_reps": [
+              20.98,
+              25.29,
+              23.71
+            ],
+            "mut_reps": [
+              6.39,
+              14.71,
+              4.49
+            ],
+            "original_index": 3294
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592363257_310",
+        "symbol": "POF1",
+        "x": 64.93739208297154,
+        "y": 43.66158408758739,
+        "rep_log2fc": -0.4353,
+        "genes": [
+          {
+            "locus_tag": "YCL047C",
+            "gene_symbol": "POF1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 16.53,
+            "mutant_val": 12.22,
+            "log2fc": -0.4353,
+            "pvalue": 0.294888,
+            "fdr": 0.363808,
+            "wt_reps": [
+              21.39,
+              17.35,
+              10.85
+            ],
+            "mut_reps": [
+              14.3,
+              12.15,
+              10.22
+            ],
+            "original_index": 4024
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592377911_835",
+        "symbol": "QNS1",
+        "x": 62.92983236591198,
+        "y": 42.42865862164212,
+        "rep_log2fc": -1.3892,
+        "genes": [
+          {
+            "locus_tag": "YHR074W",
+            "gene_symbol": "QNS1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 75.98,
+            "mutant_val": 29,
+            "log2fc": -1.3892,
+            "pvalue": 0.042388,
+            "fdr": 0.134834,
+            "wt_reps": [
+              82.43,
+              67.39,
+              78.12
+            ],
+            "mut_reps": [
+              17.26,
+              52.29,
+              17.46
+            ],
+            "original_index": 1371
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592385162_507",
+        "symbol": "NMA1",
+        "x": 65.01039425450097,
+        "y": 44.894509553532664,
+        "rep_log2fc": -1.1634,
+        "genes": [
+          {
+            "locus_tag": "YLR328W",
+            "gene_symbol": "NMA1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 38.78,
+            "mutant_val": 17.31,
+            "log2fc": -1.1634,
+            "pvalue": 0.08173,
+            "fdr": 0.169072,
+            "wt_reps": [
+              37.56,
+              38.94,
+              39.84
+            ],
+            "mut_reps": [
+              11.97,
+              30.45,
+              9.49
+            ],
+            "original_index": 2344
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592388411_946",
+        "symbol": "NMA2",
+        "x": 62.637823679794224,
+        "y": 45.93276257748658,
+        "rep_log2fc": -1.4503,
+        "genes": [
+          {
+            "locus_tag": "YGR010W",
+            "gene_symbol": "NMA2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 23.33,
+            "mutant_val": 8.53,
+            "log2fc": -1.4503,
+            "pvalue": 0.028839,
+            "fdr": 0.125817,
+            "wt_reps": [
+              20.98,
+              25.29,
+              23.71
+            ],
+            "mut_reps": [
+              6.39,
+              14.71,
+              4.49
+            ],
+            "original_index": 3294
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592398627_869",
+        "symbol": "ISN1",
+        "x": 65.81341814132479,
+        "y": 40.28726175973718,
+        "rep_log2fc": -1.5509,
+        "genes": [
+          {
+            "locus_tag": "YOR155C",
+            "gene_symbol": "ISN1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 40.44,
+            "mutant_val": 13.8,
+            "log2fc": -1.5509,
+            "pvalue": 0.027225,
+            "fdr": 0.123836,
+            "wt_reps": [
+              40.21,
+              41.59,
+              39.52
+            ],
+            "mut_reps": [
+              9.67,
+              23.05,
+              8.67
+            ],
+            "original_index": 2274
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592403547_915",
+        "symbol": "NRK1",
+        "x": 65.0833964260304,
+        "y": 45.67319932149809,
+        "rep_log2fc": -0.3992,
+        "genes": [
+          {
+            "locus_tag": "YNL129W",
+            "gene_symbol": "NRK1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 22.23,
+            "mutant_val": 16.85,
+            "log2fc": -0.3992,
+            "pvalue": 0.35745,
+            "fdr": 0.421943,
+            "wt_reps": [
+              18.73,
+              28.34,
+              19.61
+            ],
+            "mut_reps": [
+              24.55,
+              15.45,
+              10.56
+            ],
+            "original_index": 3392
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592414537_700",
+        "symbol": "URH1",
+        "x": 63.87886059579467,
+        "y": 41.19573315569684,
+        "rep_log2fc": -1.3427,
+        "genes": [
+          {
+            "locus_tag": "YDR400W",
+            "gene_symbol": "URH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 43.71,
+            "mutant_val": 17.23,
+            "log2fc": -1.3427,
+            "pvalue": 0.038528,
+            "fdr": 0.130584,
+            "wt_reps": [
+              42.8,
+              44.08,
+              44.27
+            ],
+            "mut_reps": [
+              13.18,
+              27.96,
+              10.55
+            ],
+            "original_index": 2145
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592421664_685",
+        "symbol": "BNA6",
+        "x": 66.3974355135603,
+        "y": 43.01267594761619,
+        "rep_log2fc": -1.2384,
+        "genes": [
+          {
+            "locus_tag": "YFR047C",
+            "gene_symbol": "BNA6",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 41.59,
+            "mutant_val": 17.62,
+            "log2fc": -1.2384,
+            "pvalue": 0.045414,
+            "fdr": 0.138579,
+            "wt_reps": [
+              42.25,
+              41.73,
+              40.79
+            ],
+            "mut_reps": [
+              11.93,
+              28.29,
+              12.64
+            ],
+            "original_index": 2220
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592432424_318",
+        "symbol": "BNA2",
+        "x": 55.52011195567399,
+        "y": 43.92114734357587,
+        "rep_log2fc": -2.7478,
+        "genes": [
+          {
+            "locus_tag": "YJR078W",
+            "gene_symbol": "BNA2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 4.79,
+            "mutant_val": 0.7,
+            "log2fc": -2.7478,
+            "pvalue": 0.034657,
+            "fdr": 0.127759,
+            "wt_reps": [
+              5.3,
+              3.15,
+              5.92
+            ],
+            "mut_reps": [
+              0.7,
+              1.02,
+              0.39
+            ],
+            "original_index": 5481
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592443247_562",
+        "symbol": "BNA7",
+        "x": 64.64854906123401,
+        "y": 13.135761804985831,
+        "rep_log2fc": -1.0953,
+        "genes": [
+          {
+            "locus_tag": "YDR428C",
+            "gene_symbol": "BNA7",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 34.72,
+            "mutant_val": 16.25,
+            "log2fc": -1.0953,
+            "pvalue": 0.077141,
+            "fdr": 0.163948,
+            "wt_reps": [
+              39.11,
+              29.16,
+              35.89
+            ],
+            "mut_reps": [
+              11.13,
+              28.51,
+              9.1
+            ],
+            "original_index": 2534
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592447848_348",
+        "symbol": "BNA4",
+        "x": 64.60326923444703,
+        "y": 13.658995378249195,
+        "rep_log2fc": 0.1522,
+        "genes": [
+          {
+            "locus_tag": "YBL098W",
+            "gene_symbol": "BNA4",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 10.68,
+            "mutant_val": 11.87,
+            "log2fc": 0.1522,
+            "pvalue": 0.635543,
+            "fdr": 0.676374,
+            "wt_reps": [
+              14.53,
+              8.81,
+              8.69
+            ],
+            "mut_reps": [
+              14.2,
+              11.42,
+              9.98
+            ],
+            "original_index": 4838
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592454053_865",
+        "symbol": "BNA5",
+        "x": 64.92022802195585,
+        "y": 12.773523177341966,
+        "rep_log2fc": -0.5064,
+        "genes": [
+          {
+            "locus_tag": "YLR231C",
+            "gene_symbol": "BNA5",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 21.27,
+            "mutant_val": 14.97,
+            "log2fc": -0.5064,
+            "pvalue": 0.17157,
+            "fdr": 0.249553,
+            "wt_reps": [
+              21.45,
+              21.4,
+              20.95
+            ],
+            "mut_reps": [
+              13.42,
+              20.79,
+              10.69
+            ],
+            "original_index": 3487
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592460795_658",
+        "symbol": "BNA1",
+        "x": 64.4674297540861,
+        "y": 12.854020650151716,
+        "rep_log2fc": -1.1687,
+        "genes": [
+          {
+            "locus_tag": "YJR025C",
+            "gene_symbol": "BNA1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 23.04,
+            "mutant_val": 10.24,
+            "log2fc": -1.1687,
+            "pvalue": 0.095413,
+            "fdr": 0.181352,
+            "wt_reps": [
+              31.88,
+              17.56,
+              19.69
+            ],
+            "mut_reps": [
+              12.25,
+              10.02,
+              8.46
+            ],
+            "original_index": 3307
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592953298_432",
+        "symbol": "PYC1",
+        "x": 47.56920795636421,
+        "y": 93.18241844618724,
+        "rep_log2fc": -3.2655,
+        "genes": [
+          {
+            "locus_tag": "YGL062W",
+            "gene_symbol": "PYC1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 132.82,
+            "mutant_val": 13.8,
+            "log2fc": -3.2655,
+            "pvalue": 0.002561,
+            "fdr": 0.113764,
+            "wt_reps": [
+              129.55,
+              114.47,
+              154.45
+            ],
+            "mut_reps": [
+              7.04,
+              26.61,
+              7.77
+            ],
+            "original_index": 847
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592958606_190",
+        "symbol": "PYC2",
+        "x": 46.362974463704695,
+        "y": 94.73527077609761,
+        "rep_log2fc": -1.407,
+        "genes": [
+          {
+            "locus_tag": "YBR218C",
+            "gene_symbol": "PYC2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 175.13,
+            "mutant_val": 66.04,
+            "log2fc": -1.407,
+            "pvalue": 0.058121,
+            "fdr": 0.151464,
+            "wt_reps": [
+              168.52,
+              159.68,
+              197.21
+            ],
+            "mut_reps": [
+              32.03,
+              127.82,
+              38.26
+            ],
+            "original_index": 678
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592970198_651",
+        "symbol": "CIT1",
+        "x": 59.79792055110767,
+        "y": 60.350685727572774,
+        "rep_log2fc": -2.892,
+        "genes": [
+          {
+            "locus_tag": "YNR001C",
+            "gene_symbol": "CIT1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 187.74,
+            "mutant_val": 25.28,
+            "log2fc": -2.892,
+            "pvalue": 0.015661,
+            "fdr": 0.118231,
+            "wt_reps": [
+              233.75,
+              145.6,
+              183.87
+            ],
+            "mut_reps": [
+              15.58,
+              42.88,
+              17.39
+            ],
+            "original_index": 645
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592974803_804",
+        "symbol": "CIT2",
+        "x": 61.75285069438344,
+        "y": 62.71693689695997,
+        "rep_log2fc": -3.7558,
+        "genes": [
+          {
+            "locus_tag": "YCR005C",
+            "gene_symbol": "CIT2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 719.55,
+            "mutant_val": 53.26,
+            "log2fc": -3.7558,
+            "pvalue": 0.151747,
+            "fdr": 0.230936,
+            "wt_reps": [
+              1268.87,
+              262.42,
+              627.37
+            ],
+            "mut_reps": [
+              51.29,
+              48.85,
+              59.63
+            ],
+            "original_index": 233
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592977688_329",
+        "symbol": "CIT3",
+        "x": 58.67487557518329,
+        "y": 65.08318806634718,
+        "rep_log2fc": -3.5932,
+        "genes": [
+          {
+            "locus_tag": "YPR001W",
+            "gene_symbol": "CIT3",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 16.94,
+            "mutant_val": 1.39,
+            "log2fc": -3.5932,
+            "pvalue": 0.053627,
+            "fdr": 0.146997,
+            "wt_reps": [
+              24.43,
+              12.89,
+              13.48
+            ],
+            "mut_reps": [
+              1.24,
+              1.47,
+              1.48
+            ],
+            "original_index": 3983
+          }
+        ]
+      },
+      {
+        "id": "gene_1784592999784_745",
+        "symbol": "ACO1",
+        "x": 63.66618657929164,
+        "y": 58.94572409574912,
+        "rep_log2fc": -2.7572,
+        "genes": [
+          {
+            "locus_tag": "YLR304C",
+            "gene_symbol": "ACO1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 300.7,
+            "mutant_val": 44.47,
+            "log2fc": -2.7572,
+            "pvalue": 0.00921,
+            "fdr": 0.115109,
+            "wt_reps": [
+              363.19,
+              234.09,
+              304.81
+            ],
+            "mut_reps": [
+              27.32,
+              81.72,
+              24.37
+            ],
+            "original_index": 426
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593001965_250",
+        "symbol": "ACO2",
+        "x": 61.5448794025456,
+        "y": 64.93529736826048,
+        "rep_log2fc": -0.4991,
+        "genes": [
+          {
+            "locus_tag": "YJL200C",
+            "gene_symbol": "ACO2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 59.93,
+            "mutant_val": 42.4,
+            "log2fc": -0.4991,
+            "pvalue": 0.444344,
+            "fdr": 0.495782,
+            "wt_reps": [
+              43,
+              68.95,
+              67.83
+            ],
+            "mut_reps": [
+              28.56,
+              77.92,
+              20.72
+            ],
+            "original_index": 1654
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593011333_841",
+        "symbol": "IDH1",
+        "x": 76.14446408956252,
+        "y": 64.41767992495703,
+        "rep_log2fc": -1.6264,
+        "genes": [
+          {
+            "locus_tag": "YNL037C",
+            "gene_symbol": "IDH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 46.22,
+            "mutant_val": 14.97,
+            "log2fc": -1.6264,
+            "pvalue": 0.024122,
+            "fdr": 0.122982,
+            "wt_reps": [
+              45.72,
+              46.13,
+              46.82
+            ],
+            "mut_reps": [
+              11.61,
+              24.78,
+              8.51
+            ],
+            "original_index": 2052
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593013886_278",
+        "symbol": "IDH2",
+        "x": 87.83245069084956,
+        "y": 59.389396190009215,
+        "rep_log2fc": -2.001,
+        "genes": [
+          {
+            "locus_tag": "YOR136W",
+            "gene_symbol": "IDH2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 93,
+            "mutant_val": 23.23,
+            "log2fc": -2.001,
+            "pvalue": 0.004419,
+            "fdr": 0.113764,
+            "wt_reps": [
+              75.73,
+              99.18,
+              104.09
+            ],
+            "mut_reps": [
+              16.59,
+              39.58,
+              13.51
+            ],
+            "original_index": 1150
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593022347_15",
+        "symbol": "KGD1",
+        "x": 64.08212916296733,
+        "y": 54.65689385123481,
+        "rep_log2fc": -2.1031,
+        "genes": [
+          {
+            "locus_tag": "YIL125W",
+            "gene_symbol": "KGD1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 152.54,
+            "mutant_val": 35.5,
+            "log2fc": -2.1031,
+            "pvalue": 0.006809,
+            "fdr": 0.113764,
+            "wt_reps": [
+              177.83,
+              120.72,
+              159.07
+            ],
+            "mut_reps": [
+              20.22,
+              65.68,
+              20.59
+            ],
+            "original_index": 769
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593025020_427",
+        "symbol": "KGD2",
+        "x": 57.55183059925892,
+        "y": 55.76607408688506,
+        "rep_log2fc": -2.0677,
+        "genes": [
+          {
+            "locus_tag": "YDR148C",
+            "gene_symbol": "KGD2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 131.27,
+            "mutant_val": 31.3,
+            "log2fc": -2.0677,
+            "pvalue": 0.012528,
+            "fdr": 0.11579,
+            "wt_reps": [
+              156.23,
+              97.21,
+              140.37
+            ],
+            "mut_reps": [
+              16.94,
+              57.24,
+              19.73
+            ],
+            "original_index": 859
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593031974_935",
+        "symbol": "ACH1",
+        "x": 62.709518636837544,
+        "y": 59.389396190009215,
+        "rep_log2fc": -3.6755,
+        "genes": [
+          {
+            "locus_tag": "YBL015W",
+            "gene_symbol": "ACH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 108.61,
+            "mutant_val": 8.49,
+            "log2fc": -3.6755,
+            "pvalue": 0.066946,
+            "fdr": 0.156993,
+            "wt_reps": [
+              160.06,
+              65.32,
+              100.45
+            ],
+            "mut_reps": [
+              5.22,
+              14.41,
+              5.85
+            ],
+            "original_index": 1018
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593038723_375",
+        "symbol": "SDH1",
+        "x": 62.87589567030783,
+        "y": 59.68517758618261,
+        "rep_log2fc": -3.7032,
+        "genes": [
+          {
+            "locus_tag": "YKL148C",
+            "gene_symbol": "SDH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 104.05,
+            "mutant_val": 7.98,
+            "log2fc": -3.7032,
+            "pvalue": 0.062466,
+            "fdr": 0.154653,
+            "wt_reps": [
+              144.52,
+              56.29,
+              111.35
+            ],
+            "mut_reps": [
+              4.35,
+              14.8,
+              4.79
+            ],
+            "original_index": 1052
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593041821_913",
+        "symbol": "SDH2",
+        "x": 56.7615396902751,
+        "y": 58.13232525627227,
+        "rep_log2fc": -2.3544,
+        "genes": [
+          {
+            "locus_tag": "YLL041C",
+            "gene_symbol": "SDH2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 97.82,
+            "mutant_val": 19.12,
+            "log2fc": -2.3544,
+            "pvalue": 0.01985,
+            "fdr": 0.119487,
+            "wt_reps": [
+              125.06,
+              71.93,
+              96.46
+            ],
+            "mut_reps": [
+              11.13,
+              35.03,
+              11.19
+            ],
+            "original_index": 1108
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593052325_540",
+        "symbol": "FRD1",
+        "x": 59.25719519232927,
+        "y": 59.24150549192252,
+        "rep_log2fc": -1.3041,
+        "genes": [
+          {
+            "locus_tag": "YEL047C",
+            "gene_symbol": "FRD1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 44.43,
+            "mutant_val": 17.99,
+            "log2fc": -1.3041,
+            "pvalue": 0.055799,
+            "fdr": 0.149584,
+            "wt_reps": [
+              40.03,
+              42.31,
+              50.94
+            ],
+            "mut_reps": [
+              9.76,
+              33.09,
+              11.1
+            ],
+            "original_index": 2122
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593061803_338",
+        "symbol": "FUM1",
+        "x": 59.090818158858994,
+        "y": 62.05142875556982,
+        "rep_log2fc": -1.661,
+        "genes": [
+          {
+            "locus_tag": "YPL262W",
+            "gene_symbol": "FUM1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 157.66,
+            "mutant_val": 49.85,
+            "log2fc": -1.661,
+            "pvalue": 0.028411,
+            "fdr": 0.125817,
+            "wt_reps": [
+              152.87,
+              153.12,
+              166.98
+            ],
+            "mut_reps": [
+              27.65,
+              90.31,
+              31.58
+            ],
+            "original_index": 750
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593067797_98",
+        "symbol": "MDH1",
+        "x": 60.33864590988608,
+        "y": 55.17451129453826,
+        "rep_log2fc": -1.994,
+        "genes": [
+          {
+            "locus_tag": "YKL085W",
+            "gene_symbol": "MDH1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 108.69,
+            "mutant_val": 27.28,
+            "log2fc": -1.994,
+            "pvalue": 0.006664,
+            "fdr": 0.113764,
+            "wt_reps": [
+              124.88,
+              87.43,
+              113.75
+            ],
+            "mut_reps": [
+              17.25,
+              49.59,
+              14.99
+            ],
+            "original_index": 1020
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593070590_845",
+        "symbol": "MDH2",
+        "x": 58.55009280008059,
+        "y": 64.71346132113042,
+        "rep_log2fc": -4.4784,
+        "genes": [
+          {
+            "locus_tag": "YOL126C",
+            "gene_symbol": "MDH2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 671.15,
+            "mutant_val": 30.1,
+            "log2fc": -4.4784,
+            "pvalue": 0.155649,
+            "fdr": 0.234124,
+            "wt_reps": [
+              1190.22,
+              195.67,
+              627.56
+            ],
+            "mut_reps": [
+              17.87,
+              54.97,
+              17.46
+            ],
+            "original_index": 243
+          }
+        ]
+      },
+      {
+        "id": "gene_1784593073558_712",
+        "symbol": "MDH3",
+        "x": 62.83430141194025,
+        "y": 62.421155500786575,
+        "rep_log2fc": -1.5101,
+        "genes": [
+          {
+            "locus_tag": "YDL078C",
+            "gene_symbol": "MDH3",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 252.81,
+            "mutant_val": 88.75,
+            "log2fc": -1.5101,
+            "pvalue": 0.033786,
+            "fdr": 0.127021,
+            "wt_reps": [
+              317.23,
+              208.32,
+              232.86
+            ],
+            "mut_reps": [
+              94.89,
+              95.92,
+              75.45
+            ],
+            "original_index": 483
+          }
+        ]
+      }
+    ],
+    "geneOffsets": {
+      "gene_1784591093003_935": {
+        "dx": 32.18390804597699,
+        "dy": 11.206896551724132
+      },
+      "gene_1784591104840_11": {
+        "dx": -74.52830188679242,
+        "dy": 120.28301886792447
+      },
+      "gene_1784591107636_781": {
+        "dx": -57.54716981132073,
+        "dy": 114.6226415094339
+      },
+      "gene_1784591123256_649": {
+        "dx": 48.113207547169786,
+        "dy": -8.962264150943392
+      },
+      "gene_1784591130525_14": {
+        "dx": 40.094339622641485,
+        "dy": 117.92452830188674
+      },
+      "gene_1784591134541_907": {
+        "dx": 40.09433962264149,
+        "dy": 66.98113207547166
+      },
+      "gene_1784591157932_363": {
+        "dx": 151.88679245283012,
+        "dy": 91.5094339622641
+      },
+      "gene_1784591161357_919": {
+        "dx": 81.60377358490561,
+        "dy": -42.92452830188677
+      },
+      "gene_1784591176849_778": {
+        "dx": 148.5849056603773,
+        "dy": 74.99999999999997
+      },
+      "gene_1784591184331_843": {
+        "dx": 162.26415094339615,
+        "dy": 194.8113207547169
+      },
+      "gene_1784591191006_64": {
+        "dx": 114.15094339622637,
+        "dy": 167.45283018867914
+      },
+      "gene_1784591267939_757": {
+        "dx": -34.56790123456788,
+        "dy": 59.56790123456787
+      },
+      "gene_1784591274796_507": {
+        "dx": 34.56790123456788,
+        "dy": 76.54320987654316
+      },
+      "gene_1784591277342_623": {
+        "dx": 90.74074074074069,
+        "dy": 52.469135802469104
+      },
+      "gene_1784591317512_130": {
+        "dx": 23.192771084337334,
+        "dy": -15.060240963855412
+      },
+      "gene_1784591324477_982": {
+        "dx": 92.46575342465748,
+        "dy": 8.904109589041092
+      },
+      "gene_1784591339270_470": {
+        "dx": 30.72289156626504,
+        "dy": 31.024096385542148
+      },
+      "gene_1784591346788_587": {
+        "dx": 3.9156626506024073,
+        "dy": 14.156626506024088
+      },
+      "gene_1784591360026_623": {
+        "dx": 30.479452054794503,
+        "dy": 2.054794520547944
+      },
+      "gene_1784591372492_927": {
+        "dx": 189.04109589041084,
+        "dy": 30.821917808219162
+      },
+      "gene_1784591377018_409": {
+        "dx": 142.80821917808208,
+        "dy": 66.43835616438352
+      },
+      "gene_1784591400138_883": {
+        "dx": 27.739726027397243,
+        "dy": -19.863013698630127
+      },
+      "gene_1784591409260_573": {
+        "dx": 44.178082191780796,
+        "dy": -6.506849315068489
+      },
+      "gene_1784591428724_2": {
+        "dx": 73.28767123287668,
+        "dy": -97.26027397260269
+      },
+      "gene_1784591431616_690": {
+        "dx": 53.767123287671204,
+        "dy": -117.80821917808213
+      },
+      "gene_1784591434305_166": {
+        "dx": 22.377690802348326,
+        "dy": -95.49119373776902
+      },
+      "gene_1784591503538_686": {
+        "dx": 22.57142857142857,
+        "dy": 30.57142857142857
+      },
+      "gene_1784591522744_143": {
+        "dx": 50.96774193548387,
+        "dy": 25.161290322580648
+      },
+      "gene_1784591519375_62": {
+        "dx": 45.48387096774194,
+        "dy": -26.451612903225808
+      },
+      "gene_1784591538282_760": {
+        "dx": 1.2903225806451615,
+        "dy": 27.09677419354839
+      },
+      "gene_1784591551641_246": {
+        "dx": 0.6451612903225807,
+        "dy": 16.12903225806452
+      },
+      "gene_1784591548935_314": {
+        "dx": 31.612903225806456,
+        "dy": 16.451612903225808
+      },
+      "gene_1784591603745_104": {
+        "dx": 349.5283018867923,
+        "dy": -232.0754716981131
+      },
+      "gene_1784592251599_470": {
+        "dx": 213.20754716981122,
+        "dy": -258.0188679245282
+      },
+      "gene_1784592262754_752": {
+        "dx": 344.33962264150927,
+        "dy": -126.88679245283014
+      },
+      "gene_1784592271193_969": {
+        "dx": 353.30188679245265,
+        "dy": -37.26415094339621
+      },
+      "gene_1784592278004_929": {
+        "dx": 502.8301886792451,
+        "dy": -253.77358490566027
+      },
+      "gene_1784592282334_986": {
+        "dx": 468.8679245283016,
+        "dy": -174.0566037735848
+      },
+      "gene_1784592288044_399": {
+        "dx": 465.5660377358488,
+        "dy": -117.92452830188672
+      },
+      "gene_1784592294846_74": {
+        "dx": 449.5283018867923,
+        "dy": -109.90566037735844
+      },
+      "gene_1784592326918_794": {
+        "dx": 408.4905660377357,
+        "dy": -109.90566037735844
+      },
+      "gene_1784592337802_757": {
+        "dx": 373.4693877551019,
+        "dy": -254.08163265306112
+      },
+      "gene_1784592345564_592": {
+        "dx": 276.0204081632652,
+        "dy": -353.57142857142844
+      },
+      "gene_1784592353424_874": {
+        "dx": 420.408163265306,
+        "dy": -6.122448979591837
+      },
+      "gene_1784592357862_824": {
+        "dx": 383.67346938775495,
+        "dy": -63.265306122448955
+      },
+      "gene_1784592363257_310": {
+        "dx": 431.6326530612243,
+        "dy": -39.79591836734693
+      },
+      "gene_1784592377911_835": {
+        "dx": 286.7346938775509,
+        "dy": -22.448979591836725
+      },
+      "gene_1784592388411_946": {
+        "dx": 149.99999999999994,
+        "dy": -82.65306122448976
+      },
+      "gene_1784592385162_507": {
+        "dx": 115.8163265306122,
+        "dy": -89.28571428571425
+      },
+      "gene_1784592398627_869": {
+        "dx": 96.93877551020404,
+        "dy": -138.26530612244892
+      },
+      "gene_1784592403547_915": {
+        "dx": 59.693877551020385,
+        "dy": -186.2244897959183
+      },
+      "gene_1784592414537_700": {
+        "dx": 133.67346938775503,
+        "dy": -240.81632653061214
+      },
+      "gene_1784592421664_685": {
+        "dx": -15.306122448979584,
+        "dy": -123.46938775510199
+      },
+      "gene_1784592432424_318": {
+        "dx": 107.31707317073167,
+        "dy": -272.560975609756
+      },
+      "gene_1784592443247_562": {
+        "dx": -38.291139240506304,
+        "dy": 28.164556962025298
+      },
+      "gene_1784592447848_348": {
+        "dx": -38.291139240506304,
+        "dy": 57.27848101265819
+      },
+      "gene_1784592454053_865": {
+        "dx": -43.35443037974681,
+        "dy": 94.30379746835438
+      },
+      "gene_1784592460795_658": {
+        "dx": -34.81012658227846,
+        "dy": 119.62025316455689
+      },
+      "gene_1784592953298_432": {
+        "dx": -66.27906976744184,
+        "dy": 5.2325581395348815
+      },
+      "gene_1784592958606_190": {
+        "dx": -1.7441860465116272,
+        "dy": -6.976744186046509
+      },
+      "gene_1784592970198_651": {
+        "dx": 65.11627906976742,
+        "dy": 135.46511627906972
+      },
+      "gene_1784592974803_804": {
+        "dx": 32.55813953488371,
+        "dy": 130.81395348837205
+      },
+      "gene_1784592977688_329": {
+        "dx": 81.39534883720927,
+        "dy": 127.32558139534879
+      },
+      "gene_1784593001965_250": {
+        "dx": 194.76744186046503,
+        "dy": 109.30232558139531
+      },
+      "gene_1784592999784_745": {
+        "dx": 163.95348837209295,
+        "dy": 146.51162790697668
+      },
+      "gene_1784593011333_841": {
+        "dx": 7.558139534883718,
+        "dy": -12.20930232558139
+      },
+      "gene_1784593013886_278": {
+        "dx": -180.81395348837202,
+        "dy": 49.418604651162774
+      },
+      "gene_1784593025020_427": {
+        "dx": 254.65116279069758,
+        "dy": -27.906976744186036
+      },
+      "gene_1784593022347_15": {
+        "dx": 153.4883720930232,
+        "dy": -36.62790697674417
+      },
+      "gene_1784593031974_935": {
+        "dx": 23.837209302325572,
+        "dy": -114.5348837209302
+      },
+      "gene_1784593041821_913": {
+        "dx": -49.41860465116278,
+        "dy": -55.81395348837208
+      },
+      "gene_1784593038723_375": {
+        "dx": -145.9302325581395,
+        "dy": -84.88372093023253
+      },
+      "gene_1784593052325_540": {
+        "dx": -38.3720930232558,
+        "dy": -48.83720930232556
+      },
+      "gene_1784593061803_338": {
+        "dx": -112.20930232558135,
+        "dy": 11.046511627906973
+      },
+      "gene_1784593073558_712": {
+        "dx": -136.62790697674413,
+        "dy": 131.39534883720927
+      },
+      "gene_1784593067797_98": {
+        "dx": -95.34883720930229,
+        "dy": 163.95348837209298
+      },
+      "gene_1784593070590_845": {
+        "dx": -67.44186046511625,
+        "dy": 94.18604651162788
+      }
+    }
+  },
+  "coryne_lysine_pathway": {
+    "name": "L-Lysine Biosynthesis (C. glutamicum)",
+    "species": "cgl",
+    "width": 1024,
+    "height": 580,
+    "nodes": [
+      {
+        "id": "node_1",
+        "x": 80,
+        "y": 150,
+        "w": 140,
+        "h": 50,
+        "label": "L-Aspartate",
+        "color": "blue"
+      },
+      {
+        "id": "node_2",
+        "x": 744,
+        "y": 417,
+        "w": 140,
+        "h": 50,
+        "label": "L-Aspartyl-P",
+        "color": "blue"
+      },
+      {
+        "id": "node_3",
+        "x": 520,
+        "y": 150,
+        "w": 140,
+        "h": 50,
+        "label": "ASA",
+        "color": "blue"
+      },
+      {
+        "id": "node_4",
+        "x": 740,
+        "y": 150,
+        "w": 140,
+        "h": 50,
+        "label": "L-Lysine",
+        "color": "green"
+      }
+    ],
+    "arrows": [
+      {
+        "id": "arr_1",
+        "from": "node_1",
+        "to": "node_2",
+        "label": "lysC"
+      },
+      {
+        "id": "arr_2",
+        "from": "node_2",
+        "to": "node_3",
+        "label": "asd"
+      },
+      {
+        "id": "arr_3",
+        "from": "node_3",
+        "to": "node_4",
+        "label": "dapA/dapB"
+      }
+    ],
+    "customGenes": [],
+    "geneOffsets": {},
+    "deletedDefaultGenes": []
+  }
+}

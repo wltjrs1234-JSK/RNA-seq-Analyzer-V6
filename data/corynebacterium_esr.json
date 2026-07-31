@@ -1,0 +1,27 @@
+{
+  "organic_acid_stress": {
+    "name": "유기산/젖산 스트레스 (Organic Acid / Lactic Acid Stress)",
+    "up_markers": ["NCgl2812", "NCgl0908", "NCgl2544", "NCgl2806", "NCgl1936"],
+    "down_markers": ["NCgl0247", "NCgl1216", "NCgl1896", "NCgl0460"]
+  },
+  "biotin_limitation_stress": {
+    "name": "비오틴 제한 스트레스 (Biotin Limitation Stress)",
+    "up_markers": ["NCgl0908", "NCgl1997", "NCgl2248", "NCgl2249", "NCgl0247"],
+    "down_markers": ["NCgl0831", "NCgl2743", "NCgl1936", "NCgl1193"]
+  },
+  "osmotic_stress": {
+    "name": "삼투압 스트레스 (Osmotic Stress)",
+    "up_markers": ["NCgl1208", "NCgl0460", "NCgl1834", "NCgl0896"],
+    "down_markers": ["NCgl2008", "NCgl1193", "NCgl0935"]
+  },
+  "oxidative_stress": {
+    "name": "산화 스트레스 (Oxidative Stress)",
+    "up_markers": ["NCgl0908", "NCgl0651", "NCgl2469", "NCgl0177"],
+    "down_markers": ["NCgl0367", "NCgl0368", "NCgl1408"]
+  },
+  "heat_shock_stress": {
+    "name": "열 충격 스트레스 (Heat Shock Stress)",
+    "up_markers": ["NCgl0896", "NCgl1997", "NCgl0908", "NCgl1857"],
+    "down_markers": ["NCgl0247", "NCgl1216", "NCgl1896"]
+  }
+}

@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeast (S. cerevisiae) RNA-seq Analyzer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Plotly.js for charts -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <!-- Handsontable for Excel-like data grid -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Cytoscape.js for Network Visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <!-- IGV.js for Embedded Genome Browser -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/css/igv.css">
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar collapsed" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-helix logo-icon"></i>
+                    <span class="logo-text">YeastRNA</span>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" data-tab="upload-tab">
+                    <i class="fa-solid fa-upload"></i>
+                    <span class="menu-text">데이터 업로드</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-deg" data-tab="deg-tab">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span class="menu-text">DEG 분석</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-volcano" data-tab="volcano-tab">
+                    <i class="fa-solid fa-chart-scatter"></i>
+                    <span class="menu-text">Volcano Plot</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-pca" data-tab="pca-tab">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="menu-text">PCA 분석</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-heatmap" data-tab="heatmap-tab">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span class="menu-text">Heatmap</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-kegg" data-tab="kegg-tab">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span class="menu-text">KEGG Pathway</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-go" data-tab="go-tab">
+                    <i class="fa-solid fa-tags"></i>
+                    <span class="menu-text">GO/도메인 분석</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-network" data-tab="network-tab">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <span class="menu-text">상호작용 네트워크</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-gsea" data-tab="gsea-tab">
+                    <i class="fa-solid fa-chart-area"></i>
+                    <span class="menu-text">GSEA 농축</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-motif" data-tab="motif-tab">
+                    <i class="fa-solid fa-dna"></i>
+                    <span class="menu-text">모티프 탐색</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-advanced" data-tab="advanced-tab">
+                    <i class="fa-solid fa-flask-vial"></i>
+                    <span class="menu-text">균주 분석 확장</span>
+                </a>
+                <a href="#" class="menu-item disabled" id="nav-custom-pathway" data-tab="custom-pathway-tab">
+                    <i class="fa-solid fa-route"></i>
+                    <span class="menu-text">사용자맞춤 pathway</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p class="version">v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="page-title">S. cerevisiae RNA-seq Analyzer</h1>
+                    <p class="header-subtitle">효모 raw expression 데이터 기반 DEG 시각화 및 기능성 맵핑 분석 도구</p>
+                </div>
+                <div class="header-right flex-row gap-12 align-center">
+                    <div class="species-selector-bar" id="species-selector-wrapper" style="display: flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.08); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                        <label for="species-select" style="font-size: 12px; font-weight: 600; color: #4f46e5; display: flex; align-items: center; gap: 4px; margin: 0; white-space: nowrap;">
+                            <i class="fa-solid fa-microscope"></i> Species:
+                        </label>
+                        <select id="species-select" class="species-dropdown" style="height: 30px; font-size: 13px; font-weight: 600; padding: 2px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; color: #1e293b; cursor: pointer; outline: none;">
+                            <option value="sce" selected>🧬 S. cerevisiae (효모)</option>
+                            <option value="cgl">🧫 C. glutamicum (코리네박테리움)</option>
+                        </select>
+                    </div>
+                    <div class="session-control-bar" id="header-session-control">
+                        <label for="header-session-select" class="session-label"><i class="fa-solid fa-clock-rotate-left icon-margin"></i>분석 세션:</label>
+                        <div class="session-select-wrapper">
+                            <select id="header-session-select" class="session-select-dropdown">
+                                <option value="" disabled selected>저장된 세션 불러오는 중...</option>
+                            </select>
+                        </div>
+                        <div class="session-actions">
+                            <button id="btn-rename-active-session" class="btn-icon-action" title="현재 세션 이름 변경"><i class="fa-solid fa-pen"></i></button>
+                            <button id="btn-delete-active-session" class="btn-icon-action btn-icon-danger" title="현재 세션 삭제"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="status-indicator" id="status-badge">
+                        <span class="status-dot"></span>
+                        <span class="status-text">대기 중</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Tabs -->
+            <div class="tab-content-container">
+                
+                <!-- Tab 1: Upload and Sample Info -->
+                <section class="tab-pane active" id="upload-tab">
+                    <div class="grid-layout">
+                        <!-- Upload Card -->
+                        <div class="card glass-card upload-section">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title"><i class="fa-solid fa-file-excel icon-margin"></i>RNA-seq 데이터 업로드</h3>
+                                <div class="btn-group" role="group">
+                                    <button class="btn-toggle active" id="toggle-file-upload">파일 업로드</button>
+                                    <button class="btn-toggle" id="toggle-text-upload">텍스트 직접 입력</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- File Upload Method -->
+                                <div id="file-upload-container">
+                                    <div class="dropzone" id="dropzone">
+                                        <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display: none;">
+                                        <i class="fa-solid fa-cloud-arrow-up upload-big-icon"></i>
+                                        <p class="dropzone-text">Excel (.xlsx, .xls) 또는 CSV 파일을 여기로 드래그하거나 클릭하여 선택하세요.</p>
+                                        <p class="dropzone-hint">locus_tag(예: YAL038W), Gene_Symbol, 발현량(TPM/FPKM/Read count) 열을 포함해야 합니다.</p>
+                                    </div>
+                                    <div class="file-info-box" id="file-info" style="display: none;">
+                                        <div class="file-icon-name">
+                                            <i class="fa-regular fa-file-excel file-excel-icon"></i>
+                                            <span id="selected-file-name">filename.xlsx</span>
+                                        </div>
+                                        <button class="btn btn-primary" id="analyze-btn">분석 시작하기</button>
+                                    </div>
+                                </div>
+
+                                <!-- Text Upload Method (Hidden by default) -->
+                                <div id="text-upload-container" style="display: none;">
+                                    <div class="text-upload-box">
+                                        <p class="guide-text" style="font-size: 13px; margin-bottom: 12px; color: #475569;">
+                                            <i class="fa-solid fa-circle-info icon-margin"></i> 아래 그리드의 셀을 더블클릭하여 직접 편집하거나, Excel/CSV 데이터를 복사(Ctrl+C)하여 통째로 붙여넣기(Ctrl+V) 하세요.
+                                        </p>
+                                        
+                                        <div class="grid-actions" style="margin-bottom: 10px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                                            <div style="display: flex; align-items: center; gap: 4px;">
+                                                <input type="number" id="grid-add-row-count" value="1" min="1" max="100" class="form-control" style="width: 50px; height: 28px; padding: 2px 5px; font-size: 12px; text-align: center; border-color: #cbd5e1; border-radius: 4px; background: #ffffff; color: #334155;" title="추가할 행 개수">
+                                                <button type="button" class="btn btn-secondary btn-sm" id="btn-grid-add-row" style="padding: 6px 12px; font-size: 12px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                                    <i class="fa-solid fa-plus"></i>행 추가
+                                                </button>
+                                            </div>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="btn-grid-del-row" style="padding: 6px 12px; font-size: 12px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-minus"></i>선택행 삭제
+                                            </button>
+                                            <div style="display: flex; align-items: center; gap: 4px;">
+                                                <input type="number" id="grid-add-col-count" value="1" min="1" max="20" class="form-control" style="width: 50px; height: 28px; padding: 2px 5px; font-size: 12px; text-align: center; border-color: #cbd5e1; border-radius: 4px; background: #ffffff; color: #334155;" title="추가할 열 개수">
+                                                <button type="button" class="btn btn-secondary btn-sm" id="btn-grid-add-col" style="padding: 6px 12px; font-size: 12px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                                    <i class="fa-solid fa-circle-plus"></i>열 추가
+                                                </button>
+                                            </div>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="btn-grid-del-col" style="padding: 6px 12px; font-size: 12px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-circle-minus"></i>선택열 삭제
+                                            </button>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="btn-grid-clear" style="padding: 6px 12px; font-size: 12px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-trash-can"></i>전체 삭제
+                                            </button>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="btn-grid-sample" style="padding: 6px 12px; font-size: 12px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-table"></i>예제 데이터 로드
+                                            </button>
+                                        </div>
+
+                                        <!-- Handsontable Grid Div -->
+                                        <div id="excel-grid-container" class="modern-grid-wrapper" style="border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; margin-bottom: 15px;">
+                                            <div id="excel-grid"></div>
+                                        </div>
+
+                                        <button class="btn btn-primary btn-full" id="analyze-text-btn">입력한 데이터 분석 시작</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Format Guide Card -->
+                        <div class="card glass-card guide-section">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fa-solid fa-circle-info icon-margin"></i>데이터 권장 양식 가이드</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="guide-text">본 툴은 다음과 같은 열 구성을 가진 엑셀 또는 CSV 파일을 분석할 수 있습니다.</p>
+                                <div class="table-responsive">
+                                    <table class="guide-table">
+                                        <thead>
+                                            <tr>
+                                                <th>권장 열 이름</th>
+                                                <th>설명</th>
+                                                <th>예시 데이터</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>locus_tag</code> <span class="badge badge-required">필수</span></td>
+                                                <td>Yeast 체계명 (ORF)</td>
+                                                <td><code>YAL038W</code>, <code>YGR192C</code></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>Gene_Symbol</code></td>
+                                                <td>유전자 이름 (약어)</td>
+                                                <td><code>CDC19</code>, <code>TDH3</code></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>Mutant_TPM AVG</code></td>
+                                                <td>Mutant 평균 TPM (또는 FPKM, Count)</td>
+                                                <td><code>233690.32</code></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>WT_TPM AVG</code></td>
+                                                <td>WT 평균 TPM (또는 FPKM, Count)</td>
+                                                <td><code>51864.82</code></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>Mutant_TPM_1, 2, 3</code></td>
+                                                <td><span class="badge badge-optional">선택</span> 반복구 데이터 (통계 검정용)</td>
+                                                <td><code>234500.12</code></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="alert-box">
+                                    <i class="fa-solid fa-triangle-exclamation alert-icon"></i>
+                                    <p class="alert-text"><strong>통계 분석 알림:</strong> 개별 반복구 열(예: Mutant_TPM_1, WT_TPM_1 등)이 2개 이상 감지되면 자동으로 <strong>Welch's t-test</strong> 및 <strong>FDR 보정</strong>을 수행하여 Volcano Plot을 렌더링합니다. 평균값(AVG) 열만 제공되면 p-value가 계산되지 않으며 MA Plot이 대안으로 활성화됩니다.</p>
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                                    <button class="btn btn-secondary flex-1" id="load-mock-btn"><i class="fa-solid fa-vial icon-margin"></i>효모 Mock 데이터 로드</button>
+                                    <button class="btn btn-secondary flex-1" id="load-mock-coryne-btn" style="border-color: #6366f1; color: #4f46e5;"><i class="fa-solid fa-flask icon-margin"></i>코리네박테리움 Mock 데이터 로드</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saved Sessions History Catalog Card -->
+                    <div class="card glass-card session-catalog-card" style="margin-top: 24px;">
+                        <div class="card-header flex-header">
+                            <h3 class="card-title">
+                                <i class="fa-solid fa-folder-tree icon-margin"></i>저장된 분석 세션 이력 (Session History Catalog)
+                            </h3>
+                            <span class="badge badge-info" id="session-count-badge">0개의 세션</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="guide-text" style="margin-bottom: 16px;">
+                                이전에 실행했던 모든 RNA-seq 분석 결과가 고유 세션으로 보존되어 있습니다. 아래 목록에서 <strong style="color: #6366f1;">[전환]</strong> 버튼을 클릭하면 전체 시각화 탭이 선택된 세션 데이터로 즉각 동기화됩니다.
+                            </p>
+                            <div id="session-catalog-list" class="session-card-grid">
+                                <!-- Dynamic session items rendered by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 2: DEG Analysis Table -->
+                <section class="tab-pane" id="deg-tab">
+                    <div class="card glass-card">
+                        <div class="card-header flex-header">
+                            <h3 class="card-title">DEG (Differentially Expressed Genes) 분석 결과</h3>
+                            <div class="filter-controls">
+                                <div class="control-group">
+                                    <label for="log2fc-thresh">|Log2 FC| 임계값:</label>
+                                    <input type="number" id="log2fc-thresh" value="1.0" step="0.1" min="0" class="input-number">
+                                </div>
+                                <div class="control-group" id="pvalue-filter-group" style="gap: 8px;">
+                                    <select id="stat-type" class="form-select" style="height: 32px; border-radius: 4px; font-size: 12px; border-color: #cbd5e1; background: #ffffff; color: #334155; padding: 2px 6px;" title="통계 유의성 판정 기준">
+                                        <option value="fdr" selected>FDR 기준</option>
+                                        <option value="pvalue">p-value 기준</option>
+                                        <option value="none">통계 필터 없음</option>
+                                    </select>
+                                    <label for="pvalue-thresh" id="pvalue-thresh-label">임계값:</label>
+                                    <input type="number" id="pvalue-thresh" value="0.05" step="0.01" min="0" max="1" class="input-number">
+                                </div>
+                                <div class="control-group">
+                                    <input type="text" id="search-gene" placeholder="유전자 검색 (Symbol/ORF)..." class="input-text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Statistics Summary Badges with Excel export -->
+                            <div class="deg-stats-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                    <div class="stat-badge up-badge">
+                                        <span class="stat-label">발현 증가 (Upregulated)</span>
+                                        <span class="stat-val" id="stat-up-count">0</span>
+                                    </div>
+                                    <div class="stat-badge down-badge">
+                                        <span class="stat-label">발현 감소 (Downregulated)</span>
+                                        <span class="stat-val" id="stat-down-count">0</span>
+                                    </div>
+                                    <div class="stat-badge total-badge">
+                                        <span class="stat-label">전체 분석 유전자</span>
+                                        <span class="stat-val" id="stat-total-count">0</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success" id="btn-export-deg-excel" style="height: 38px; padding: 0 16px; display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 13px; background-color: #10b981; border-color: #10b981; color: white;">
+                                    <i class="fa-solid fa-file-excel"></i> Excel 내보내기
+                                </button>
+                            </div>
+
+                            <div class="table-responsive max-height-table">
+                                <table class="data-table" id="deg-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-sort-key="locus_tag" class="sortable-header">Locus Tag <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="gene_symbol" class="sortable-header">Symbol <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="wt_val" class="sortable-header">WT 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="mutant_val" class="sortable-header">Mutant 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="log2fc" class="sortable-header">Log2 Fold Change <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="pvalue" class="sortable-header stat-header">p-value <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="fdr" class="sortable-header stat-header">FDR <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="classification" class="sortable-header">분류 <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="description" class="sortable-header">Description <i class="fa-solid fa-sort sort-icon"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="deg-table-body">
+                                        <!-- Will be populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 3: Volcano / MA Plot -->
+                <section class="tab-pane" id="volcano-tab">
+                    <div class="split-layout">
+                        <!-- Plot View -->
+                        <div class="card glass-card flex-2">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title" id="plot-title-text">Volcano Plot</h3>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <div class="btn-group" id="plot-toggle-btns" style="display: none;">
+                                        <button class="btn btn-toggle active" id="btn-show-volcano">Volcano</button>
+                                        <button class="btn btn-toggle" id="btn-show-ma">MA Plot</button>
+                                    </div>
+                                    <button class="btn btn-secondary btn-export" id="btn-export-volcano-jpg" title="JPG 이미지로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
+                                    <button class="btn btn-secondary btn-export" id="btn-export-volcano-pdf" title="PDF 파일로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="plotly-chart" class="chart-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- Gene Detail Panel -->
+                        <div class="card glass-card flex-1">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fa-solid fa-magnifying-glass icon-margin"></i>선택된 유전자 상세 발현량</h3>
+                            </div>
+                            <div class="card-body" id="gene-detail-body">
+                                <div class="no-gene-selected">
+                                    <i class="fa-solid fa-mouse-pointer click-icon"></i>
+                                    <p>Plot의 유전자 점을 클릭하거나 테이블에서 유전자를 선택하면 상세 정보 및 발현 분포가 여기에 표시됩니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 4: Heatmap -->
+                <section class="tab-pane" id="heatmap-tab">
+                    <div class="grid-layout-heatmap">
+                        <div class="card glass-card heatmap-controls-card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fa-solid fa-sliders icon-margin"></i>Heatmap 설정</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="control-field">
+                                    <label for="heatmap-count">시각화 유전자 수:</label>
+                                    <select id="heatmap-count" class="input-select">
+                                        <option value="20">상위 20개 (발현 차이 극대화)</option>
+                                        <option value="50" selected>상위 50개 (권장)</option>
+                                        <option value="100">상위 100개</option>
+                                    </select>
+                                </div>
+                                <div class="control-field">
+                                    <label for="heatmap-metric">선별 기준:</label>
+                                    <select id="heatmap-metric" class="input-select">
+                                        <option value="log2fc">절대값 Log2 Fold Change 순</option>
+                                        <option value="pvalue" id="heatmap-metric-pvalue">FDR (Adjusted p-value) 가장 낮은 순</option>
+                                    </select>
+                                </div>
+                                <div class="control-field">
+                                    <label for="heatmap-cluster">계층적 클러스터링 적용:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="heatmap-cluster" checked>
+                                        <label for="heatmap-cluster"></label>
+                                    </div>
+                                </div>
+                                <div class="control-field" style="margin-top: 15px;">
+                                    <label for="heatmap-height" style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 13px; color: var(--text-secondary);">
+                                        <span>히트맵 세로 높이:</span>
+                                        <span id="heatmap-height-val" style="font-weight: 600; color: var(--accent-cyan);">600px</span>
+                                    </label>
+                                    <input type="range" id="heatmap-height" min="400" max="2500" step="50" value="600" style="width: 100%; accent-color: var(--accent-cyan); height: 6px; background: #cbd5e1; border-radius: 3px; cursor: pointer; outline: none; margin-top: 8px;">
+                                </div>
+                                <div class="control-field" style="margin-top: 15px;">
+                                    <label for="heatmap-dendro-gap" style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 13px; color: var(--text-secondary);">
+                                        <span>좌측 선 간격 (유전자):</span>
+                                        <span id="heatmap-dendro-gap-val" style="font-weight: 600; color: var(--accent-cyan);">2%</span>
+                                    </label>
+                                    <input type="range" id="heatmap-dendro-gap" min="1" max="15" step="1" value="2" style="width: 100%; accent-color: var(--accent-cyan); height: 6px; background: #cbd5e1; border-radius: 3px; cursor: pointer; outline: none; margin-top: 8px;">
+                                </div>
+                                <div class="control-field" style="margin-top: 15px;">
+                                    <label for="heatmap-dendro-gap-top" style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 13px; color: var(--text-secondary);">
+                                        <span>상측 선 간격 (샘플):</span>
+                                        <span id="heatmap-dendro-gap-top-val" style="font-weight: 600; color: var(--accent-cyan);">2%</span>
+                                    </label>
+                                    <input type="range" id="heatmap-dendro-gap-top" min="1" max="15" step="1" value="2" style="width: 100%; accent-color: var(--accent-cyan); height: 6px; background: #cbd5e1; border-radius: 3px; cursor: pointer; outline: none; margin-top: 8px;">
+                                </div>
+                                <div class="control-field" style="margin-top: 15px;">
+                                    <label for="heatmap-margin-bottom" style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 13px; color: var(--text-secondary);">
+                                        <span>하단 여백 (샘플 이름):</span>
+                                        <span id="heatmap-margin-bottom-val" style="font-weight: 600; color: var(--accent-cyan);">100px</span>
+                                    </label>
+                                    <input type="range" id="heatmap-margin-bottom" min="60" max="250" step="10" value="100" style="width: 100%; accent-color: var(--accent-cyan); height: 6px; background: #cbd5e1; border-radius: 3px; cursor: pointer; outline: none; margin-top: 8px;">
+                                </div>
+                                <div class="control-field" style="margin-top: 15px;" id="sample-order-type-container">
+                                    <label for="heatmap-sample-order-type">샘플 순서 정렬:</label>
+                                    <select id="heatmap-sample-order-type" class="input-select" style="width: 100%;">
+                                        <option value="wt-mutant" selected>WT ➜ Mutant 순</option>
+                                        <option value="mutant-wt">Mutant ➜ WT 순</option>
+                                        <option value="custom">사용자 지정 순서</option>
+                                    </select>
+                                </div>
+                                <div class="control-field" style="margin-top: 10px; display: none;" id="sample-order-custom-container">
+                                    <label for="heatmap-sample-order-custom" style="font-size: 12px; color: var(--text-muted);">사용자 지정 샘플명 (쉼표 구분):</label>
+                                    <input type="text" id="heatmap-sample-order-custom" class="input-text" placeholder="예: WT_Rep1, WT_Rep3, Mutant_Rep2" style="width: 100%; font-size: 12px; padding: 6px 10px;">
+                                </div>
+                                <button class="btn btn-primary btn-full mt-10" id="regenerate-heatmap">열지도 재생성</button>
+                            </div>
+                        </div>
+
+                        <div class="card glass-card heatmap-chart-card">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title">Top DEG Expression Heatmap</h3>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <button class="btn btn-secondary btn-export" id="btn-export-heatmap-jpg" title="JPG 이미지로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
+                                    <button class="btn btn-secondary btn-export" id="btn-export-heatmap-pdf" title="PDF 파일로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                                </div>
+                            </div>
+                            <div class="card-body heatmap-container">
+                                <div id="plotly-heatmap" class="chart-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 5: KEGG Pathway Mapper -->
+                <section class="tab-pane" id="kegg-tab">
+                    <div class="split-layout-kegg">
+                        <!-- Pathway List Panel -->
+                        <div class="card glass-card flex-1 list-panel">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fa-solid fa-list icon-margin"></i>KEGG Pathway 목록</h3>
+                            </div>
+                            <div class="card-body no-padding max-height-list">
+                                <div class="kegg-search-container" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-main);">
+                                    <input type="text" id="kegg-search-gene" placeholder="경로 내 유전자 검색 (Symbol/ORF)..." class="input-text" style="width: 100%; height: 34px; font-size: 13px; border-radius: 6px; padding: 6px 12px; border: 1px solid var(--border-color); outline: none; box-sizing: border-box;">
+                                </div>
+                                <ul class="kegg-list" id="kegg-pathway-list">
+                                    <!-- Populated dynamically -->
+                                    <li class="loading-item">경로 데이터를 불러오고 있습니다...</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Pathway Map View -->
+                        <div class="card glass-card flex-2 map-panel">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title" id="kegg-map-title">KEGG Pathway Map</h3>
+                                <div style="display: flex; gap: 12px; align-items: center;">
+                                    <div class="kegg-legend" style="margin-bottom: 0;">
+                                        <span class="legend-item"><span class="legend-box up-box"></span> 발현 증가 (Mutant Up)</span>
+                                        <span class="legend-item"><span class="legend-box down-box"></span> 발현 감소 (Mutant Down)</span>
+                                        <span class="legend-item"><span class="legend-box no-box"></span> 변화 없음 / 미매칭</span>
+                                    </div>
+                                    <div style="display: flex; gap: 8px; align-items: center; border-left: 1px solid var(--border-color); padding-left: 12px;">
+                                        <button class="btn btn-secondary btn-export" id="btn-export-kegg-jpg" title="JPG 이미지로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
+                                        <button class="btn btn-secondary btn-export" id="btn-export-kegg-pdf" title="PDF 파일로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body map-body-container" id="kegg-map-container">
+                                <div class="no-pathway-selected">
+                                    <i class="fa-solid fa-diagram-project map-big-icon"></i>
+                                    <p>왼쪽 목록에서 보고 싶은 KEGG Pathway를 선택하세요.</p>
+                                    <p class="sub-hint">유전자의 발현 변화량($\log_2\text{FC}$)에 따라 실시간으로 노드 색상이 맵핑되어 표시됩니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 6: GO Enrichment -->
+                <section class="tab-pane" id="go-tab">
+                    <div class="card glass-card">
+                        <div class="card-header flex-header">
+                            <h3 class="card-title">Gene Ontology Enrichment (유전자 온톨로지 농축 분석)</h3>
+                            <div class="go-controls" style="display: flex; gap: 8px; align-items: center;">
+                                <label for="go-direction">분석 대상 유전자군:</label>
+                                <select id="go-direction" class="input-select inline-select">
+                                    <option value="up">발현 증가 유전자 (Upregulated DEGs)</option>
+                                    <option value="down">발현 감소 유전자 (Downregulated DEGs)</option>
+                                </select>
+                                <button class="btn btn-primary" id="run-go-btn">Enrichment 분석 실행</button>
+                                <div style="display: flex; gap: 6px; align-items: center; border-left: 1px solid var(--border-color); padding-left: 10px; margin-left: 4px;">
+                                    <button class="btn btn-secondary btn-export" id="btn-export-go-jpg" title="차트 JPG 이미지로 내보내기" style="padding: 4px 8px; font-size: 11px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
+                                    <button class="btn btn-secondary btn-export" id="btn-export-go-pdf" title="차트 PDF 파일로 내보내기" style="padding: 4px 8px; font-size: 11px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert-box mb-20">
+                                <i class="fa-solid fa-info alert-icon"></i>
+                                <p class="alert-text">선택한 유전자군에 대해 <strong>SGD Yeast GO Slim</strong> 데이터셋을 기반으로 Hypergeometric test(초기하 분포 통계 검정)를 수행하여 통계적으로 유의미한 기능 범주를 도출합니다.</p>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; margin-bottom: 24px;">
+                                <div class="table-responsive max-height-table">
+                                    <table class="data-table" id="go-table">
+                                        <thead>
+                                            <tr>
+                                                <th>GO ID</th>
+                                                <th>분류 (Aspect)</th>
+                                                <th>기능 범주 (Term Name)</th>
+                                                <th class="stat-header">매칭 (k)</th>
+                                                <th class="stat-header">전체 (M)</th>
+                                                <th class="stat-header">p-value</th>
+                                                <th class="stat-header">FDR (BH)</th>
+                                                <th>매칭 유전자 목록</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="go-table-body">
+                                            <tr>
+                                                <td colspan="8" class="text-center text-muted">분석 실행 버튼을 누르시면 검정이 시작됩니다.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="chart-box" id="go-chart-container" style="display: none; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px; min-height: 450px;">
+                                    <div id="go-bar-chart" style="width: 100%; height: 450px;"></div>
+                                </div>
+                            </div>
+
+                            <!-- GO Term Gene Inspector Section (Replaces Protein Domain section) -->
+                            <div class="card glass-card go-inspector-card" id="go-gene-inspector-card" style="margin-top: 30px; border-top: 2px solid #6366f1;">
+                                <div class="card-header flex-header" style="background: rgba(99, 102, 241, 0.03);">
+                                    <div class="header-left">
+                                        <h3 class="card-title">
+                                            <i class="fa-solid fa-list-check icon-margin" style="color: #6366f1;"></i>
+                                            <span id="selected-go-title">GO Term 매칭 유전자 상세 분석 (GO Term Gene Inspector)</span>
+                                        </h3>
+                                        <p class="header-subtitle" id="selected-go-subtitle" style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+                                            상단 GO Enrichment 결과 테이블에서 원하는 GO ID 행을 클릭하면 해당 범주의 전체 매칭 유전자 리스트가 하단에 바인딩됩니다.
+                                        </p>
+                                    </div>
+                                    <div class="header-right flex-row gap-12 align-center">
+                                        <div class="control-group" style="margin-bottom: 0;">
+                                            <input type="text" id="search-go-inspector-gene" class="input-text" placeholder="GO 매칭 유전자 검색 (Tag/Symbol)..." style="width: 210px; height: 32px; font-size: 13px;">
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" id="btn-export-go-genes" style="padding: 6px 14px; font-size: 12px; height: 32px;" title="선택된 GO Term 유전자 리스트 엑셀 내보내기">
+                                            <i class="fa-solid fa-file-excel icon-margin" style="color: #10b981;"></i>GO 유전자 엑셀 내보내기
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive max-height-table" style="max-height: 480px;">
+                                        <table class="data-table" id="go-inspector-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Locus Tag</th>
+                                                    <th>Gene Symbol</th>
+                                                    <th class="stat-header">WT 발현량</th>
+                                                    <th class="stat-header">Mutant 발현량</th>
+                                                    <th class="stat-header">Log2FC</th>
+                                                    <th class="stat-header">FDR (p-val)</th>
+                                                    <th class="text-center">발현 상태</th>
+                                                    <th>유전자 기능 설명 (Description)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="go-inspector-table-body">
+                                                <tr>
+                                                    <td colspan="8" class="text-center text-muted" style="padding: 36px 16px;">
+                                                        <i class="fa-solid fa-hand-pointer" style="font-size: 28px; margin-bottom: 10px; color: #94a3b8; display: block;"></i>
+                                                        상단 GO 분석 테이블에서 검정 결과를 확인한 후, 특정 GO ID 행을 클릭하면 전체 유전자 세부 목록이 이곳에 표출됩니다.
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 7: PCA Analysis -->
+                <section class="tab-pane" id="pca-tab">
+                    <div class="card glass-card">
+                        <div class="card-header flex-header">
+                            <h3 class="card-title">PCA (주성분 분석) - 샘플 변동성</h3>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <button class="btn btn-secondary btn-export" id="btn-export-pca-jpg" title="JPG 이미지로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
+                                <button class="btn btn-secondary btn-export" id="btn-export-pca-pdf" title="PDF 파일로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert-box mb-20">
+                                <i class="fa-solid fa-circle-info alert-icon"></i>
+                                <p class="alert-text">전체 유전자 발현 데이터를 주성분 분석(PCA)으로 차원 축소하여 WT 3개 반복구와 Mutant 3개 반복구 간의 분리도와 발현 변동성(Variance)을 시각화합니다.</p>
+                            </div>
+                            <div class="go-chart-container" style="min-height: 500px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px;">
+                                <div id="pca-scatter-chart" style="width: 100%; height: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 8: Protein Interaction & Regulatory Network -->
+                <section class="tab-pane" id="network-tab">
+                    <div class="card glass-card">
+                        <!-- Network Sub-Header for Mode Selection -->
+                        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-main);">
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary active" id="btn-net-mode-string" style="padding: 6px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px; border-radius: 6px;">
+                                    <i class="fa-solid fa-circle-nodes"></i> STRING PPI 네트워크
+                                </button>
+                                <button class="btn btn-secondary" id="btn-net-mode-tf" style="padding: 6px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px; border-radius: 6px;">
+                                    <i class="fa-solid fa-dna"></i> 전사조절(TF-Target) 네트워크
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-header flex-header" style="border-top: none;">
+                            <h3 class="card-title" id="network-tab-title">STRING-DB 단백질 상호작용 네트워크</h3>
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <!-- STRING & PPI specific controls -->
+                                <div id="string-controls-wrapper" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="network-source" style="font-size: 12px; font-weight: 600;">PPI 소스:</label>
+                                        <select id="network-source" class="form-select" style="height: 28px; padding: 2px 6px; font-size: 12px; border-color: #cbd5e1; border-radius: 4px; background: #fff;">
+                                            <option value="hybrid" selected>하이브리드 (BioGRID + STRING)</option>
+                                            <option value="biogrid">BioGRID (실험 검증 PPI)</option>
+                                            <option value="string">STRING-DB API</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="network-type" style="font-size: 12px; font-weight: 600;">상호작용 유형:</label>
+                                        <select id="network-type" class="form-select" style="height: 28px; padding: 2px 6px; font-size: 12px; border-color: #cbd5e1; border-radius: 4px; background: #fff;">
+                                            <option value="all" selected>전체 (Physical & Genetic)</option>
+                                            <option value="physical">물리적 직접결합 (Physical PPI)</option>
+                                            <option value="genetic">유전적 상호작용 (Genetic)</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="network-limit" style="font-size: 12px;">노드 개수:</label>
+                                        <select id="network-limit" class="form-select" style="height: 28px; padding: 2px 6px; font-size: 12px; border-color: #cbd5e1; border-radius: 4px;">
+                                            <option value="30">상위 30개 DEG</option>
+                                            <option value="50" selected>상위 50개 DEG</option>
+                                            <option value="100">상위 100개 DEG</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="network-score" style="font-size: 12px;">신뢰도 기준:</label>
+                                        <select id="network-score" class="form-select" style="height: 28px; padding: 2px 6px; font-size: 12px; border-color: #cbd5e1; border-radius: 4px;">
+                                            <option value="400" selected>보통 (0.40)</option>
+                                            <option value="700">높음 (0.70)</option>
+                                            <option value="900">매우 높음 (0.90)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-export-network-excel" style="height: 28px; font-size: 12px; padding: 4px 10px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-file-excel" style="color: #16a34a;"></i> 엑셀 내보내기
+                                </button>
+                                <button class="btn btn-primary btn-sm" id="btn-rebuild-network" style="height: 28px; font-size: 12px; padding: 4px 10px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-arrows-rotate"></i>네트워크 갱신
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 20px;">
+                            <div class="network-container-box" style="position: relative; height: 600px; border: 1px solid var(--border-color); border-radius: 12px; background: #fafafa; overflow: hidden;">
+                                <div id="cy-network" style="width: 100%; height: 100%;"></div>
+                                <div class="kegg-legend" style="position: absolute; bottom: 12px; left: 12px; background: rgba(255, 255, 255, 0.95); padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 11px;">
+                                    <span class="legend-item"><span class="legend-box up-box"></span> 발현 증가 유전자 (Up)</span>
+                                    <span class="legend-item"><span class="legend-box down-box"></span> 발현 감소 유전자 (Down)</span>
+                                </div>
+                            </div>
+                            <div class="card glass-card" style="margin-bottom: 0; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-card); display: flex; flex-direction: column; overflow: hidden;">
+                                <div class="card-header" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); display: flex; gap: 16px; background: var(--bg-main);">
+                                    <button class="btn-subtab active" id="btn-subtab-node" style="background: none; border: none; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 4px;">상세 정보</button>
+                                    <button class="btn-subtab" id="btn-subtab-tflist" style="background: none; border: none; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-muted); padding-bottom: 4px; display: none;">TF 분석 목록</button>
+                                </div>
+                                <div class="card-body" id="network-side-body" style="padding: 16px; font-size: 13px; color: #475569; overflow-y: auto; flex: 1;">
+                                    <div id="network-node-details">
+                                        <p class="text-center text-muted" style="margin-top: 100px;">네트워크에서 유전자 노드를 클릭하시면 상세 기능 설명이 여기에 표시됩니다.</p>
+                                    </div>
+                                    <div id="network-tf-list-container" style="display: none; height: 100%;">
+                                        <p class="text-center text-muted" style="margin-top: 100px;">TF 조절 데이터를 집계하고 있습니다...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 9: GSEA Enrichment -->
+                <section class="tab-pane" id="gsea-tab">
+                    <div class="card glass-card">
+                        <div class="card-header flex-header">
+                            <h3 class="card-title">GSEA 스타일 랭킹 기반 농축 분석 (GSEA Running Score)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert-box mb-20">
+                                <i class="fa-solid fa-circle-info alert-icon"></i>
+                                <p class="alert-text">전체 유전자를 발현 변화량(Log2FC) 순위로 정렬한 상태에서 특정 GO 범주가 상단(증가) 또는 하단(감소)에 유의미하게 쏠려있는지 <strong>Enrichment Score Running Curve</strong>로 정밀 분석합니다.</p>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 24px;">
+                                <div class="card glass-card" style="margin-bottom: 0; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-card); display: flex; flex-direction: column;">
+                                    <div class="card-header" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color);">
+                                        <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0;"><i class="fa-solid fa-list icon-margin"></i>분석 대상 유전자 세트 목록</h4>
+                                    </div>
+                                    <div style="padding: 12px; border-bottom: 1px solid var(--border-color); display: flex; gap: 8px;">
+                                        <input type="text" id="gsea-search" placeholder="기능 명칭 검색..." style="width: 100%; height: 28px; padding: 2px 8px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                    </div>
+                                    <div id="gsea-terms-list" style="overflow-y: auto; max-height: 480px; flex: 1; padding: 6px;">
+                                        <!-- Will be populated dynamically -->
+                                        <p class="text-center text-muted" style="padding: 20px 0;">데이터 분석 대기 중...</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 20px;">
+                                    <div class="chart-box" style="background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px; min-height: 380px;">
+                                        <div id="gsea-running-plot" style="width: 100%; height: 350px;"></div>
+                                    </div>
+                                    <div class="chart-box" style="background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px; min-height: 150px;">
+                                        <div id="gsea-barcode-plot" style="width: 100%; height: 120px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 10: Motif Discovery -->
+                <section class="tab-pane" id="motif-tab">
+                    <div class="card glass-card">
+                        <div class="card-header flex-header">
+                            <h3 class="card-title">Promoter Sequence Motif Discovery (프로모터 모티프 분석)</h3>
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <div class="control-group" style="margin-bottom: 0;">
+                                    <label for="motif-len-select" style="font-size: 12px;">모티프 길이:</label>
+                                    <select id="motif-len-select" class="form-select" style="height: 28px; padding: 2px 6px; font-size: 12px; border-color: #cbd5e1; border-radius: 4px;">
+                                        <option value="6">6 bp</option>
+                                        <option value="8" selected>8 bp</option>
+                                        <option value="10">10 bp</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary btn-sm" id="btn-run-motif" style="height: 28px; font-size: 12px; padding: 4px 10px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>모티프 분석 실행
+                                </button>
+                                <div style="display: flex; gap: 6px; align-items: center; border-left: 1px solid var(--border-color); padding-left: 10px; margin-left: 4px;">
+                                    <button class="btn btn-secondary btn-export" id="btn-export-motif-jpg" title="차트 JPG 이미지로 내보내기" style="padding: 4px 8px; font-size: 11px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
+                                    <button class="btn btn-secondary btn-export" id="btn-export-motif-pdf" title="차트 PDF 파일로 내보내기" style="padding: 4px 8px; font-size: 11px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body" style="display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 24px;">
+                            <div class="alert-box-container" style="display: flex; flex-direction: column; gap: 15px;">
+                                <div class="alert-box" style="margin-bottom: 0;">
+                                    <i class="fa-solid fa-circle-info alert-icon"></i>
+                                    <p class="alert-text" style="font-size: 12px; line-height: 1.4;">상위 발현 유전자들의 프로모터 상류(TSS 기준 -500bp ~ +50bp) 서열을 스캔하여, Gibbs Sampling 알고리즘으로 가장 고농축된 모티프 합의 서열(Consensus Sequence)을 도출합니다.</p>
+                                </div>
+                                <div class="card glass-card" style="border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-card); padding: 16px; margin-bottom: 0;">
+                                    <h4 style="font-size: 13px; font-weight: 600; color: #1e293b; margin-bottom: 12px;"><i class="fa-solid fa-square-poll-vertical icon-margin"></i>분석 결과 요약</h4>
+                                    <div style="font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 8px;">
+                                        <p><strong>도출된 모티프 (Consensus):</strong> <span id="motif-consensus-text" style="font-family: monospace; font-weight: bold; font-size: 14px; color: #6366f1; background: #e0e7ff; padding: 2px 6px; border-radius: 4px;">N/A</span></p>
+                                        <p><strong>정보량 점수 (Entropy Score):</strong> <span id="motif-score-text" style="font-weight: bold; color: #1e293b;">N/A</span></p>
+                                        <p class="text-muted" style="font-size: 11px; margin-top: 5px; line-height: 1.3;">* 오른쪽 염기서열 로고(Sequence Logo)의 높이가 클수록 해당 포지션에서 특정 염기가 발견될 확률 및 정보 강도가 높음을 나타냅니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-box" style="background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px; min-height: 400px; display: flex; align-items: center; justify-content: center; position: relative;">
+                                <div id="motif-logo-chart" style="width: 100%; height: 380px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 10: Advanced Strain Analysis Tools -->
+                <section class="tab-pane" id="advanced-tab">
+                    <!-- Subtab Navigation for Advanced Analysis -->
+                    <div class="advanced-subtabs-nav" style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                        <button class="subtab-btn active" id="btn-subtab-tf" style="padding: 8px 16px; font-weight: 500; font-size: 13px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-microscope" style="color: #6366f1;"></i>전사인자(TF) 조절망 분석
+                        </button>
+                        <button class="subtab-btn" id="btn-subtab-bottleneck" style="padding: 8px 16px; font-weight: 500; font-size: 13px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-shuffle" style="color: #10b981;"></i>대사 경로 병목 진단
+                        </button>
+                        <button class="subtab-btn" id="btn-subtab-stress" style="padding: 8px 16px; font-weight: 500; font-size: 13px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-gauge" style="color: #ef4444;"></i>균주 스트레스 저항성 판정
+                        </button>
+                        <button class="subtab-btn" id="btn-subtab-reporter" style="padding: 8px 16px; font-weight: 500; font-size: 13px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-flask" style="color: #8b5cf6;"></i>리포터 대사물질 분석
+                        </button>
+                    </div>
+
+                    <!-- Subtab 1: TF Activity Area -->
+                    <div id="subtab-tf-area" class="advanced-subtab-content">
+                        <div class="card glass-card" style="margin-bottom: 20px;">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title"><i class="fa-solid fa-sitemap icon-margin"></i>Master 전사인자(TF) 활성 추론</h3>
+                                <button class="btn btn-primary" id="btn-run-tf-analysis"><i class="fa-solid fa-play"></i> TF 활성 분석 실행</button>
+                            </div>
+                        </div>
+                        <!-- Guide Panel -->
+                        <div class="guide-panel" style="margin-bottom: 20px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; line-height: 1.5; color: #475569;">
+                            <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                                <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-circle-info" style="color: #6366f1; margin-right: 4px;"></i>분석 용도:</span>
+                                <span>DEG 목록과 전사 조절 관계 DB(YEASTRACT)를 교차 분석하여, 특정 전사인자(TF)의 하위 표적 유전자들이 변이 균주에서 통계적으로 유의미하게 변화했는지 파악하고 TF 활성 증감을 추론합니다.</span>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-chart-line" style="color: #10b981; margin-right: 4px;"></i>해석 방법:</span>
+                                <span><b>활성도 지수(PSRS Score)</b>가 양수(+)이면 해당 TF의 조절망이 활성화(Activated)되었음을, 음수(-)이면 억제(Repressed)되었음을 뜻합니다. 각 막대를 클릭하면 개별 표적 DEG 유전자 리스트와 유의성(Fisher's p-value)을 확인할 수 있습니다.</span>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px;">
+                            <!-- Left: TF Score Bar Chart -->
+                            <div class="card glass-card" style="padding: 16px;">
+                                <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 12px;"><i class="fa-solid fa-chart-column icon-margin"></i>전사인자 활성도 지수 (Activated vs Repressed)</h4>
+                                <div id="tf-activity-chart" style="width: 100%; height: 450px; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px;">
+                                    분석 실행 버튼을 누르면 전사 조절망 활성 랭킹이 시각화됩니다.
+                                </div>
+                            </div>
+                            <!-- Right: Target DEG Details -->
+                            <div class="card glass-card" style="padding: 16px; display: flex; flex-direction: column;">
+                                <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 8px;"><i class="fa-solid fa-list icon-margin"></i>선택된 TF의 조절 대상 DEG 유전자 목록</h4>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="tf-selected-desc">차트의 전사인자 막대를 클릭하면 세부 조절 유전자 정보가 여기에 표시됩니다.</p>
+                                <div style="flex-grow: 1; overflow-y: auto; max-height: 400px; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; background: #fafafa;" id="tf-target-list-container">
+                                    <div style="text-align: center; color: #94a3b8; padding-top: 50px; font-size: 12px;">선택된 유전자가 없습니다.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 2: Metabolic Bottleneck Area -->
+                    <div id="subtab-bottleneck-area" class="advanced-subtab-content" style="display: none;">
+                        <div class="card glass-card" style="margin-bottom: 20px;">
+                            <div class="card-header flex-header" style="flex-wrap: wrap; gap: 12px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <h3 class="card-title" style="margin-bottom: 0;"><i class="fa-solid fa-road-barrier icon-margin"></i>대사 경로 병목 지점 예측</h3>
+                                    <select id="bottleneck-pathway-select" class="input-select" style="height: 32px; font-size: 12px; padding: 2px 8px; width: 220px; border-color: #cbd5e1;">
+                                        <!-- Will populate dynamically -->
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" id="btn-run-bottleneck"><i class="fa-solid fa-magnifying-glass"></i> 병목 구간 스캔</button>
+                            </div>
+                            <div class="card-body">
+                                <!-- Guide Panel -->
+                                <div class="guide-panel" style="margin-bottom: 16px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; line-height: 1.5; color: #475569;">
+                                    <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                                        <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-circle-info" style="color: #10b981; margin-right: 4px;"></i>분석 용도:</span>
+                                        <span>선택된 KEGG 대사 경로(Pathway)상에 존재하는 유전자들의 발현 변화를 추적하여 대사 흐름을 지연시키는 속도 제한 단계(Rate-limiting step)의 병목 지점을 진단합니다.</span>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-chart-line" style="color: #10b981; margin-right: 4px;"></i>해석 방법:</span>
+                                        <span><b>High Severity (빨간색)</b>는 변이 균주에서 발현량이 현저히 저하(Log2FC ≤ -0.8)되어 대사 반응 속도를 저해하므로 1순위 상시 과발현 개량 대상입니다. <b>Medium Severity (노란색)</b>는 WT/Mutant 모두에서 발현 절대량이 전체 전사체의 하위 25% 이하인 유전자로 발현량 보강이 추천됩니다.</span>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" style="max-height: 380px; border: 1px solid var(--border-color); border-radius: 6px;">
+                                    <table class="data-table" id="bottleneck-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Locus Tag</th>
+                                                <th>Gene Symbol</th>
+                                                <th>WT 평균</th>
+                                                <th>Mutant 평균</th>
+                                                <th>Log2 FC</th>
+                                                <th>병목 의심 요인</th>
+                                                <th>의심 수준</th>
+                                                <th style="width: 45%;">대사 설계 추천 개량 가이드</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bottleneck-table-body">
+                                            <tr>
+                                                <td colspan="8" style="text-align: center; color: #94a3b8; padding: 40px 0; font-size: 12px;">원하는 대사 경로를 선택한 뒤 [병목 구간 스캔] 버튼을 실행해 주세요.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 3: Stress Spectrum Area -->
+                    <div id="subtab-stress-area" class="advanced-subtab-content" style="display: none;">
+                        <div class="card glass-card" style="margin-bottom: 20px;">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title"><i class="fa-solid fa-shield-halved icon-margin"></i>균주 환경 스트레스 저항 스펙트럼</h3>
+                                <button class="btn btn-primary" id="btn-run-stress-prediction"><i class="fa-solid fa-play"></i> 스트레스 스펙트럼 판정</button>
+                            </div>
+                        </div>
+                        <!-- Guide Panel -->
+                        <div class="guide-panel" style="margin-bottom: 20px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; line-height: 1.5; color: #475569;">
+                            <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                                <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-circle-info" style="color: #ef4444; margin-right: 4px;"></i>분석 용도:</span>
+                                <span>산업 공정 중 마주하는 6대 환경 스트레스(열, 에탄올, 삼투압, 영양기아, 산화, 약산) 관련 마커 전사체 발현 시그니처를 연산하여 변이 균주의 환경 저항 스펙트럼 강도를 예측합니다.</span>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-chart-line" style="color: #10b981; margin-right: 4px;"></i>해석 방법:</span>
+                                <span>야생형(WT)을 기준점 0(빨간색 영역)으로 할 때, 지수(PSRS Score)가 <b>+1.5 이상(파란색 영역 확장)</b>이면 저항성 향상(Resistant)을 의미하고, <b>-1.5 이하(안쪽 수축)</b>이면 스트레스 감수성 취약(Sensitive)으로 판정합니다.</span>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <!-- Left: Radar Chart -->
+                            <div class="card glass-card" style="padding: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                                    <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0;"><i class="fa-solid fa-compass icon-margin"></i>스트레스 저항 예측 인덱스 (PSRS Score)</h4>
+                                    <div style="display: flex; gap: 6px; align-items: center;" id="stress-toggle-container">
+                                        <button class="btn btn-toggle active" id="btn-stress-toggle-wt" style="padding: 4px 10px; font-size: 11px; border-radius: 4px; display: flex; align-items: center; gap: 6px; height: 26px; border: 1px solid var(--border-color); background: #ffffff;">
+                                            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #ef4444;"></span>야생형 (WT)
+                                        </button>
+                                        <button class="btn btn-toggle active" id="btn-stress-toggle-mut" style="padding: 4px 10px; font-size: 11px; border-radius: 4px; display: flex; align-items: center; gap: 6px; height: 26px; border: 1px solid var(--border-color); background: #ffffff;">
+                                            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #6366f1;"></span>변이주 (Mutant)
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="stress-radar-chart" style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px;">
+                                    판정 실행 버튼을 누르면 6대 스트레스 방사형 차트가 렌더링됩니다.
+                                </div>
+                            </div>
+                            <!-- Right: Diagnosis Report -->
+                            <div class="card glass-card" style="padding: 16px; display: flex; flex-direction: column;">
+                                <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 12px;"><i class="fa-solid fa-clipboard-check icon-margin"></i>균주 종합 표현형 진단서 리포트</h4>
+                                <div style="flex-grow: 1; overflow-y: auto; max-height: 400px; display: flex; flex-direction: column; gap: 12px;" id="stress-report-container">
+                                    <div style="text-align: center; color: #94a3b8; padding-top: 100px; font-size: 12px;">분석된 리포트가 존재하지 않습니다.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 4: Reporter Metabolites Area -->
+                    <div id="subtab-reporter-area" class="advanced-subtab-content" style="display: none;">
+                        <div class="card glass-card" style="margin-bottom: 20px;">
+                            <div class="card-header flex-header">
+                                <h3 class="card-title"><i class="fa-solid fa-circle-nodes icon-margin"></i>리포터 대사물질 (Reporter Metabolites) 분석</h3>
+                                <button class="btn btn-primary" id="btn-run-reporter"><i class="fa-solid fa-play"></i> 리포터 대사산물 스캔</button>
+                            </div>
+                        </div>
+                        <!-- Guide Panel -->
+                        <div class="guide-panel" style="margin-bottom: 20px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; line-height: 1.5; color: #475569;">
+                            <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                                <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-circle-info" style="color: #8b5cf6; margin-right: 4px;"></i>분석 용도:</span>
+                                <span>효모의 중심/아미노산 대사 네트워크와 연계하여, 전사체 변화(P-value)를 바탕으로 발현 분포의 섭동이 가장 높게 관측된 대사 물질 핫스팟(Reporter Metabolite)을 탐지합니다.</span>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-chart-line" style="color: #10b981; margin-right: 4px;"></i>해석 방법:</span>
+                                <span><b>Reporter Score (Z-score)</b>가 높을수록 해당 대사 물질 주변의 생합성/분해 유전자군 발현이 무작위 상태 대비 유의하게 요동쳤음을 의미합니다. 차트에서 대사산물을 클릭하면 연계된 반응 유전자의 실제 발현 비율(Log2FC) 및 대사 제어 방향을 테이블에서 진단할 수 있습니다.</span>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px;">
+                            <!-- Left: Score Chart -->
+                            <div class="card glass-card" style="padding: 16px;">
+                                <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 12px;"><i class="fa-solid fa-chart-bar icon-margin"></i>리포터 대사물질 섭동 지수 (Reporter Z-score)</h4>
+                                <div id="reporter-score-chart" style="width: 100%; height: 450px; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px;">
+                                    스캔 실행 버튼을 누르면 리포터 대사산물 랭킹이 시각화됩니다.
+                                </div>
+                            </div>
+                            <!-- Right: Associated Reaction Genes Table -->
+                            <div class="card glass-card" style="padding: 16px; display: flex; flex-direction: column;">
+                                <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 4px;"><i class="fa-solid fa-clipboard-list icon-margin"></i>연계 반응 및 조절 유전자 세부 현황</h4>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="reporter-selected-desc">대사산물 막대를 선택하면 해당 물질의 구획 정보와 관련 유전자 리스트가 아래에 로드됩니다.</p>
+                                <div style="flex-grow: 1; overflow-y: auto; max-height: 400px; border: 1px solid var(--border-color); border-radius: 6px; padding: 0;">
+                                    <table class="data-table" style="font-size: 12px; margin: 0; width: 100%; border: none;" id="reporter-detail-table">
+                                        <thead>
+                                            <tr style="background: #fafafa; border-bottom: 1px solid var(--border-color);">
+                                                <th style="padding: 8px;">Gene Symbol</th>
+                                                <th style="padding: 8px;">Locus Tag</th>
+                                                <th style="padding: 8px; text-align: right;">Log2 FC</th>
+                                                <th style="padding: 8px; text-align: right;">P-value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reporter-detail-body">
+                                            <tr>
+                                                <td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px 0;">조회된 상세 정보가 없습니다.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Custom Pathway Mapping Tab -->
+                <section class="tab-pane" id="custom-pathway-tab">
+                    <div class="content-header">
+                        <div class="header-title-area">
+                            <h2 class="content-title">사용자맞춤 pathway</h2>
+                            <p class="content-subtitle">직접 정의한 글루타치온 생산 및 연계 대사 경로의 RNA-seq 발현량 분포 진단</p>
+                        </div>
+                    </div>
+
+                    <!-- Guide Panel -->
+                    <div class="card glass-card info-card" style="margin-bottom: 24px;">
+                        <div style="margin-bottom: 8px; display: flex; gap: 8px;">
+                            <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-circle-question" style="color: #6366f1; margin-right: 4px;"></i>분석 용도:</span>
+                            <span>설계한 글루타치온 생산 경로 및 관련 중심 대사 경로 상에서 병목(Bottleneck) 유전자와 유의하게 발현이 변동한 조절 인자들의 공간적 분포를 이미지 맵 위에서 직관적으로 파악합니다.</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <span style="font-weight: 600; color: #0f172a; min-width: 80px;"><i class="fa-solid fa-chart-line" style="color: #10b981; margin-right: 4px;"></i>해석 방법:</span>
+                            <span>유전자명 위에 표시된 색상 뱃지는 <b>Log2 Fold Change (Log2FC)</b> 강도를 의미합니다. 붉은색(과발현), 푸른색(발현 억제)으로 표시되며, 마우스 오버 시 각 동위효소(Isoforms)의 개별 WT/Mutant 발현량 값과 P-value를 상세 툴팁으로 실시간 진단할 수 있습니다.</span>
+                        </div>
+                    </div>
+
+                    <!-- Layout: Left (Pathway Canvas), Right (Legend & Statistics) -->
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px;">
+                        <div class="card glass-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; overflow: hidden; position: relative;">
+                            
+                            <!-- Control & Legend Header -->
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 6px;">
+                                            <i class="fa-solid fa-route" style="color: #4f46e5;"></i>대사 경로 맵:
+                                        </h4>
+                                        <select id="pathway-map-select" class="form-select" style="width: 180px; font-size: 12px; height: 28px; padding: 2px 8px; border: 1px solid var(--border-color); border-radius: 4px; background: #ffffff;">
+                                            <!-- Options will be populated dynamically -->
+                                        </select>
+                                        
+                                        <button class="btn btn-secondary btn-sm" id="btn-create-map" title="새 맵 만들기" style="padding: 4px 8px; font-size: 11px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                            <i class="fa-solid fa-folder-plus" style="color: #10b981;"></i>새 맵
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-rename-map" title="맵 이름 변경" style="padding: 4px 8px; font-size: 11px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                            <i class="fa-solid fa-pen-to-square" style="color: #f59e0b;"></i>이름 변경
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-delete-map" title="현재 맵 삭제" style="padding: 4px 8px; font-size: 11px; height: 28px; display: flex; align-items: center; gap: 4px; color: #ef4444; border-color: rgba(239,68,68,0.2);">
+                                            <i class="fa-solid fa-folder-minus"></i>맵 삭제
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-refresh-gsh-pathway" style="padding: 4px 8px; font-size: 11px; height: 28px; display: flex; align-items: center; gap: 4px;">
+                                            <i class="fa-solid fa-arrows-rotate"></i>맵 초기화
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" id="btn-save-gsh-pathway" title="현재 대사 경로의 노드, 화살표, 유전자 배지 위치 영구 저장" style="padding: 4px 10px; font-size: 11px; height: 28px; display: flex; align-items: center; gap: 4px; background: #10b981; border-color: #10b981; color: white; font-weight: 600;">
+                                            <i class="fa-solid fa-floppy-disk"></i>저장
+                                        </button>
+                                        
+                                        <div class="edit-mode-toggle-container" style="display: flex; align-items: center; gap: 8px; margin-left: 5px; border-left: 1px solid var(--border-color); padding-left: 12px;">
+                                            <span style="font-size: 12px; font-weight: 600; color: #475569;">편집 모드</span>
+                                            <label class="switch" style="position: relative; display: inline-block; width: 34px; height: 18px; margin: 0;">
+                                                <input type="checkbox" id="toggle-edit-mode" style="opacity: 0; width: 0; height: 0;">
+                                                <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 18px;"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Heatmap color scale legend -->
+                                    <div style="display: flex; align-items: center; gap: 16px; font-size: 12px; color: #64748b;">
+                                        <div style="display: flex; align-items: center; gap: 4px;">
+                                            <span style="display: inline-block; width: 12px; height: 12px; background: rgba(239, 68, 68, 0.7); border-radius: 3px;"></span>
+                                            <span>과발현 (Log2FC > 0.5)</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 4px;">
+                                            <span style="display: inline-block; width: 12px; height: 12px; background: rgba(99, 102, 241, 0.7); border-radius: 3px;"></span>
+                                            <span>발현 억제 (Log2FC < -0.5)</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 4px;">
+                                            <span style="display: inline-block; width: 12px; height: 12px; background: rgba(148, 163, 184, 0.3); border-radius: 3px;"></span>
+                                            <span>유의차 없음</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Dynamic Editor Toolbar (Hidden by default) -->
+                                <div id="gsh-editor-toolbar" style="display: none; align-items: center; gap: 6px; padding: 6px 10px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; flex-wrap: wrap; animation: fadeIn 0.2s ease; width: 100%;">
+                                    <button class="btn btn-secondary btn-sm edit-tool-btn" id="tool-add-node" title="대사산물(노드) 추가" style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-circle-plus" style="color: #06b6d4;"></i>노드 추가
+                                    </button>
+                                    
+                                    <!-- Arrow connecting tool with options -->
+                                    <button class="btn btn-secondary btn-sm edit-tool-btn" id="tool-add-arrow" title="화살표(연결선) 추가" style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-arrow-right" style="color: #6366f1;"></i>화살표 연결
+                                    </button>
+                                    <div id="arrow-options-panel" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; background: #e2e8f0; border-radius: 4px; font-size: 10px; font-weight: 500;">
+                                        <span style="color: #475569;">선:</span>
+                                        <label style="display: inline-flex; align-items: center; gap: 2px; cursor: pointer; margin: 0;">
+                                            <input type="radio" name="arrow-type" value="straight" checked style="margin: 0; transform: scale(0.85);"> 직선
+                                        </label>
+                                        <label style="display: inline-flex; align-items: center; gap: 2px; cursor: pointer; margin: 0; margin-left: 4px;">
+                                            <input type="radio" name="arrow-type" value="curved" style="margin: 0; transform: scale(0.85);"> 곡선
+                                        </label>
+                                        <span style="height: 10px; width: 1px; background: #cbd5e1; margin: 0 4px;"></span>
+                                        <span style="color: #475569;">방향:</span>
+                                        <label style="display: inline-flex; align-items: center; gap: 2px; cursor: pointer; margin: 0;">
+                                            <input type="radio" name="arrow-dir" value="forward" checked style="margin: 0; transform: scale(0.85);"> 단방향
+                                        </label>
+                                        <label style="display: inline-flex; align-items: center; gap: 2px; cursor: pointer; margin: 0; margin-left: 4px;">
+                                            <input type="radio" name="arrow-dir" value="both" style="margin: 0; transform: scale(0.85);"> 양방향
+                                        </label>
+                                    </div>
+                                    
+                                    <button class="btn btn-secondary btn-sm edit-tool-btn" id="tool-add-gene" title="유전자 배지 추가" style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-dna" style="color: #ec4899;"></i>유전자 추가
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm edit-tool-btn" id="tool-delete" title="요소 삭제 도구" style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-trash-can" style="color: #ef4444;"></i>삭제 도구
+                                    </button>
+                                    
+                                    <span style="height: 16px; width: 1px; background: var(--border-color); margin: 0 4px;"></span>
+                                    
+                                    <!-- Undo / Redo Tools -->
+                                    <button class="btn btn-secondary btn-sm" id="btn-gsh-undo" title="이전 작업으로 되돌리기 (Ctrl+Z)" disabled style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-rotate-left" style="color: #6366f1;"></i>되돌리기
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-gsh-redo" title="다시 실행 (Ctrl+Y / Ctrl+Shift+Z)" disabled style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-rotate-right" style="color: #6366f1;"></i>다시실행
+                                    </button>
+                                    
+                                    <!-- Node Align Tools -->
+                                    <span style="color: #475569; font-size: 11px; font-weight: 500;">정렬:</span>
+                                    <div style="display: inline-flex; align-items: center; gap: 2px;">
+                                        <button class="btn btn-secondary btn-sm" id="btn-align-left" title="왼쪽 정렬" style="font-size: 10px; padding: 2px 6px; height: 22px; width: 22px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-align-left"></i></button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-align-center" title="수직 가운데 정렬" style="font-size: 10px; padding: 2px 6px; height: 22px; width: 22px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-align-center"></i></button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-align-right" title="오른쪽 정렬" style="font-size: 10px; padding: 2px 6px; height: 22px; width: 22px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-align-right"></i></button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-align-top" title="위쪽 정렬" style="font-size: 10px; padding: 2px 6px; height: 22px; width: 22px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-arrow-up-wide-short"></i></button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-align-middle" title="수평 가운데 정렬" style="font-size: 10px; padding: 2px 6px; height: 22px; width: 22px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-align-justify"></i></button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-align-bottom" title="아래쪽 정렬" style="font-size: 10px; padding: 2px 6px; height: 22px; width: 22px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-arrow-down-wide-short"></i></button>
+                                    </div>
+                                    
+                                    <span style="height: 16px; width: 1px; background: var(--border-color); margin: 0 4px;"></span>
+                                    
+                                    <!-- Node Color Theme Picker -->
+                                    <span style="color: #475569; font-size: 11px; font-weight: 500;">색상:</span>
+                                    <div style="display: inline-flex; align-items: center; gap: 3px; background: #e2e8f0; padding: 3px; border-radius: 4px;">
+                                        <button class="node-color-btn" data-color="blue" title="파랑 (기본)" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #3b82f6; background: #eff6ff; cursor: pointer; padding: 0;"></button>
+                                        <button class="node-color-btn" data-color="green" title="초록" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #10b981; background: #ecfdf5; cursor: pointer; padding: 0;"></button>
+                                        <button class="node-color-btn" data-color="red" title="빨강" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #ef4444; background: #fef2f2; cursor: pointer; padding: 0;"></button>
+                                        <button class="node-color-btn" data-color="yellow" title="노랑" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #f59e0b; background: #fffbeb; cursor: pointer; padding: 0;"></button>
+                                        <button class="node-color-btn" data-color="purple" title="보라" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #8b5cf6; background: #faf5ff; cursor: pointer; padding: 0;"></button>
+                                        <button class="node-color-btn" data-color="gray" title="회색" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #64748b; background: #f8fafc; cursor: pointer; padding: 0;"></button>
+                                    </div>
+                                    
+                                    <span style="height: 16px; width: 1px; background: var(--border-color); margin: 0 4px;"></span>
+                                    
+                                    <!-- Canvas size input controls -->
+                                    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #475569;">
+                                        <span>크기:</span>
+                                        <input type="number" id="canvas-width-input" value="1024" style="width: 44px; padding: 2px 4px; font-size: 10px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; height: 22px; background: #ffffff;">
+                                        <span>×</span>
+                                        <input type="number" id="canvas-height-input" value="580" style="width: 44px; padding: 2px 4px; font-size: 10px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; height: 22px; background: #ffffff;">
+                                        <button class="btn btn-secondary btn-sm" id="btn-apply-size" style="padding: 2px 6px; font-size: 10px; height: 22px; line-height: 1.2; font-weight: 600;">적용</button>
+                                    </div>
+                                    
+                                    <span style="height: 16px; width: 1px; background: var(--border-color); margin: 0 4px;"></span>
+                                    
+                                    <button class="btn btn-secondary btn-sm" id="btn-export-layout" title="맵 JSON 파일로 저장" style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-file-export"></i>내보내기
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-import-layout-trigger" title="맵 JSON 파일 불러오기" style="font-size: 11px; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-file-import"></i>불러오기
+                                    </button>
+                                    <input type="file" id="file-import-layout" accept=".json" style="display: none;">
+                                </div>
+                            </div>
+
+                            <!-- Interactive Image Canvas Container -->
+                            <div class="gsh-pathway-wrapper" style="position: relative; width: 100%; max-width: 1400px; height: 750px; overflow: hidden; border: 1px solid var(--border-color); border-radius: 8px; background: #ffffff; cursor: grab; user-select: none;">
+                                <!-- Selection Marquee Overlay Box -->
+                                <div id="selection-marquee" style="display: none;"></div>
+                                
+                                <!-- Zoom / Pan Control Panel -->
+                                <div style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 6px;">
+                                    <button class="btn btn-secondary btn-sm" id="btn-zoom-in" title="확대" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; background: rgba(255, 255, 255, 0.9); border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #475569;">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-zoom-out" title="축소" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; background: rgba(255, 255, 255, 0.9); border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #475569;">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-zoom-reset" title="화면 맞춤" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; background: rgba(255, 255, 255, 0.9); border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #475569;">
+                                        <i class="fa-solid fa-arrows-to-eye"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Inner content div (Height auto-fits to image aspect ratio) -->
+                                <div id="gsh-pathway-content" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                                    <svg id="gsh-pathway-svg" viewBox="0 0 1024 580" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; font-family: 'Outfit', 'Inter', -apple-system, sans-serif; background: #f8fafc; overflow: visible;">
+                                      <defs>
+                                        <!-- Arrowhead markers -->
+                                        <marker id="arrowhead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                          <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                                        </marker>
+                                        <marker id="arrowhead-start" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                          <path d="M 10 1 L 0 5 L 10 9 z" fill="#475569" />
+                                        </marker>
+                                        <marker id="arrowhead-reverse" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                          <path d="M 10 1 L 0 5 L 10 9 z" fill="#475569" />
+                                        </marker>
+                                        <!-- Node glow shadow -->
+                                        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                                          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.04" />
+                                        </filter>
+                                      </defs>
+
+                                      <!-- VIEWPORT GROUP FOR CRISP VECTOR ZOOM & PAN -->
+                                      <g id="gsh-pathway-viewport">
+                                        <!-- Background Canvas -->
+                                        <rect id="gsh-bg-rect" width="1024" height="580" fill="#f8fafc" rx="8" />
+
+                                        <!-- GRID PATTERN -->
+                                        <g stroke="#cbd5e1" stroke-width="0.5" stroke-dasharray="10 10" opacity="0.15">
+                                          <path d="M 100 0 L 100 580 M 200 0 L 200 580 M 300 0 L 300 580 M 400 0 L 400 580 M 500 0 L 500 580 M 600 0 L 600 580 M 700 0 L 700 580 M 800 0 L 800 580 M 900 0 L 900 580" />
+                                          <path d="M 0 100 L 1024 100 M 0 200 L 1024 200 M 0 300 L 1024 300 M 0 400 L 1024 400 M 0 500 L 1024 500" />
+                                        </g>
+
+                                        <!-- DYNAMIC CONTENT CONTAINERS -->
+                                        <g id="gsh-pathway-arrows" stroke="#64748b" stroke-width="1.5" fill="none"></g>
+                                        <g id="gsh-pathway-nodes" font-size="11" font-weight="600" fill="#334155" text-anchor="middle"></g>
+                                        <g id="gsh-dynamic-overlay" style="pointer-events: none;"></g>
+                                      </g>
+                                    </svg>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Details Modal/Popup for Gene (Optional but neat) -->
+    <div id="gene-modal" class="modal" style="display: none;">
+        <div class="modal-content glass-card" style="max-width: 800px; width: 90%;">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2 id="modal-gene-title">Gene Name</h2>
+            <p id="modal-gene-desc" class="modal-subtitle">Gene Description</p>
+            <div id="modal-chart" class="modal-chart"></div>
+        </div>
+    </div>
+
+    <!-- jsPDF & html2canvas for PDF and Image Exporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Application JavaScript -->
+    <script src="app.js?v=25"></script>
+</body>
+</html>

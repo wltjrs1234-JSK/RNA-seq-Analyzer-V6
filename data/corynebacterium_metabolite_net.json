@@ -1,0 +1,47 @@
+{
+  "pyruvate": {
+    "name": "Pyruvate (피루브산)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl0908", "NCgl2008", "NCgl2812", "NCgl2533", "NCgl0896"]
+  },
+  "oxaloacetate": {
+    "name": "Oxaloacetate (옥살아세트산)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl0908", "NCgl2806", "NCgl0367", "NCgl0247"]
+  },
+  "2_oxoglutarate": {
+    "name": "2-Oxoglutarate (alpha-Ketoglutarate)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl1997", "NCgl1408", "NCgl1834"]
+  },
+  "l_lysine": {
+    "name": "L-Lysine (L-리신)",
+    "compartment": "Cytosol / Export",
+    "genes": ["NCgl0247", "NCgl1896", "NCgl1208", "NCgl1216"]
+  },
+  "l_glutamate": {
+    "name": "L-Glutamate (L-글루탐산)",
+    "compartment": "Cytosol / Export",
+    "genes": ["NCgl1997", "NCgl1834", "NCgl0247", "NCgl1586"]
+  },
+  "acetyl_coa": {
+    "name": "Acetyl-CoA (아세틸-CoA)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl2544", "NCgl2543", "NCgl2248", "NCgl2249", "NCgl0831"]
+  },
+  "l_threonine": {
+    "name": "L-Threonine (L-트레오닌)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl1216", "NCgl0247", "NCgl1896"]
+  },
+  "l_valine": {
+    "name": "L-Valine (L-발린)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl2008", "NCgl0908", "NCgl1208"]
+  },
+  "nadph": {
+    "name": "NADPH (환원형 환원원)",
+    "compartment": "Cytosol",
+    "genes": ["NCgl1997", "NCgl0896", "NCgl1216"]
+  }
+}
