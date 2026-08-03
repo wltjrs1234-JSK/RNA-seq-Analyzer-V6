@@ -2211,6 +2211,12 @@ function renderHeatmap() {
             const yHeatmapEnd = Math.max(0.35, 1.0 - totalTopFraction);
             const ySampleDendroStart = Math.min(0.99, yHeatmapEnd + sampleTextFraction + gapFraction);
 
+            // Calculate exact X and Y axis coordinate bounds for 1:1 pixel alignment
+            const numSamples = xLabels.length;
+            const numGenes = yLabels.length;
+            const xMin = -0.5;
+            const xMax = numSamples - 0.5;
+
             const layout = {
                 height: heatmapHeight,
                 paper_bgcolor: 'rgba(0,0,0,0)',
@@ -2220,9 +2226,10 @@ function renderHeatmap() {
                 showlegend: false,
                 
                 // Axis configurations for subplot domain partitioning
-                // X1 is for Heatmap Matrix & Top Sample Labels (directly on top of heatmap)
+                // X1 is for Heatmap Matrix & Top Sample Labels (directly attached to top edge of heatmap)
                 xaxis: {
                     domain: [xHeatmapStart, 1.0],
+                    range: [xMin, xMax],
                     side: 'top',
                     tickangle: -45,
                     showgrid: false,
@@ -2230,9 +2237,10 @@ function renderHeatmap() {
                     tickvals: xIndices,
                     ticktext: xLabels
                 },
+                // Y1 is for Heatmap Matrix & Gene Labels (range explicitly set to remove top axis padding)
                 yaxis: {
                     domain: [0.0, yHeatmapEnd],
-                    autorange: 'reversed',
+                    range: [numGenes - 0.5, -0.5],
                     showgrid: false,
                     zeroline: false,
                     tickvals: yIndices,
@@ -2248,15 +2256,17 @@ function renderHeatmap() {
                     autorange: 'reversed' // Branch outwards towards the left
                 },
                 
-                // X3 & Y2 are for Sample Dendrogram (Top side, above sample labels)
+                // X3 & Y2 are for Sample Dendrogram (Top side, aligned 1:1 with xaxis)
                 xaxis3: {
                     domain: [xHeatmapStart, 1.0],
+                    range: [xMin, xMax],
                     showgrid: false,
                     zeroline: false,
                     showticklabels: false
                 },
                 yaxis2: {
                     domain: [ySampleDendroStart, 1.0],
+                    range: [-0.02, 1.05],
                     showgrid: false,
                     zeroline: false,
                     showticklabels: false
