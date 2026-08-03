@@ -2192,22 +2192,24 @@ function renderHeatmap() {
             const xGeneDendroEnd = Math.max(0.0, xHeatmapStart - gap);
             
             // Y-axis layouts:
-            // Heatmap occupies domain [0.0, yHeatmapEnd]
-            // Sample dendrogram occupies domain [ySampleDendroStart, 1.0]
+            // 1) Heatmap matrix: [0.0, yHeatmapEnd] -> Sample names attach directly at yHeatmapEnd
+            // 2) Blank Clearance Gap: 65px (45px rotated text height + 20px clean blank gap)
+            // 3) Sample dendrogram tree: [ySampleDendroStart, 1.0] -> 75px fixed tree height
             const marginT = 30;
             const marginB = 40;
-            const availablePlotHeight = Math.max(120, heatmapHeight - marginT - marginB);
+            const availablePlotHeight = Math.max(150, heatmapHeight - marginT - marginB);
             
-            // Dendrogram tree height (~70px) + optional top gap
-            const dendroTreePx = 70;
-            const extraGapPx = (gapRatioTop * 100) * 1.5;
+            const sampleTextClearancePx = 65; // 45px text height + 20px clean open gap
+            const dendroTreePx = 75;          // 75px top dendrogram tree height
+            const userGapPx = (gapRatioTop * 100) * 1.5;
             
-            const dendroFraction = Math.min(0.25, dendroTreePx / availablePlotHeight);
-            const gapFraction = extraGapPx / availablePlotHeight;
+            const sampleTextFraction = Math.min(0.25, sampleTextClearancePx / availablePlotHeight);
+            const dendroTreeFraction = Math.min(0.35, dendroTreePx / availablePlotHeight);
+            const gapFraction = userGapPx / availablePlotHeight;
             
-            const totalTopFraction = dendroFraction + gapFraction;
-            const yHeatmapEnd = Math.max(0.40, 1.0 - totalTopFraction);
-            const ySampleDendroStart = Math.min(0.99, yHeatmapEnd + gapFraction);
+            const totalTopFraction = sampleTextFraction + dendroTreeFraction + gapFraction;
+            const yHeatmapEnd = Math.max(0.35, 1.0 - totalTopFraction);
+            const ySampleDendroStart = Math.min(0.99, yHeatmapEnd + sampleTextFraction + gapFraction);
 
             const layout = {
                 height: heatmapHeight,
