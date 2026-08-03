@@ -1588,8 +1588,8 @@ def run_pca_analysis(payload: dict):
             s_name = sample_names[idx]
             s_group = sample_groups[idx]
             expr = float(vals[idx])
-            z_score = (expr - mean_val) / std_val
-            group_mean = wt_mean if s_group == "WT" else mut_mean
+            z_score = float((expr - mean_val) / std_val)
+            group_mean = float(wt_mean if s_group == "WT" else mut_mean)
             
             feat = [expr, z_score, log2fc, group_mean, wt_mean, mut_mean]
             point_feature_matrix.append(feat)
@@ -2435,66 +2435,7 @@ def get_pathway_map(pathway_id: str, session_id: str = None, species: str = None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"KEGG 연동 실패: {str(e)}")
 
-@app.get("/api/pca")
-def run_pca_analysis():
-    """Perform PCA (Principal Component Analysis) on WT and Mutant replicate expression matrix."""
-    if not os.path.exists(PARSED_DATA_PATH):
-        raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드하여 분석을 수행해 주세요.")
-        
-    with open(PARSED_DATA_PATH, "r", encoding="utf-8") as f:
-        genes = json.load(f)
-        
-    # We need replicates data. PCA is only valid when replicate columns exist
-    if not genes or "wt_reps" not in genes[0] or "mut_reps" not in genes[0]:
-        raise HTTPException(status_code=400, detail="PCA 분석을 위해서는 반복구(Replicate) 데이터가 필요합니다.")
-        
-    wt_rep_len = len(genes[0]["wt_reps"])
-    mut_rep_len = len(genes[0]["mut_reps"])
-    
-    samples = []
-    for i in range(wt_rep_len):
-        samples.append(f"WT_{i+1}")
-    for i in range(mut_rep_len):
-        samples.append(f"Mutant_{i+1}")
-        
-    # Build expression matrix
-    data = []
-    for gene in genes:
-        row = gene["wt_reps"] + gene["mut_reps"]
-        data.append(row)
-        
-    X = np.array(data) # shape: (n_genes, n_samples)
-    X = X.T # shape: (n_samples, n_genes)
-    
-    # Mean centering
-    mean = np.mean(X, axis=0)
-    X_centered = X - mean
-    
-    try:
-        U, S, Vt = np.linalg.svd(X_centered, full_matrices=False)
-        eigenvalues = (S ** 2) / (X.shape[0] - 1)
-        explained_variance_ratio = eigenvalues / np.sum(eigenvalues)
-        
-        pc1 = U[:, 0] * S[0]
-        pc2 = U[:, 1] * S[1]
-        
-        pca_results = []
-        for idx, sample_name in enumerate(samples):
-            pca_results.append({
-                "sample": sample_name,
-                "group": "WT" if "WT" in sample_name else "Mutant",
-                "pc1": float(pc1[idx]),
-                "pc2": float(pc2[idx])
-            })
-            
-        return {
-            "success": True,
-            "pc1_var": float(explained_variance_ratio[0]),
-            "pc2_var": float(explained_variance_ratio[1]),
-            "results": pca_results
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"PCA 연산 중 오류가 발생했습니다: {str(e)}")
+
 
 def get_yeast_ppi_data():
     """Build and cache comprehensive Yeast PPI dataset (BioGRID physical/genetic + STRING)"""
