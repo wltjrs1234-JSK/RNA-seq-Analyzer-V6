@@ -1549,10 +1549,26 @@ def run_pca_analysis(payload: dict):
             })
         loadings_out.sort(key=lambda x: x["abs_loading"], reverse=True)
         
+    gene_profiles = []
+    for g in matched_genes:
+        if has_reps:
+            vals = g["wt_reps"] + g["mut_reps"]
+        else:
+            vals = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
+        sample_dict = {sample_names[idx]: float(vals[idx]) for idx in range(len(sample_names))}
+        gene_profiles.append({
+            "gene": g.get("gene_symbol") or g.get("locus_tag"),
+            "locus_tag": g.get("locus_tag"),
+            "log2fc": round(float(g.get("log2fc", 0.0)), 2),
+            "sample_values": sample_dict
+        })
+        
     return {
         "success": True,
         "samples": samples_out,
         "loadings": loadings_out,
+        "gene_profiles": gene_profiles,
+        "sample_names": sample_names,
         "pca_info": {
             "pc1_var": round(float(var_ratios[0]), 1) if len(var_ratios) > 0 else 100.0,
             "pc2_var": round(float(var_ratios[1]), 1) if len(var_ratios) > 1 else 0.0,

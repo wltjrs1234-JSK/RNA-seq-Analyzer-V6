@@ -402,7 +402,7 @@
                             <!-- Gene Loading Contribution Card -->
                             <div class="card glass-card" id="pca-loading-card">
                                 <div class="card-header flex-header">
-                                    <h3 class="card-title"><i class="fa-solid fa-chart-bar icon-margin"></i>선택 유전자 기여도 (PC1 Gene Loading Contribution)</h3>
+                                    <h3 class="card-title" id="pca-profiles-title"><i class="fa-solid fa-chart-line icon-margin"></i>선택 유전자별 샘플 발현량 프로필 비교 (Individual Gene Expression Profiles)</h3>
                                 </div>
                                 <div class="card-body">
                                     <div id="plotly-pca-loading" class="chart-container" style="min-height: 280px;"></div>
@@ -674,28 +674,6 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Tab 7: PCA Analysis -->
-                <section class="tab-pane" id="pca-tab">
-                    <div class="card glass-card">
-                        <div class="card-header flex-header">
-                            <h3 class="card-title">PCA (주성분 분석) - 샘플 변동성</h3>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <button class="btn btn-secondary btn-export" id="btn-export-pca-jpg" title="JPG 이미지로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-image"></i> JPG</button>
-                                <button class="btn btn-secondary btn-export" id="btn-export-pca-pdf" title="PDF 파일로 내보내기" style="padding: 4px 10px; font-size: 12px; height: 32px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert-box mb-20">
-                                <i class="fa-solid fa-circle-info alert-icon"></i>
-                                <p class="alert-text">전체 유전자 발현 데이터를 주성분 분석(PCA)으로 차원 축소하여 WT 3개 반복구와 Mutant 3개 반복구 간의 분리도와 발현 변동성(Variance)을 시각화합니다.</p>
-                            </div>
-                            <div class="go-chart-container" style="min-height: 500px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px;">
-                                <div id="pca-scatter-chart" style="width: 100%; height: 500px;"></div>
                             </div>
                         </div>
                     </div>

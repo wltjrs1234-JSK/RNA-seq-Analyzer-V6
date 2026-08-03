@@ -7207,6 +7207,8 @@ function renderPCAPlot() {
         const samples = data.samples || [];
         const loadings = data.loadings || [];
         const pcaInfo = data.pca_info || {};
+        const profiles = data.gene_profiles || [];
+        const sampleNames = data.sample_names || [];
 
         // Group samples into WT vs Mutant traces
         const wtSamples = samples.filter(s => s.group === "WT");
@@ -7251,8 +7253,42 @@ function renderPCAPlot() {
             });
         }
 
+        // Add Biplot Gene Vector Traces (Arrows/Points for genes)
+        if (loadings.length > 0) {
+            // Find max absolute PC coordinate of samples to scale gene vectors
+            const maxSampleX = Math.max(...samples.map(s => Math.abs(s.pc1)), 1.0);
+            const maxSampleY = Math.max(...samples.map(s => Math.abs(s.pc2)), 1.0);
+            const maxLoadingX = Math.max(...loadings.map(l => Math.abs(l.pc1_loading)), 0.1);
+            const maxLoadingY = Math.max(...loadings.map(l => Math.abs(l.pc2_loading)), 0.1);
+
+            const scaleX = (maxSampleX * 0.8) / maxLoadingX;
+            const scaleY = (maxSampleY * 0.8) / maxLoadingY;
+
+            // Take up to 10 genes for vector display to prevent clutter
+            const topGeneLoadings = loadings.slice(0, 10);
+            
+            topGeneLoadings.forEach(l => {
+                const vecX = l.pc1_loading * scaleX;
+                const vecY = l.pc2_loading * scaleY;
+                traces.push({
+                    x: [0, vecX],
+                    y: [0, vecY],
+                    mode: 'lines+markers+text',
+                    type: 'scatter',
+                    name: `유전자: ${l.gene}`,
+                    text: ['', l.gene],
+                    textposition: 'top right',
+                    textfont: { family: 'Inter, sans-serif', size: 11, color: '#6366f1' },
+                    line: { color: '#6366f1', width: 2, dash: 'dot' },
+                    marker: { size: [0, 8], color: '#6366f1', symbol: 'circle' },
+                    showlegend: false,
+                    hovertemplate: `<b>유전자: ${l.gene}</b> (${l.locus_tag})<br>PC1 Loading: ${l.pc1_loading}<br>PC2 Loading: ${l.pc2_loading}<extra></extra>`
+                });
+            });
+        }
+
         const layout = {
-            height: 460,
+            height: 480,
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(248, 250, 252, 0.8)',
             font: { color: '#0f172a', family: 'Inter, sans-serif' },
@@ -7284,34 +7320,46 @@ function renderPCAPlot() {
         // Update PCA Title
         const titleEl = document.getElementById("pca-chart-title");
         if (titleEl) {
-            titleEl.innerHTML = `Sample PCA Plot (${pcaInfo.gene_count || 0}개 유전자 기반 주성분 분석)`;
+            titleEl.innerHTML = `Sample PCA Biplot (${pcaInfo.gene_count || 0}개 유전자 주성분 분석 & 유전자 벡터)`;
         }
 
-        // Render Gene Loading Contribution Chart
-        if (loadingDiv && loadings.length > 0) {
-            const topLoadings = loadings.slice(0, 15);
-            const loadingTrace = {
-                x: topLoadings.map(l => l.gene),
-                y: topLoadings.map(l => l.pc1_loading),
-                type: 'bar',
-                marker: {
-                    color: topLoadings.map(l => l.pc1_loading >= 0 ? '#6366f1' : '#f43f5e'),
-                    line: { color: '#312e81', width: 1 }
-                },
-                hovertemplate: '<b>%{x}</b><br>PC1 Loading: %{y:.4f}<extra></extra>'
-            };
+        // Render Individual Gene Expression Profiles Grouped Bar Chart
+        if (loadingDiv && profiles.length > 0) {
+            // Grouped Bar Chart: X-axis = Sample Names, Traces = Individual Selected Genes
+            const palette = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#3b82f6', '#ef4444'];
+            
+            const profileTraces = profiles.map((p, idx) => {
+                const yVals = sampleNames.map(sName => p.sample_values[sName] || 0.0);
+                return {
+                    x: sampleNames,
+                    y: yVals,
+                    name: `${p.gene} (Log2FC: ${p.log2fc >= 0 ? '+' : ''}${p.log2fc})`,
+                    type: 'bar',
+                    marker: {
+                        color: palette[idx % palette.length]
+                    },
+                    hovertemplate: `<b>유전자: ${p.gene}</b> (%{x})<br>발현량: %{y:.2f}<br>Log2FC: ${p.log2fc}<extra></extra>`
+                };
+            });
 
-            const loadingLayout = {
-                height: 280,
+            const profileLayout = {
+                height: 320,
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 font: { color: '#0f172a', family: 'Inter, sans-serif' },
-                margin: { t: 30, r: 20, b: 60, l: 50 },
-                xaxis: { tickangle: -45, title: '유전자 (Gene Symbol / Locus Tag)' },
-                yaxis: { title: 'PC1 Loading Score', zeroline: true, zerolinecolor: '#cbd5e1' }
+                margin: { t: 30, r: 20, b: 60, l: 60 },
+                barmode: 'group',
+                xaxis: { title: '샘플 (Samples)', tickangle: 0 },
+                yaxis: { title: '유전자 발현량 (Expression Level)', zeroline: true, zerolinecolor: '#cbd5e1' },
+                legend: {
+                    orientation: 'h',
+                    y: 1.15,
+                    x: 0.5,
+                    xanchor: 'center'
+                }
             };
 
-            Plotly.newPlot('plotly-pca-loading', [loadingTrace], loadingLayout, { responsive: true });
+            Plotly.newPlot('plotly-pca-loading', profileTraces, profileLayout, { responsive: true });
         } else if (loadingDiv) {
             loadingDiv.innerHTML = "";
         }
