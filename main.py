@@ -1457,7 +1457,7 @@ def run_pca_analysis(payload: dict):
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
         
     requested_genes = payload.get("genes", [])
-    mode = payload.get("mode", "top50")
+    mode = payload.get("mode", "sample")
     
     dataset_map = {}
     for g in dataset_genes:
@@ -1474,13 +1474,8 @@ def run_pca_analysis(payload: dict):
         if not matched_genes:
             raise HTTPException(status_code=400, detail="입력하신 유전자와 일치하는 데이터를 데이터셋에서 찾지 못했습니다.")
     else:
-        # Default top N genes by absolute log2fc
-        count = 50
-        if mode == "top20": count = 20
-        elif mode == "top100": count = 100
-        
-        sorted_genes = sorted(dataset_genes, key=lambda x: abs(x.get("log2fc", 0.0)), reverse=True)
-        matched_genes = sorted_genes[:count]
+        # Whole-dataset sample PCA
+        matched_genes = dataset_genes
         
     if not matched_genes:
         raise HTTPException(status_code=400, detail="분석에 사용할 유전자가 없습니다.")
@@ -1563,79 +1558,91 @@ def run_pca_analysis(payload: dict):
             "sample_values": sample_dict
         })
         
-    # Build Gene x Sample 2D PCA Matrix
-    wt_len = len(matched_genes[0]["wt_reps"]) if has_reps else 1
-    point_feature_matrix = []
-    point_metadata = []
-
-    for g in matched_genes:
-        g_name = g.get("gene_symbol") or g.get("locus_tag")
-        locus_tag = g.get("locus_tag")
-        log2fc = float(g.get("log2fc", 0.0))
-        if has_reps:
-            vals = g["wt_reps"] + g["mut_reps"]
-        else:
-            vals = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
-        
-        vals_arr = np.array(vals, dtype=float)
-        mean_val = np.mean(vals_arr)
-        std_val = np.std(vals_arr) if np.std(vals_arr) > 0 else 1.0
-        
-        wt_mean = np.mean(vals_arr[:wt_len]) if has_reps else float(g.get("wt_val", 0.0))
-        mut_mean = np.mean(vals_arr[wt_len:]) if has_reps else float(g.get("mutant_val", 0.0))
-        
-        for idx in range(n_samples):
-            s_name = sample_names[idx]
-            s_group = sample_groups[idx]
-            expr = float(vals[idx])
-            z_score = float((expr - mean_val) / std_val)
-            group_mean = float(wt_mean if s_group == "WT" else mut_mean)
-            
-            feat = [expr, z_score, log2fc, group_mean, wt_mean, mut_mean]
-            point_feature_matrix.append(feat)
-            point_metadata.append({
-                "gene": g_name,
-                "locus_tag": locus_tag,
-                "sample": s_name,
-                "group": s_group,
-                "expr": round(expr, 2),
-                "log2fc": round(log2fc, 2),
-                "z_score": round(z_score, 2)
-            })
-
-    point_mat = np.array(point_feature_matrix, dtype=float)
-    p_means = np.mean(point_mat, axis=0)
-    p_stds = np.std(point_mat, axis=0)
-    p_stds[p_stds == 0] = 1.0
-    p_scaled = (point_mat - p_means) / p_stds
-    
-    p_U, p_S, p_Vt = np.linalg.svd(p_scaled, full_matrices=False)
-    p_coords = p_U * p_S
-    
-    p_variances = (p_S ** 2) / max(1, len(point_metadata) - 1)
-    p_total_var = np.sum(p_variances)
-    p_var_ratios = (p_variances / p_total_var * 100.0) if p_total_var > 0 else np.array([100.0, 0.0])
-
+    # Build Gene x Sample 2D PCA Matrix (Only for custom gene mode)
     gene_sample_points = []
-    for i in range(len(point_metadata)):
-        meta = point_metadata[i]
-        meta["pc1"] = round(float(p_coords[i, 0]), 4) if p_coords.shape[1] > 0 else 0.0
-        meta["pc2"] = round(float(p_coords[i, 1]), 4) if p_coords.shape[1] > 1 else 0.0
-        gene_sample_points.append(meta)
+    if mode == "custom":
+        wt_len = len(matched_genes[0]["wt_reps"]) if has_reps else 1
+        point_feature_matrix = []
+        point_metadata = []
+
+        for g in matched_genes:
+            g_name = g.get("gene_symbol") or g.get("locus_tag")
+            locus_tag = g.get("locus_tag")
+            log2fc = float(g.get("log2fc", 0.0))
+            if has_reps:
+                vals = g["wt_reps"] + g["mut_reps"]
+            else:
+                vals = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
+            
+            vals_arr = np.array(vals, dtype=float)
+            mean_val = np.mean(vals_arr)
+            std_val = np.std(vals_arr) if np.std(vals_arr) > 0 else 1.0
+            
+            wt_mean = np.mean(vals_arr[:wt_len]) if has_reps else float(g.get("wt_val", 0.0))
+            mut_mean = np.mean(vals_arr[wt_len:]) if has_reps else float(g.get("mutant_val", 0.0))
+            
+            for idx in range(n_samples):
+                s_name = sample_names[idx]
+                s_group = sample_groups[idx]
+                expr = float(vals[idx])
+                z_score = float((expr - mean_val) / std_val)
+                group_mean = float(wt_mean if s_group == "WT" else mut_mean)
+                
+                feat = [expr, z_score, log2fc, group_mean, wt_mean, mut_mean]
+                point_feature_matrix.append(feat)
+                point_metadata.append({
+                    "gene": g_name,
+                    "locus_tag": locus_tag,
+                    "sample": s_name,
+                    "group": s_group,
+                    "expr": round(expr, 2),
+                    "log2fc": round(log2fc, 2),
+                    "z_score": round(z_score, 2)
+                })
+
+        if point_feature_matrix:
+            point_mat = np.array(point_feature_matrix, dtype=float)
+            p_means = np.mean(point_mat, axis=0)
+            p_stds = np.std(point_mat, axis=0)
+            p_stds[p_stds == 0] = 1.0
+            p_scaled = (point_mat - p_means) / p_stds
+            
+            p_U, p_S, p_Vt = np.linalg.svd(p_scaled, full_matrices=False)
+            p_coords = p_U * p_S
+            
+            p_variances = (p_S ** 2) / max(1, len(point_metadata) - 1)
+            p_total_var = np.sum(p_variances)
+            p_var_ratios = (p_variances / p_total_var * 100.0) if p_total_var > 0 else np.array([100.0, 0.0])
+
+            for i in range(len(point_metadata)):
+                meta = point_metadata[i]
+                meta["pc1"] = round(float(p_coords[i, 0]), 4) if p_coords.shape[1] > 0 else 0.0
+                meta["pc2"] = round(float(p_coords[i, 1]), 4) if p_coords.shape[1] > 1 else 0.0
+                gene_sample_points.append(meta)
+
+            pc1_var = round(float(p_var_ratios[0]), 1) if len(p_var_ratios) > 0 else 100.0
+            pc2_var = round(float(p_var_ratios[1]), 1) if len(p_var_ratios) > 1 else 0.0
+        else:
+            pc1_var = round(float(var_ratios[0]), 1) if len(var_ratios) > 0 else 100.0
+            pc2_var = round(float(var_ratios[1]), 1) if len(var_ratios) > 1 else 0.0
+    else:
+        pc1_var = round(float(var_ratios[0]), 1) if len(var_ratios) > 0 else 100.0
+        pc2_var = round(float(var_ratios[1]), 1) if len(var_ratios) > 1 else 0.0
 
     return {
         "success": True,
+        "mode": mode,
         "gene_sample_points": gene_sample_points,
         "samples": samples_out,
         "loadings": loadings_out,
         "gene_profiles": gene_profiles,
         "sample_names": sample_names,
         "pca_info": {
-            "pc1_var": round(float(p_var_ratios[0]), 1) if len(p_var_ratios) > 0 else 100.0,
-            "pc2_var": round(float(p_var_ratios[1]), 1) if len(p_var_ratios) > 1 else 0.0,
+            "pc1_var": pc1_var,
+            "pc2_var": pc2_var,
             "gene_count": n_genes,
             "sample_count": n_samples,
-            "point_count": len(gene_sample_points)
+            "point_count": len(gene_sample_points) if mode == "custom" else n_samples
         }
     }
 

@@ -7173,7 +7173,7 @@ function renderPCAPlot() {
     if (loadingDiv) loadingDiv.innerHTML = `<div style="text-align: center; padding-top: 100px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>`;
 
     const modeSelect = document.getElementById("pca-mode-select");
-    const mode = modeSelect ? modeSelect.value : "top50";
+    const mode = modeSelect ? modeSelect.value : "sample";
     
     let genes = [];
     if (mode === "custom") {
@@ -7217,8 +7217,8 @@ function renderPCAPlot() {
         const palette = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#ef4444', '#3b82f6', '#84cc16'];
         const traces = [];
 
-        if (geneSamplePoints.length > 0) {
-            // Group points by Gene
+        if (mode === "custom" && geneSamplePoints.length > 0) {
+            // Option 2: Gene-level PCA points
             const genesMap = {};
             geneSamplePoints.forEach(p => {
                 if (!genesMap[p.gene]) genesMap[p.gene] = [];
@@ -7275,8 +7275,8 @@ function renderPCAPlot() {
                     });
                 }
             }
-        } else if (samples.length > 0) {
-            // Fallback to sample-level PCA if gene_sample_points is empty
+        } else {
+            // Option 1: Whole-dataset Sample-level PCA (6 sample points)
             const wtSamples = samples.filter(s => s.group === "WT");
             const mutSamples = samples.filter(s => s.group === "Mutant");
 
@@ -7340,19 +7340,19 @@ function renderPCAPlot() {
 
         Plotly.newPlot('plotly-pca', traces, layout, { responsive: true });
 
-        const actualPointCount = geneSamplePoints.length > 0 ? geneSamplePoints.length : (samples.length || 0);
-
         // Update PCA Title
         const titleEl = document.getElementById("pca-chart-title");
         if (titleEl) {
-            titleEl.innerHTML = `유전자별 샘플 PCA 산점도 (${pcaInfo.gene_count || 0}개 유전자 × ${pcaInfo.sample_count || 0}개 샘플 = ${actualPointCount}개 데이터 포인트)`;
+            if (mode === "custom") {
+                const ptCount = geneSamplePoints.length;
+                titleEl.innerHTML = `선택 유전자별 샘플 PCA 산점도 (${pcaInfo.gene_count || 0}개 유전자 × ${pcaInfo.sample_count || 0}개 샘플 = ${ptCount}개 데이터 포인트)`;
+            } else {
+                titleEl.innerHTML = `전체 데이터셋 샘플간 PCA 산점도 (${pcaInfo.sample_count || 0}개 샘플 데이터 포인트)`;
+            }
         }
 
-        // Render Individual Gene Expression Profiles Grouped Bar Chart
-        if (loadingDiv && profiles.length > 0) {
-            // Grouped Bar Chart: X-axis = Sample Names, Traces = Individual Selected Genes
-            const palette = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#3b82f6', '#ef4444'];
-            
+        // Render Individual Gene Expression Profiles Grouped Bar Chart (only in Custom mode)
+        if (mode === "custom" && loadingDiv && profiles.length > 0) {
             const profileTraces = profiles.map((p, idx) => {
                 const yVals = sampleNames.map(sName => p.sample_values[sName] || 0.0);
                 return {
@@ -7384,9 +7384,6 @@ function renderPCAPlot() {
                 }
             };
 
-            Plotly.newPlot('plotly-pca-loading', profileTraces, profileLayout, { responsive: true });
-        } else if (loadingDiv) {
-            loadingDiv.innerHTML = "";
         }
     })
     .catch(err => {

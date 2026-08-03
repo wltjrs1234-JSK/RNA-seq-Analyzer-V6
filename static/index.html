@@ -358,12 +358,10 @@
                             </div>
                             <div class="card-body">
                                 <div class="control-field">
-                                    <label for="pca-mode-select">분석 대상 유전자 범위:</label>
+                                    <label for="pca-mode-select">PCA 분석 모드 선택:</label>
                                     <select id="pca-mode-select" class="input-select" style="width: 100%;">
-                                        <option value="top50" selected>상위 50개 주요 DEG (기본)</option>
-                                        <option value="top20">상위 20개 주요 DEG</option>
-                                        <option value="top100">상위 100개 주요 DEG</option>
-                                        <option value="custom">사용자 지정 유전자 조합 (Custom)</option>
+                                        <option value="sample" selected>1. 전체 데이터셋 샘플간 PCA 분석</option>
+                                        <option value="custom">2. 특정 유전자 선택 PCA 분석 (Custom)</option>
                                     </select>
                                 </div>
                                 
