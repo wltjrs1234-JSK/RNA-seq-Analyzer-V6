@@ -1,9 +1,9 @@
 @echo off
-:: Last Updated: 2026-08-03 (Silent background execution & single Chrome browser tab launch fix)
+:: Last Updated: 2026-08-03 (Path-safe silent background execution & single Chrome browser launch)
 if "%~1"=="-hidden" goto :MAIN_LOGIC
 
-:: Self-hide CMD console window
-powershell -ExecutionPolicy Bypass -Command "Start-Process cmd -ArgumentList '/c `"%~f0`" -hidden' -WindowStyle Hidden"
+:: Self-hide CMD console window safely (handles spaces and parentheses in path)
+mshta vbscript:Execute("CreateObject(""WScript.Shell"").Run ""cmd /c """"%~f0"""" -hidden"", 0, False:close()")
 exit /b
 
 :MAIN_LOGIC
@@ -14,16 +14,21 @@ cd /d "%~dp0"
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":8500" ^| findstr "LISTENING"') do (
     taskkill /F /PID %%a >nul 2>&1
 )
-powershell -ExecutionPolicy Bypass -Command "Get-NetTCPConnection -LocalPort 8500 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }" >nul 2>&1
 
-:: 2. Launch background FastAPI server silently
-powershell -ExecutionPolicy Bypass -Command "Start-Process cmd -ArgumentList '/c `"%~dp0run_server.bat`"' -WindowStyle Hidden"
+:: 2. Launch background FastAPI server silently using mshta (handles spaces & parentheses)
+mshta vbscript:Execute("CreateObject(""WScript.Shell"").Run ""cmd /c """"%~dp0run_server.bat"""""", 0, False:close()")
 
-:: 3. Wait for server on http://127.0.0.1:8500 to become active (Timeout: 60s)
-powershell -ExecutionPolicy Bypass -Command "$timeout = 60; $start = [DateTime]::Now; while ($true) { try { $conn = New-Object System.Net.Sockets.TcpClient('127.0.0.1', 8500); if ($conn.Connected) { $conn.Close(); exit 0; } } catch {} if (([DateTime]::Now - $start).TotalSeconds -gt $timeout) { exit 1; } Start-Sleep -Seconds 1 }"
+:: 3. Wait for server on http://127.0.0.1:8500 to become active (Timeout: ~30s)
+set /a count=0
+:WAIT_LOOP
+netstat -aon | findstr ":8500" | findstr "LISTENING" >nul 2>&1
+if %errorlevel% equ 0 goto :SERVER_READY
+timeout /t 1 /nobreak >nul
+set /a count+=1
+if %count% geq 30 goto :SERVER_READY
+goto :WAIT_LOOP
 
-if %errorlevel% neq 0 exit /b 1
-
+:SERVER_READY
 :: 4. Launch Chrome browser ONCE
 set CHROME_PATH=""
 if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" set CHROME_PATH="%ProgramFiles%\Google\Chrome\Application\chrome.exe"
