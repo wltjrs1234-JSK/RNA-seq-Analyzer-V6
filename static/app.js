@@ -7204,91 +7204,74 @@ function renderPCAPlot() {
             return;
         }
 
-        const samples = data.samples || [];
-        const loadings = data.loadings || [];
+        const geneSamplePoints = data.gene_sample_points || [];
         const pcaInfo = data.pca_info || {};
         const profiles = data.gene_profiles || [];
         const sampleNames = data.sample_names || [];
 
-        // Group samples into WT vs Mutant traces
-        const wtSamples = samples.filter(s => s.group === "WT");
-        const mutSamples = samples.filter(s => s.group === "Mutant");
+        // Group points by Gene
+        const genesMap = {};
+        geneSamplePoints.forEach(p => {
+            if (!genesMap[p.gene]) genesMap[p.gene] = [];
+            genesMap[p.gene].push(p);
+        });
 
+        const palette = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#ef4444', '#3b82f6', '#84cc16'];
         const traces = [];
-        if (wtSamples.length > 0) {
-            traces.push({
-                x: wtSamples.map(s => s.pc1),
-                y: wtSamples.map(s => s.pc2),
-                text: wtSamples.map(s => s.name),
-                mode: 'markers+text',
-                type: 'scatter',
-                name: 'WT (Wild Type)',
-                textposition: 'top center',
-                textfont: { family: 'Inter, sans-serif', size: 12, color: '#1e3a8a' },
-                marker: {
-                    size: 16,
-                    color: '#3b82f6',
-                    line: { color: '#1d4ed8', width: 2 }
-                },
-                hovertemplate: '<b>%{text}</b><br>PC1: %{x:.3f}<br>PC2: %{y:.3f}<extra></extra>'
-            });
-        }
+        let colorIdx = 0;
 
-        if (mutSamples.length > 0) {
-            traces.push({
-                x: mutSamples.map(s => s.pc1),
-                y: mutSamples.map(s => s.pc2),
-                text: mutSamples.map(s => s.name),
-                mode: 'markers+text',
-                type: 'scatter',
-                name: 'Mutant (변이주)',
-                textposition: 'top center',
-                textfont: { family: 'Inter, sans-serif', size: 12, color: '#831843' },
-                marker: {
-                    size: 16,
-                    color: '#ec4899',
-                    line: { color: '#be185d', width: 2 }
-                },
-                hovertemplate: '<b>%{text}</b><br>PC1: %{x:.3f}<br>PC2: %{y:.3f}<extra></extra>'
-            });
-        }
+        for (const [gName, pList] of Object.entries(genesMap)) {
+            const geneColor = palette[colorIdx % palette.length];
+            colorIdx++;
 
-        // Add Biplot Gene Vector Traces (Arrows/Points for genes)
-        if (loadings.length > 0) {
-            // Find max absolute PC coordinate of samples to scale gene vectors
-            const maxSampleX = Math.max(...samples.map(s => Math.abs(s.pc1)), 1.0);
-            const maxSampleY = Math.max(...samples.map(s => Math.abs(s.pc2)), 1.0);
-            const maxLoadingX = Math.max(...loadings.map(l => Math.abs(l.pc1_loading)), 0.1);
-            const maxLoadingY = Math.max(...loadings.map(l => Math.abs(l.pc2_loading)), 0.1);
+            const wtPts = pList.filter(pt => pt.group === "WT");
+            const mutPts = pList.filter(pt => pt.group === "Mutant");
 
-            const scaleX = (maxSampleX * 0.8) / maxLoadingX;
-            const scaleY = (maxSampleY * 0.8) / maxLoadingY;
-
-            // Take up to 10 genes for vector display to prevent clutter
-            const topGeneLoadings = loadings.slice(0, 10);
-            
-            topGeneLoadings.forEach(l => {
-                const vecX = l.pc1_loading * scaleX;
-                const vecY = l.pc2_loading * scaleY;
+            if (wtPts.length > 0) {
                 traces.push({
-                    x: [0, vecX],
-                    y: [0, vecY],
-                    mode: 'lines+markers+text',
+                    x: wtPts.map(pt => pt.pc1),
+                    y: wtPts.map(pt => pt.pc2),
+                    text: wtPts.map(pt => `${pt.gene} (${pt.sample})`),
+                    mode: 'markers+text',
                     type: 'scatter',
-                    name: `유전자: ${l.gene}`,
-                    text: ['', l.gene],
-                    textposition: 'top right',
-                    textfont: { family: 'Inter, sans-serif', size: 11, color: '#6366f1' },
-                    line: { color: '#6366f1', width: 2, dash: 'dot' },
-                    marker: { size: [0, 8], color: '#6366f1', symbol: 'circle' },
-                    showlegend: false,
-                    hovertemplate: `<b>유전자: ${l.gene}</b> (${l.locus_tag})<br>PC1 Loading: ${l.pc1_loading}<br>PC2 Loading: ${l.pc2_loading}<extra></extra>`
+                    name: `${gName} [WT]`,
+                    textposition: 'top center',
+                    textfont: { family: 'Inter, sans-serif', size: 11, color: '#1e293b' },
+                    marker: {
+                        size: 14,
+                        color: geneColor,
+                        symbol: 'circle',
+                        line: { color: '#0f172a', width: 1.5 }
+                    },
+                    customdata: wtPts,
+                    hovertemplate: '<b>%{text}</b><br>샘플: %{customdata.sample}<br>발현량: %{customdata.expr}<br>PC1: %{x:.3f}<br>PC2: %{y:.3f}<extra></extra>'
                 });
-            });
+            }
+
+            if (mutPts.length > 0) {
+                traces.push({
+                    x: mutPts.map(pt => pt.pc1),
+                    y: mutPts.map(pt => pt.pc2),
+                    text: mutPts.map(pt => `${pt.gene} (${pt.sample})`),
+                    mode: 'markers+text',
+                    type: 'scatter',
+                    name: `${gName} [Mutant]`,
+                    textposition: 'top center',
+                    textfont: { family: 'Inter, sans-serif', size: 11, color: '#1e293b' },
+                    marker: {
+                        size: 15,
+                        color: geneColor,
+                        symbol: 'diamond',
+                        line: { color: '#0f172a', width: 1.5 }
+                    },
+                    customdata: mutPts,
+                    hovertemplate: '<b>%{text}</b><br>샘플: %{customdata.sample}<br>발현량: %{customdata.expr}<br>PC1: %{x:.3f}<br>PC2: %{y:.3f}<extra></extra>'
+                });
+            }
         }
 
         const layout = {
-            height: 480,
+            height: 500,
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(248, 250, 252, 0.8)',
             font: { color: '#0f172a', family: 'Inter, sans-serif' },
@@ -7309,7 +7292,7 @@ function renderPCAPlot() {
             },
             legend: {
                 orientation: 'h',
-                y: 1.1,
+                y: 1.12,
                 x: 0.5,
                 xanchor: 'center'
             }
@@ -7320,7 +7303,7 @@ function renderPCAPlot() {
         // Update PCA Title
         const titleEl = document.getElementById("pca-chart-title");
         if (titleEl) {
-            titleEl.innerHTML = `Sample PCA Biplot (${pcaInfo.gene_count || 0}개 유전자 주성분 분석 & 유전자 벡터)`;
+            titleEl.innerHTML = `유전자별 샘플 PCA 산점도 (${pcaInfo.gene_count || 0}개 유전자 × ${pcaInfo.sample_count || 0}개 샘플 = ${pcaInfo.point_count || 0}개 데이터 포인트)`;
         }
 
         // Render Individual Gene Expression Profiles Grouped Bar Chart
