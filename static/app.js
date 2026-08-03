@@ -2175,7 +2175,7 @@ function renderHeatmap() {
                     y: sdY,
                     type: 'scatter',
                     mode: 'lines',
-                    xaxis: 'x',
+                    xaxis: 'x3',
                     yaxis: 'y2',
                     line: { color: '#475569', width: 1.5 },
                     hoverinfo: 'none',
@@ -2184,36 +2184,30 @@ function renderHeatmap() {
                 traces.push(sampleDendroTrace);
             }
             
-            // Calculate dynamic margins and domain boundaries based on gapRatio, gapRatioTop, and marginBot
+            // Calculate dynamic margins and domain boundaries
             const gap = gapRatio;
             
             // X-axis layouts:
-            // xaxis (heatmap): [0.24, 1.0]
-            // xaxis2 (gene dendrogram): [0.0, 0.24 - gap]
             const xHeatmapStart = 0.24;
             const xGeneDendroEnd = Math.max(0.0, xHeatmapStart - gap);
             
-            // Calculate dynamic Y-axis domain partitioning for 3-tier top layout:
-            // [Heatmap Matrix (bottom)] -> [Sample Names (attached to top of matrix)] -> [Sample Dendrogram (above text)]
-            const marginT = 35;
+            // Y-axis layouts:
+            // Heatmap occupies domain [0.0, yHeatmapEnd]
+            // Sample dendrogram occupies domain [ySampleDendroStart, 1.0]
+            const marginT = 30;
             const marginB = 40;
             const availablePlotHeight = Math.max(120, heatmapHeight - marginT - marginB);
             
-            // Fixed pixel height allocations for top elements:
-            // 1) sampleTextPx: Vertical space for -45deg rotated sample name text (~45px)
-            // 2) dendroTreePx: Vertical height of sample dendrogram lines (~75px)
-            // 3) extraGapPx: User adjustable slider gap (0~15px)
-            const sampleTextPx = 45;
-            const dendroTreePx = 75;
-            const extraGapPx = Math.max(2, (gapRatioTop * 100) * 2.5);
+            // Dendrogram tree height (~70px) + optional top gap
+            const dendroTreePx = 70;
+            const extraGapPx = (gapRatioTop * 100) * 1.5;
             
-            const sampleTextFraction = Math.min(0.20, sampleTextPx / availablePlotHeight);
-            const dendroTreeFraction = Math.min(0.30, dendroTreePx / availablePlotHeight);
+            const dendroFraction = Math.min(0.25, dendroTreePx / availablePlotHeight);
             const gapFraction = extraGapPx / availablePlotHeight;
             
-            const totalTopFraction = sampleTextFraction + dendroTreeFraction + gapFraction;
-            const yHeatmapEnd = Math.max(0.35, 1.0 - totalTopFraction);
-            const ySampleDendroStart = Math.min(0.99, yHeatmapEnd + sampleTextFraction + gapFraction);
+            const totalTopFraction = dendroFraction + gapFraction;
+            const yHeatmapEnd = Math.max(0.40, 1.0 - totalTopFraction);
+            const ySampleDendroStart = Math.min(0.99, yHeatmapEnd + gapFraction);
 
             const layout = {
                 height: heatmapHeight,
@@ -2224,6 +2218,7 @@ function renderHeatmap() {
                 showlegend: false,
                 
                 // Axis configurations for subplot domain partitioning
+                // X1 is for Heatmap Matrix & Top Sample Labels (directly on top of heatmap)
                 xaxis: {
                     domain: [xHeatmapStart, 1.0],
                     side: 'top',
@@ -2251,7 +2246,13 @@ function renderHeatmap() {
                     autorange: 'reversed' // Branch outwards towards the left
                 },
                 
-                // Y2 is for Sample Dendrogram (Top side)
+                // X3 & Y2 are for Sample Dendrogram (Top side, above sample labels)
+                xaxis3: {
+                    domain: [xHeatmapStart, 1.0],
+                    showgrid: false,
+                    zeroline: false,
+                    showticklabels: false
+                },
                 yaxis2: {
                     domain: [ySampleDendroStart, 1.0],
                     showgrid: false,
