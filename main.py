@@ -1446,6 +1446,122 @@ def run_cluster_heatmap(payload: dict):
     }
 
 # ----------------------------------------------------------------------
+# PCA (Principal Component Analysis) API
+# ----------------------------------------------------------------------
+@app.post("/api/pca")
+def run_pca_analysis(payload: dict):
+    """Compute Principal Component Analysis (PCA) for samples based on all or selected genes."""
+    session_id = payload.get("session_id")
+    dataset_genes = get_session_genes(session_id)
+    if not dataset_genes:
+        raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
+        
+    requested_genes = payload.get("genes", [])
+    mode = payload.get("mode", "top50")
+    
+    dataset_map = {}
+    for g in dataset_genes:
+        dataset_map[g["locus_tag"].upper()] = g
+        if g.get("gene_symbol"):
+            dataset_map[g["gene_symbol"].upper()] = g
+            
+    matched_genes = []
+    if mode == "custom" and requested_genes and len(requested_genes) > 0:
+        for q in requested_genes:
+            q_clean = str(q).strip().upper()
+            if q_clean in dataset_map and dataset_map[q_clean] not in matched_genes:
+                matched_genes.append(dataset_map[q_clean])
+        if not matched_genes:
+            raise HTTPException(status_code=400, detail="입력하신 유전자와 일치하는 데이터를 데이터셋에서 찾지 못했습니다.")
+    else:
+        # Default top N genes by absolute log2fc
+        count = 50
+        if mode == "top20": count = 20
+        elif mode == "top100": count = 100
+        
+        sorted_genes = sorted(dataset_genes, key=lambda x: abs(x.get("log2fc", 0.0)), reverse=True)
+        matched_genes = sorted_genes[:count]
+        
+    if not matched_genes:
+        raise HTTPException(status_code=400, detail="분석에 사용할 유전자가 없습니다.")
+        
+    has_reps = ("wt_reps" in matched_genes[0] and "mut_reps" in matched_genes[0] 
+                and matched_genes[0]["wt_reps"] and matched_genes[0]["mut_reps"])
+    
+    if has_reps:
+        wt_len = len(matched_genes[0]["wt_reps"])
+        mut_len = len(matched_genes[0]["mut_reps"])
+        sample_names = [f"WT_Rep{i+1}" for i in range(wt_len)] + [f"Mutant_Rep{i+1}" for i in range(mut_len)]
+        sample_groups = ["WT"] * wt_len + ["Mutant"] * mut_len
+    else:
+        sample_names = ["WT", "Mutant"]
+        sample_groups = ["WT", "Mutant"]
+        
+    matrix = []
+    gene_labels = []
+    for g in matched_genes:
+        if has_reps:
+            row = g["wt_reps"] + g["mut_reps"]
+        else:
+            row = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
+        matrix.append(row)
+        gene_labels.append(g.get("gene_symbol") or g.get("locus_tag"))
+        
+    matrix = np.array(matrix, dtype=float).T # Shape: (n_samples, n_genes)
+    n_samples, n_genes = matrix.shape
+    
+    # Mean-center and scale genes
+    means = np.mean(matrix, axis=0)
+    stds = np.std(matrix, axis=0)
+    stds[stds == 0] = 1.0
+    scaled_matrix = (matrix - means) / stds
+    
+    # Compute SVD for PCA coordinates
+    U, S, Vt = np.linalg.svd(scaled_matrix, full_matrices=False)
+    pc_coords = U * S # (n_samples, k)
+    
+    variances = (S ** 2) / max(1, n_samples - 1)
+    total_var = np.sum(variances)
+    var_ratios = (variances / total_var * 100.0) if total_var > 0 else np.array([100.0, 0.0])
+    
+    samples_out = []
+    for i in range(n_samples):
+        pc1_val = float(pc_coords[i, 0]) if pc_coords.shape[1] > 0 else 0.0
+        pc2_val = float(pc_coords[i, 1]) if pc_coords.shape[1] > 1 else 0.0
+        samples_out.append({
+            "name": sample_names[i],
+            "group": sample_groups[i],
+            "pc1": round(pc1_val, 4),
+            "pc2": round(pc2_val, 4)
+        })
+        
+    loadings_out = []
+    if Vt.shape[0] > 0:
+        pc1_loadings = Vt[0]
+        pc2_loadings = Vt[1] if Vt.shape[0] > 1 else np.zeros(n_genes)
+        for j in range(n_genes):
+            loadings_out.append({
+                "gene": gene_labels[j],
+                "locus_tag": matched_genes[j]["locus_tag"],
+                "pc1_loading": round(float(pc1_loadings[j]), 4),
+                "pc2_loading": round(float(pc2_loadings[j]), 4),
+                "abs_loading": round(float(abs(pc1_loadings[j])), 4)
+            })
+        loadings_out.sort(key=lambda x: x["abs_loading"], reverse=True)
+        
+    return {
+        "success": True,
+        "samples": samples_out,
+        "loadings": loadings_out,
+        "pca_info": {
+            "pc1_var": round(float(var_ratios[0]), 1) if len(var_ratios) > 0 else 100.0,
+            "pc2_var": round(float(var_ratios[1]), 1) if len(var_ratios) > 1 else 0.0,
+            "gene_count": n_genes,
+            "sample_count": n_samples
+        }
+    }
+
+# ----------------------------------------------------------------------
 # 1. TF Activity Analyzer API
 # ----------------------------------------------------------------------
 @app.post("/api/tf_activity")

@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInit("initGSHZoomPan", initGSHZoomPan);
     runInit("initGSHEditorBindings", initGSHEditorBindings);
     runInit("initIPTargetDiscoveryBindings", initIPTargetDiscoveryBindings);
+    runInit("initPCAEvents", initPCAEvents);
     
     runInit("loadMockBtn", () => {
         const mockBtn = document.getElementById("load-mock-btn");
@@ -7125,5 +7126,199 @@ function switchNetworkSubtab(subtab) {
         btnTf.style.borderBottom = "2px solid var(--primary-color)";
         divTf.style.display = "block";
     }
+}
+
+// ----------------------------------------------------------------------
+// PCA (Principal Component Analysis) UI Logic
+// ----------------------------------------------------------------------
+function initPCAEvents() {
+    const modeSelect = document.getElementById("pca-mode-select");
+    if (modeSelect) {
+        modeSelect.addEventListener("change", () => {
+            const customContainer = document.getElementById("pca-custom-gene-container");
+            if (customContainer) {
+                customContainer.style.display = (modeSelect.value === "custom") ? "block" : "none";
+            }
+        });
+    }
+
+    const runBtn = document.getElementById("run-pca-btn");
+    if (runBtn) {
+        runBtn.addEventListener("click", () => {
+            renderPCAPlot();
+        });
+    }
+
+    // Export buttons
+    safeAddListener("btn-export-pca-jpg", "click", () => {
+        exportPlotlyChart("plotly-pca", "pca_plot", "jpeg");
+    });
+    safeAddListener("btn-export-pca-pdf", "click", () => {
+        exportPlotlyChart("plotly-pca", "pca_plot", "pdf");
+    });
+}
+
+function renderPCAPlot() {
+    const chartDiv = document.getElementById("plotly-pca");
+    const loadingDiv = document.getElementById("plotly-pca-loading");
+    if (!chartDiv) return;
+
+    if (!gGenes || gGenes.length === 0) {
+        chartDiv.innerHTML = `<div class="text-center text-muted" style="padding-top: 150px;">RNA-seq 데이터를 업로드하시면 PCA 분석 차트가 표시됩니다.</div>`;
+        if (loadingDiv) loadingDiv.innerHTML = "";
+        return;
+    }
+
+    chartDiv.innerHTML = `<div style="text-align: center; padding-top: 150px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 10px;">PCA (주성분 분석) 연산 중...</p></div>`;
+    if (loadingDiv) loadingDiv.innerHTML = `<div style="text-align: center; padding-top: 100px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>`;
+
+    const modeSelect = document.getElementById("pca-mode-select");
+    const mode = modeSelect ? modeSelect.value : "top50";
+    
+    let genes = [];
+    if (mode === "custom") {
+        const customText = document.getElementById("pca-custom-genes") ? document.getElementById("pca-custom-genes").value : "";
+        genes = customText.split(/[\s,;\n]+/).map(s => s.trim()).filter(s => s.length > 0);
+        if (genes.length === 0) {
+            chartDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 150px;">분석할 유전자 이름을 1개 이상 입력해주세요.</div>`;
+            if (loadingDiv) loadingDiv.innerHTML = "";
+            return;
+        }
+    }
+
+    fetch(`${API_URL}/api/pca`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            session_id: gActiveSessionId,
+            species: gCurrentSpecies,
+            mode: mode,
+            genes: genes
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) {
+            chartDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 150px;">PCA 연산 실패: ${data.detail}</div>`;
+            if (loadingDiv) loadingDiv.innerHTML = "";
+            return;
+        }
+
+        const samples = data.samples || [];
+        const loadings = data.loadings || [];
+        const pcaInfo = data.pca_info || {};
+
+        // Group samples into WT vs Mutant traces
+        const wtSamples = samples.filter(s => s.group === "WT");
+        const mutSamples = samples.filter(s => s.group === "Mutant");
+
+        const traces = [];
+        if (wtSamples.length > 0) {
+            traces.push({
+                x: wtSamples.map(s => s.pc1),
+                y: wtSamples.map(s => s.pc2),
+                text: wtSamples.map(s => s.name),
+                mode: 'markers+text',
+                type: 'scatter',
+                name: 'WT (Wild Type)',
+                textposition: 'top center',
+                textfont: { family: 'Inter, sans-serif', size: 12, color: '#1e3a8a' },
+                marker: {
+                    size: 16,
+                    color: '#3b82f6',
+                    line: { color: '#1d4ed8', width: 2 }
+                },
+                hovertemplate: '<b>%{text}</b><br>PC1: %{x:.3f}<br>PC2: %{y:.3f}<extra></extra>'
+            });
+        }
+
+        if (mutSamples.length > 0) {
+            traces.push({
+                x: mutSamples.map(s => s.pc1),
+                y: mutSamples.map(s => s.pc2),
+                text: mutSamples.map(s => s.name),
+                mode: 'markers+text',
+                type: 'scatter',
+                name: 'Mutant (변이주)',
+                textposition: 'top center',
+                textfont: { family: 'Inter, sans-serif', size: 12, color: '#831843' },
+                marker: {
+                    size: 16,
+                    color: '#ec4899',
+                    line: { color: '#be185d', width: 2 }
+                },
+                hovertemplate: '<b>%{text}</b><br>PC1: %{x:.3f}<br>PC2: %{y:.3f}<extra></extra>'
+            });
+        }
+
+        const layout = {
+            height: 460,
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(248, 250, 252, 0.8)',
+            font: { color: '#0f172a', family: 'Inter, sans-serif' },
+            margin: { t: 40, r: 40, b: 60, l: 60 },
+            xaxis: {
+                title: `PC1 (${pcaInfo.pc1_var || 0}% Variance)`,
+                zeroline: true,
+                zerolinecolor: '#cbd5e1',
+                zerolinewidth: 1.5,
+                gridcolor: '#e2e8f0'
+            },
+            yaxis: {
+                title: `PC2 (${pcaInfo.pc2_var || 0}% Variance)`,
+                zeroline: true,
+                zerolinecolor: '#cbd5e1',
+                zerolinewidth: 1.5,
+                gridcolor: '#e2e8f0'
+            },
+            legend: {
+                orientation: 'h',
+                y: 1.1,
+                x: 0.5,
+                xanchor: 'center'
+            }
+        };
+
+        Plotly.newPlot('plotly-pca', traces, layout, { responsive: true });
+
+        // Update PCA Title
+        const titleEl = document.getElementById("pca-chart-title");
+        if (titleEl) {
+            titleEl.innerHTML = `Sample PCA Plot (${pcaInfo.gene_count || 0}개 유전자 기반 주성분 분석)`;
+        }
+
+        // Render Gene Loading Contribution Chart
+        if (loadingDiv && loadings.length > 0) {
+            const topLoadings = loadings.slice(0, 15);
+            const loadingTrace = {
+                x: topLoadings.map(l => l.gene),
+                y: topLoadings.map(l => l.pc1_loading),
+                type: 'bar',
+                marker: {
+                    color: topLoadings.map(l => l.pc1_loading >= 0 ? '#6366f1' : '#f43f5e'),
+                    line: { color: '#312e81', width: 1 }
+                },
+                hovertemplate: '<b>%{x}</b><br>PC1 Loading: %{y:.4f}<extra></extra>'
+            };
+
+            const loadingLayout = {
+                height: 280,
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#0f172a', family: 'Inter, sans-serif' },
+                margin: { t: 30, r: 20, b: 60, l: 50 },
+                xaxis: { tickangle: -45, title: '유전자 (Gene Symbol / Locus Tag)' },
+                yaxis: { title: 'PC1 Loading Score', zeroline: true, zerolinecolor: '#cbd5e1' }
+            };
+
+            Plotly.newPlot('plotly-pca-loading', [loadingTrace], loadingLayout, { responsive: true });
+        } else if (loadingDiv) {
+            loadingDiv.innerHTML = "";
+        }
+    })
+    .catch(err => {
+        chartDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 150px;">PCA 연산 중 오류 발생: ${err.message}</div>`;
+        if (loadingDiv) loadingDiv.innerHTML = "";
+    });
 }
 
