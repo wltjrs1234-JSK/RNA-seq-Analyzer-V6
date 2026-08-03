@@ -1138,13 +1138,7 @@ function initControls() {
         });
     }
     
-    const heatmapMarginBottomInput = document.getElementById("heatmap-margin-bottom");
-    if (heatmapMarginBottomInput) {
-        heatmapMarginBottomInput.addEventListener("input", (e) => {
-            document.getElementById("heatmap-margin-bottom-val").textContent = `${e.target.value}px`;
-            renderHeatmap();
-        });
-    }
+
     
     // Sample order control event listeners
     const sampleOrderTypeSelect = document.getElementById("heatmap-sample-order-type");
@@ -1952,10 +1946,7 @@ function renderHeatmap() {
     const gapRatio = gapInput ? parseFloat(gapInput.value) / 100.0 : 0.02;
     
     const gapTopInput = document.getElementById("heatmap-dendro-gap-top");
-    const gapRatioTop = gapTopInput ? parseFloat(gapTopInput.value) / 100.0 : 0.02;
-    
-    const marginBotInput = document.getElementById("heatmap-margin-bottom");
-    const marginBot = marginBotInput ? parseInt(marginBotInput.value) : 100;
+    const gapRatioTop = gapTopInput ? parseFloat(gapTopInput.value) / 100.0 : 0.01;
     
     if (!applyClustering) {
         // Simple mock hierarchical clustering for layout (Local mode)
@@ -2071,8 +2062,8 @@ function renderHeatmap() {
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             font: { color: '#0f172a', family: 'Inter, sans-serif' },
-            margin: { t: 20, r: 20, b: marginBot, l: 150 },
-            xaxis: { tickangle: -45 },
+            margin: { t: 50, r: 20, b: 40, l: 150 },
+            xaxis: { side: 'top', tickangle: -45 },
             yaxis: { autorange: 'reversed', showgrid: false }
         };
         
@@ -2203,17 +2194,17 @@ function renderHeatmap() {
             const xGeneDendroEnd = Math.max(0.0, xHeatmapStart - gap);
             
             // Y-axis layouts:
-            // yaxis (heatmap): [0.0, 0.82]
-            // yaxis2 (sample dendrogram): [0.84, 1.0]
-            const yHeatmapEnd = 0.82;
-            const ySampleDendroStart = Math.min(1.0, yHeatmapEnd + Math.max(0.01, gapRatioTop));
+            // yaxis (heatmap): [0.0, 0.80]
+            // yaxis2 (sample dendrogram): [0.81 + gapRatioTop, 1.0]
+            const yHeatmapEnd = 0.80;
+            const ySampleDendroStart = Math.min(0.99, yHeatmapEnd + 0.01 + gapRatioTop);
 
             const layout = {
                 height: heatmapHeight,
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 font: { color: '#0f172a', family: 'Inter, sans-serif' },
-                margin: { t: 50, r: 20, b: Math.min(marginBot, 50), l: 150 },
+                margin: { t: 30, r: 20, b: 40, l: 150 },
                 showlegend: false,
                 
                 // Axis configurations for subplot domain partitioning
