@@ -2555,7 +2555,7 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
         
     sp = species or get_session_species(session_id)
-    tax_id = 83333 if sp == "eco" else (85962 if sp == "cgl" else 4932)
+    tax_id = 511145 if sp == "eco" else (196627 if sp == "cgl" else 4932)
     
     degs = [g for g in dataset_genes if g.get("locus_tag")]
     
@@ -2626,9 +2626,10 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
             "caller_identity": "yeast_rnaseq_analyzer"
         }
         try:
-            r = requests.post(url, data=params, timeout=5, verify=False)
+            r = requests.post(url, data=params, timeout=8, verify=False)
             if r.status_code == 200:
                 interactions = r.json()
+                string_edge_type = interaction_type if interaction_type in ["physical", "genetic"] else "functional"
                 for inter in interactions:
                     raw1 = inter.get("stringId_A", "").split(".")[-1].upper()
                     raw2 = inter.get("stringId_B", "").split(".")[-1].upper()
@@ -2643,7 +2644,7 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
                         "source": l1,
                         "target": l2,
                         "score": sc,
-                        "type": "functional",
+                        "type": string_edge_type,
                         "db": "STRING-DB"
                     })
                 fetched_from_string = True
