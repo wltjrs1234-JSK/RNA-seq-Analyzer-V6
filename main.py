@@ -8,7 +8,7 @@ import requests
 import pandas as pd
 import numpy as np
 from scipy import stats
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse, FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -3012,6 +3012,402 @@ def get_mock_coryne_file():
     if os.path.exists("mock_coryne_rnaseq.xlsx"):
         return FileResponse("mock_coryne_rnaseq.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="mock_coryne_rnaseq.xlsx")
     raise HTTPException(status_code=404, detail="Mock file not found. Please run generate_mock_data.py first.")
+
+@app.post("/api/generate_report")
+def generate_report(payload: dict = Body(...)):
+    """Generate a comprehensive One-Click Publication & Strain Engineering Analysis Report in standalone HTML."""
+    try:
+        session_id = payload.get("session_id", "default")
+        species = payload.get("species") or get_session_species(session_id)
+        
+        species_names = {
+            "sce": "Saccharomyces cerevisiae (Baker's Yeast)",
+            "cgl": "Corynebacterium glutamicum ATCC 13032",
+            "eco": "Escherichia coli K-12 MG1655"
+        }
+        sp_full_name = species_names.get(species, species.upper())
+        
+        genes = get_session_genes(session_id)
+        if not genes:
+            raise HTTPException(status_code=400, detail="분석할 RNA-seq 데이터가 존재하지 않습니다. 먼저 데이터를 로드해 주세요.")
+            
+        df_deg = pd.DataFrame(genes)
+            
+        log2fc_cutoff = float(payload.get("log2fc_cutoff", 1.0))
+        fdr_cutoff = float(payload.get("fdr_cutoff", 0.05))
+        
+        # Calculate statistics
+        df_deg["log2fc"] = pd.to_numeric(df_deg["log2fc"], errors="coerce").fillna(0.0)
+        df_deg["pvalue"] = pd.to_numeric(df_deg["pvalue"], errors="coerce").fillna(1.0)
+        df_deg["fdr"] = pd.to_numeric(df_deg["fdr"], errors="coerce").fillna(1.0)
+        
+        up_deg = df_deg[(df_deg["log2fc"] >= log2fc_cutoff) & (df_deg["fdr"] <= fdr_cutoff)]
+        down_deg = df_deg[(df_deg["log2fc"] <= -log2fc_cutoff) & (df_deg["fdr"] <= fdr_cutoff)]
+        neutral_deg = df_deg[~df_deg.index.isin(up_deg.index) & ~df_deg.index.isin(down_deg.index)]
+        
+        top_up = up_deg.sort_values(by="log2fc", ascending=False).head(10)
+        top_down = down_deg.sort_values(by="log2fc", ascending=True).head(10)
+        
+        # Collect GSEA Leading Edge Targets
+        df_go = get_go_data(species)
+        counts = df_go.groupby(["goid", "term_name", "aspect"]).size().reset_index(name="count")
+        filtered_terms = counts[(counts["count"] >= 5) & (counts["count"] <= 1500)].head(5)
+        
+        gsea_summary_list = []
+        for _, r in filtered_terms.iterrows():
+            g_res = run_gsea_analysis(r["goid"], session_id=session_id, species=species)
+            if g_res.get("success"):
+                gsea_summary_list.append(g_res)
+                
+        # Image base64 strings if provided from client
+        volcano_img = payload.get("volcano_img", "")
+        pca_img = payload.get("pca_img", "")
+        
+        import datetime
+        now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Build HTML content
+        html_code = f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNA-Seq Analysis & Strain Engineering Report ({sp_full_name})</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {{
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-page: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }}
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body {{
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 24px;
+        }}
+        .report-container {{
+            max-width: 1040px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 40px;
+            border: 1px solid var(--border);
+        }}
+        .no-print-bar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }}
+        .btn-print {{
+            background: #3b82f6;
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        .btn-print:hover {{ background: #2563eb; }}
+        header {{
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }}
+        .report-title {{
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }}
+        .report-subtitle {{
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }}
+        .badge-species {{
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }}
+        .section-card {{
+            margin-bottom: 32px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
+        }}
+        .section-header {{
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 10px;
+        }}
+        .stats-grid {{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }}
+        .stat-box {{
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }}
+        .stat-val {{
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 4px;
+        }}
+        .stat-label {{
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 12px;
+        }}
+        th, td {{
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }}
+        th {{
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 700;
+        }}
+        code {{
+            font-family: 'JetBrains Mono', monospace;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }}
+        .action-over {{
+            background: #dcfce7;
+            color: #15803d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }}
+        .action-ko {{
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }}
+        .img-container {{
+            text-align: center;
+            margin: 16px 0;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }}
+        .img-container img {{
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }}
+        @media print {{
+            body {{ background: #ffffff; padding: 0; }}
+            .report-container {{ box-shadow: none; border: none; padding: 0; max-width: 100%; }}
+            .no-print-bar {{ display: none !important; }}
+            .section-card {{ page-break-inside: avoid; border: 1px solid #cbd5e1; }}`
+        }}
+    </style>
+</head>
+<body>
+    <div class="no-print-bar">
+        <div>
+            <i class="fa-solid fa-file-pdf" style="color: #60a5fa; margin-right: 8px;"></i>
+            <strong>RNA-Seq & Strain Engineering Publication Report</strong>
+        </div>
+        <button class="btn-print" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> PDF 인쇄 및 저장
+        </button>
+    </div>
+
+    <div class="report-container">
+        <header>
+            <div>
+                <h1 class="report-title">🧬 RNA-Seq & 균주 개량 종합 연구 보고서</h1>
+                <p class="report-subtitle">Transcriptomic Profiling & Strain Engineering Target Recommendation Report</p>
+                <p style="font-size: 11px; color: #94a3b8; margin-top: 6px;">생성 일시: {now_str}</p>
+            </div>
+            <div>
+                <span class="badge-species"><i class="fa-solid fa-dna" style="margin-right: 6px;"></i>{sp_full_name}</span>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="fa-solid fa-chart-pie" style="color: var(--primary);"></i> Executive Summary & 품질 관리 (QC)
+            </div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">분석 유전자 총수</div>
+                    <div class="stat-val" style="color: #0f172a;">{len(df_deg):,} 개</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">발현 상향 (Upregulated)</div>
+                    <div class="stat-val" style="color: var(--danger);">+{len(up_deg):,} 개</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">발현 하향 (Downregulated)</div>
+                    <div class="stat-val" style="color: var(--primary);">-{len(down_deg):,} 개</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">적용 임계값 (Cut-off)</div>
+                    <div class="stat-val" style="font-size: 14px; color: #334155; line-height: 2.2;">|FC| &ge; {log2fc_cutoff}, FDR &le; {fdr_cutoff}</div>
+                </div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted);">
+                본 보고서는 선택된 미생물 균주({sp_full_name})의 RNA-Seq 데이터를 기반으로 발현 변이 유전자(DEG), 전사 조절 네트워크, GSEA 랭킹 경로 농축 및 대사공학적 개량 타깃 유전자를 종합 진단하여 생성되었습니다.
+            </p>
+        </div>
+
+        <!-- Section 1: Volcano Plot & Top DEGs -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="fa-solid fa-volcano" style="color: var(--danger);"></i> 1. 발현 변이 유전자 (DEG) 분석 & Volcano Plot
+            </div>
+            {"<div class='img-container'><img src='" + volcano_img + "' alt='Volcano Plot'/></div>" if volcano_img else ""}
+            
+            <h4 style="font-size: 13px; margin-top: 16px; color: #1e293b;">🔥 Top 10 발현 상향 유전자 (Top 10 Upregulated DEGs)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Locus Tag</th>
+                        <th>Symbol</th>
+                        <th>Log2FC</th>
+                        <th>P-value</th>
+                        <th>FDR</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+"""
+        for _, r in top_up.iterrows():
+            desc = str(r.get("description", "-"))[:45]
+            html_code += f"""
+                    <tr>
+                        <td><code>{r.get('locus_tag', '-')}</code></td>
+                        <td><strong>{r.get('gene_symbol', '-')}</strong></td>
+                        <td style="color: var(--danger); font-weight:700;">+{float(r.get('log2fc',0)):.2f}</td>
+                        <td>{float(r.get('pvalue',1)):.2e}</td>
+                        <td>{float(r.get('fdr',1)):.2e}</td>
+                        <td style="color: #475569;">{desc}</td>
+                    </tr>"""
+                    
+        html_code += """
+                </tbody>
+            </table>
+
+            <h4 style="font-size: 13px; margin-top: 24px; color: #1e293b;">🧊 Top 10 발현 하향 유전자 (Top 10 Downregulated DEGs)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Locus Tag</th>
+                        <th>Symbol</th>
+                        <th>Log2FC</th>
+                        <th>P-value</th>
+                        <th>FDR</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+"""
+        for _, r in top_down.iterrows():
+            desc = str(r.get("description", "-"))[:45]
+            html_code += f"""
+                    <tr>
+                        <td><code>{r.get('locus_tag', '-')}</code></td>
+                        <td><strong>{r.get('gene_symbol', '-')}</strong></td>
+                        <td style="color: var(--primary); font-weight:700;">{float(r.get('log2fc',0)):.2f}</td>
+                        <td>{float(r.get('pvalue',1)):.2e}</td>
+                        <td>{float(r.get('fdr',1)):.2e}</td>
+                        <td style="color: #475569;">{desc}</td>
+                    </tr>"""
+
+        html_code += """
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 2: GSEA Pathway & Strain Engineering Targets -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="fa-solid fa-bullseye" style="color: #10b981;"></i> 2. GSEA 농축 분석 & 🎯 핵심 균주 개량 타깃 (Leading Edge Targets)
+            </div>
+"""
+        if gsea_summary_list:
+            for g in gsea_summary_list:
+                status_color = "#10b981" if g["nes"] > 0 else "#ef4444"
+                html_code += f"""
+            <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>{g['term_name']} (<code>{g['term_id']}</code>)</strong>
+                    <span style="background: {status_color}; color: white; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">
+                        {g['status_tag']} (NES: {g['nes']:+.2f}, FDR: {g['fdr']:.4f})
+                    </span>
+                </div>
+                <p style="font-size: 12px; color: #475569; margin-top: 6px;">{g['insight_text']}</p>
+            </div>
+"""
+        html_code += """
+        </div>
+
+        <!-- Footnote -->
+        <footer style="text-align: center; font-size: 11px; color: #94a3b8; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+            RNA-Seq Analyzer & Strain Engineering Platform V4 &copy; Google DeepMind Pair Programming Assistant
+        </footer>
+    </div>
+</body>
+</html>"""
+        
+        return Response(content=html_code, media_type="text/html")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Mount static files folder (will serve our frontend UI)
 app.mount("/static", StaticFiles(directory="static"), name="static_dir")

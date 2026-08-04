@@ -7572,8 +7572,68 @@ function renderPCAPlot() {
         }
     })
     .catch(err => {
-        chartDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 150px;">PCA 연산 중 오류 발생: ${err.message}</div>`;
-        if (loadingDiv) loadingDiv.innerHTML = "";
-    });
-}
+
+// ==========================================
+// One-Click Publication Report Generator Handler
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    const btnGenReport = document.getElementById("btn-generate-report");
+    if (btnGenReport) {
+        btnGenReport.addEventListener("click", async () => {
+            const curSpecies = typeof currentSpecies !== 'undefined' ? currentSpecies : "sce";
+            const curSession = typeof currentSessionId !== 'undefined' ? currentSessionId : "default";
+            const fcEl = document.getElementById("fc-cutoff");
+            const fdrEl = document.getElementById("fdr-cutoff");
+            const log2fcVal = fcEl ? parseFloat(fcEl.value || 1.0) : 1.0;
+            const fdrVal = fdrEl ? parseFloat(fdrEl.value || 0.05) : 0.05;
+
+            // Capture Volcano Plot image if present
+            let volcanoImg = "";
+            const volcanoDiv = document.getElementById("volcano-plot");
+            if (volcanoDiv && volcanoDiv.data) {
+                try {
+                    volcanoImg = await Plotly.toImage('volcano-plot', { format: 'png', width: 900, height: 450 });
+                } catch (e) {
+                    console.warn("Plotly image capture warning:", e);
+                }
+            }
+
+            btnGenReport.disabled = true;
+            btnGenReport.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 보고서 생성 중...`;
+
+            fetch(`${API_URL}/api/generate_report`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    session_id: curSession,
+                    species: curSpecies,
+                    log2fc_cutoff: log2fcVal,
+                    fdr_cutoff: fdrVal,
+                    volcano_img: volcanoImg
+                })
+            })
+            .then(r => {
+                if (!r.ok) throw new Error("보고서 생성 실패");
+                return r.text();
+            })
+            .then(htmlContent => {
+                btnGenReport.disabled = false;
+                btnGenReport.innerHTML = `<i class="fa-solid fa-file-contract"></i> 📄 종합 보고서 생성`;
+                
+                const reportWindow = window.open("", "_blank");
+                if (reportWindow) {
+                    reportWindow.document.write(htmlContent);
+                    reportWindow.document.close();
+                } else {
+                    alert("팝업 창이 블록되었습니다. 브라우저의 팝업 허용 설정을 확인해 주세요.");
+                }
+            })
+            .catch(err => {
+                btnGenReport.disabled = false;
+                btnGenReport.innerHTML = `<i class="fa-solid fa-file-contract"></i> 📄 종합 보고서 생성`;
+                alert("종합 보고서 생성 중 오류가 발생했습니다: " + err.message);
+            });
+        });
+    }
+});
 
