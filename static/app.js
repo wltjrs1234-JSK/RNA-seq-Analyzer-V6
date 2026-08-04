@@ -1820,18 +1820,42 @@ function renderPlot(plotType) {
     });
 }
 
+// Helper to generate species-specific UniProt DB link URL
+function getUniprotUrl(gene) {
+    if (!gene) return "https://www.uniprot.org";
+    const locus = gene.locus_tag || gene.gene_symbol || (typeof gene === 'string' ? gene : "");
+    const symbol = gene.gene_symbol || locus;
+    const query = locus || symbol;
+    
+    let taxId = "";
+    if (gCurrentSpecies === "cgl") taxId = "196627";
+    else if (gCurrentSpecies === "eco") taxId = "83333";
+    else if (gCurrentSpecies === "sce") taxId = "559292";
+    
+    if (taxId) {
+        return `https://www.uniprot.org/uniprotkb?query=${encodeURIComponent(query)}+AND+taxonomy_id:${taxId}`;
+    }
+    return `https://www.uniprot.org/uniprotkb?query=${encodeURIComponent(query)}`;
+}
+
 // ----------------------------------------------------------------------
 // 5. Gene Detail Panel
 // ----------------------------------------------------------------------
 function showGeneDetails(gene) {
     gSelectedGene = gene;
+    const uniprotUrl = getUniprotUrl(gene);
     
     const panel = document.getElementById("gene-detail-body");
     panel.innerHTML = `
         <div class="gene-detail-card">
-            <div class="gene-detail-header">
-                <span class="gene-detail-title">${gene.gene_symbol}</span>
-                <span class="gene-detail-locus">${gene.locus_tag}</span>
+            <div class="gene-detail-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span class="gene-detail-title">${gene.gene_symbol}</span>
+                    <span class="gene-detail-locus">${gene.locus_tag}</span>
+                </div>
+                <a href="${uniprotUrl}" target="_blank" rel="noopener noreferrer" class="uniprot-badge-btn" title="UniProt에서 ${gene.gene_symbol || gene.locus_tag} 단백질 3D 구조 및 상세 정보 보기">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> UniProt DB
+                </a>
             </div>
             <p class="gene-detail-desc">${gene.description || '유전자 설명이 존재하지 않습니다.'}</p>
             
@@ -3217,10 +3241,17 @@ function renderNetworkGraph() {
             const detailsPanel = document.getElementById("network-node-details");
             cyInstance.on('tap', 'node', function(evt){
                 const nodeData = evt.target.data();
+                const nodeGene = { locus_tag: nodeData.id, gene_symbol: nodeData.label };
+                const uUrl = getUniprotUrl(nodeGene);
                 detailsPanel.innerHTML = `
-                    <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 600; color: #6366f1; text-transform: uppercase;">ORF Name (Systematic ID)</span>
-                        <h5 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 2px 0;">${nodeData.id}</h5>
+                    <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span style="font-size: 11px; font-weight: 600; color: #6366f1; text-transform: uppercase;">ORF Name (Systematic ID)</span>
+                            <h5 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 2px 0;">${nodeData.id}</h5>
+                        </div>
+                        <a href="${uUrl}" target="_blank" rel="noopener noreferrer" class="uniprot-badge-btn" title="UniProt에서 상세 단백질 정보 보기">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> UniProt DB
+                        </a>
                     </div>
                     <div style="margin-bottom: 10px;">
                         <span style="font-size: 11px; font-weight: 600; color: #64748b;">Gene Symbol</span>
