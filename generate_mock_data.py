@@ -31,14 +31,14 @@ yeast_core_genes = [
     {"Gene_ID": 855770, "Gene_Symbol": "SKN7", "Description": "Response regulator SKN7", "locus_tag": "YHR206W", "direction": "up"}
 ]
 
-# Generate additional yeast genes up to 525 genes
+# Generate additional yeast genes up to 6,477 genes
 np.random.seed(42)
 yeast_genes_data = list(yeast_core_genes)
 existing_yeast_tags = set(g["locus_tag"] for g in yeast_genes_data)
 
 chroms = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
 num_counter = 1
-while len(yeast_genes_data) < 525:
+while len(yeast_genes_data) < 6477:
     ch = chroms[num_counter % len(chroms)]
     num_str = f"{num_counter:03d}"
     arm = "L" if (num_counter % 2 == 0) else "R"
@@ -85,12 +85,12 @@ coryne_core_genes = [
     {"Gene_ID": 1021225, "Gene_Symbol": "fasA", "Description": "Fatty acid synthase subunit A", "locus_tag": "NCgl0831", "direction": "unchanged"}
 ]
 
-# Generate additional Corynebacterium genes up to 525 genes
+# Generate additional Corynebacterium genes up to 3,100 genes
 coryne_genes_data = list(coryne_core_genes)
 existing_coryne_tags = set(g["locus_tag"] for g in coryne_genes_data)
 
 cg_num = 1
-while len(coryne_genes_data) < 525:
+while len(coryne_genes_data) < 3100:
     tag = f"NCgl{cg_num:04d}"
     if tag not in existing_coryne_tags:
         existing_coryne_tags.add(tag)
@@ -108,26 +108,32 @@ def generate_excel(genes_list, filename):
     np.random.seed(42)
     rows = []
     for item in genes_list:
-        wt_tpm = np.random.exponential(1000) + 50
+        wt_tpm = np.random.exponential(800) + 30
         dir_choice = item.get("direction", "unchanged")
         if dir_choice == "up":
-            fc = np.random.uniform(2.2, 6.5)
+            fc = np.random.uniform(1.5, 5.8)
+            cv = np.random.uniform(0.04, 0.22)
         elif dir_choice == "down":
-            fc = 1 / np.random.uniform(2.2, 6.5)
+            fc = 1 / np.random.uniform(1.5, 5.8)
+            cv = np.random.uniform(0.04, 0.22)
         else:
-            fc = np.random.uniform(0.85, 1.15)
+            fc = np.random.uniform(0.88, 1.14)
+            cv = np.random.uniform(0.08, 0.35)
             
         mutant_tpm = wt_tpm * fc
-        wt_reps = [round(wt_tpm * np.random.uniform(0.92, 1.08), 2) for _ in range(3)]
-        mut_reps = [round(mutant_tpm * np.random.uniform(0.92, 1.08), 2) for _ in range(3)]
+        wt_reps = [round(max(1.0, wt_tpm * (1 + np.random.normal(0, cv))), 2) for _ in range(3)]
+        mut_reps = [round(max(1.0, mutant_tpm * (1 + np.random.normal(0, cv))), 2) for _ in range(3)]
+        
+        wt_avg = round(float(np.mean(wt_reps)), 2)
+        mut_avg = round(float(np.mean(mut_reps)), 2)
         
         rows.append({
             "Gene_ID": item["Gene_ID"],
             "Gene_Symbol": item["Gene_Symbol"],
             "locus_tag": item["locus_tag"],
             "Description": item["Description"],
-            "Mutant_TPM AVG": round(mutant_tpm, 2),
-            "WT_TPM AVG": round(wt_tpm, 2),
+            "Mutant_TPM AVG": mut_avg,
+            "WT_TPM AVG": wt_avg,
             "Mutant_TPM_1": mut_reps[0],
             "Mutant_TPM_2": mut_reps[1],
             "Mutant_TPM_3": mut_reps[2],
@@ -174,7 +180,7 @@ ecoli_genes_data = list(ecoli_core_genes)
 existing_ecoli_tags = set(g["locus_tag"] for g in ecoli_genes_data)
 
 b_num = 1
-while len(ecoli_genes_data) < 525:
+while len(ecoli_genes_data) < 4400:
     tag = f"b{b_num:04d}"
     if tag not in existing_ecoli_tags:
         existing_ecoli_tags.add(tag)

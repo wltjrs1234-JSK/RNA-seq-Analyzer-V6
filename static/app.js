@@ -15,6 +15,7 @@ let gActiveSessionId = null;
 let gCurrentSelectedGOTerm = null;
 let gCurrentSelectedGOGenes = [];
 let gCurrentSpecies = 'sce'; // 'sce' (S. cerevisiae) or 'cgl' (C. glutamicum)
+let gSelectedTfId = null;
 
 // Base API URL (can be blank since we are hosting static files on same port)
 const API_URL = "";
@@ -85,6 +86,7 @@ function initSpeciesSelect() {
     if (select) {
         select.addEventListener("change", (e) => {
             gCurrentSpecies = e.target.value;
+            gSelectedTfId = null;
             updateSpeciesTitle(gCurrentSpecies);
         });
     }
@@ -1632,7 +1634,8 @@ function renderVolcanoOrMAPlot() {
 
 function renderPlot(plotType) {
     const log2fcThresh = parseFloat(document.getElementById("log2fc-thresh").value) || 0;
-    const pvalThresh = parseFloat(document.getElementById("pvalue-thresh").value) || 1.0;
+    const rawPvalThresh = document.getElementById("pvalue-thresh") ? parseFloat(document.getElementById("pvalue-thresh").value) : 0.05;
+    const pvalThresh = isNaN(rawPvalThresh) ? 0.05 : rawPvalThresh;
     const statType = document.getElementById("stat-type") ? document.getElementById("stat-type").value : "fdr";
     
     const xData = [];
@@ -1641,31 +1644,43 @@ function renderPlot(plotType) {
     const colorData = [];
     const customData = [];
     
+    let topDegCandidates = [];
+    
     gGenes.forEach(gene => {
         const statVal = statType === "fdr" ? gene.fdr : gene.pvalue;
         let passesPVal = true;
         if (statType !== "none" && gIsReplicateMode) {
-            passesPVal = (statVal !== null && statVal <= pvalThresh);
+            passesPVal = (statVal !== null && statVal !== undefined && !isNaN(statVal) && statVal <= pvalThresh);
         }
         const isUp = gene.log2fc >= log2fcThresh && passesPVal;
         const isDown = gene.log2fc <= -log2fcThresh && passesPVal;
         
-        let color = '#64748b'; // Neutral (Grey)
-        if (isUp) color = '#ff4d4d'; // Upregulated (Red)
-        if (isDown) color = '#4d4dff'; // Downregulated (Blue)
+        let color = '#94a3b8'; // Neutral (Gray)
+        if (isUp) color = '#ef4444'; // Upregulated DEG (Bright Red)
+        if (isDown) color = '#3b82f6'; // Downregulated DEG (Bright Blue)
         
+        let yVal = 0;
         if (plotType === "volcano") {
             xData.push(gene.log2fc);
-            // Y-axis: if statType is none, default to using FDR to draw Volcano shape
-            const yStatVal = statType === "none" ? gene.fdr : statVal;
-            const yVal = (yStatVal !== null && yStatVal > 0) ? -Math.log10(yStatVal) : 0;
+            const yStatVal = statType === "none" ? (gene.fdr || gene.pvalue) : statVal;
+            yVal = (yStatVal !== null && yStatVal !== undefined && yStatVal > 0) ? -Math.log10(yStatVal) : 0;
             yData.push(yVal);
         } else {
-            // MA Plot: X-axis is log2 Mean Expression, Y-axis is Log2FC
             const meanExpr = (gene.wt_val + gene.mutant_val) / 2;
             const xVal = meanExpr > 0 ? Math.log2(meanExpr) : 0;
             xData.push(xVal);
             yData.push(gene.log2fc);
+            yVal = Math.abs(gene.log2fc);
+        }
+        
+        if (passesPVal && (isUp || isDown)) {
+            topDegCandidates.push({
+                gene: gene,
+                symbol: gene.gene_symbol || gene.locus_tag,
+                x: plotType === "volcano" ? gene.log2fc : (Math.log2(((gene.wt_val + gene.mutant_val) / 2) || 1)),
+                y: yVal,
+                score: yVal * Math.abs(gene.log2fc)
+            });
         }
         
         const statLabel = statType === "fdr" ? "FDR" : "p-value";
@@ -1674,23 +1689,51 @@ function renderPlot(plotType) {
         customData.push(gene);
     });
     
+    // Sort top DEGs by significance score for auto-annotations
+    topDegCandidates.sort((a, b) => b.score - a.score);
+    const topDegsToAnnotate = topDegCandidates.slice(0, 8);
+    
+    const markerSize = gGenes.length > 2000 ? 5 : 6;
+    
     const trace = {
         x: xData,
         y: yData,
         mode: 'markers',
-        type: 'scatter',
+        type: 'scattergl',
         text: textData,
         marker: {
-            size: 8,
+            size: markerSize,
             color: colorData,
-            opacity: 0.8,
+            opacity: 0.55,
             line: {
-                color: 'rgba(0,0,0,0.2)',
-                width: 0.5
+                color: 'rgba(255,255,255,0.3)',
+                width: 0.3
             }
         },
         customdata: customData
     };
+    
+    const annotations = topDegsToAnnotate.map(item => ({
+        x: item.x,
+        y: item.y,
+        text: item.symbol,
+        showarrow: true,
+        arrowhead: 2,
+        arrowsize: 0.8,
+        arrowwidth: 1,
+        arrowcolor: '#475569',
+        ax: item.x > 0 ? 25 : -25,
+        ay: -20,
+        font: {
+            family: 'Inter, sans-serif',
+            size: 11,
+            color: '#0f172a'
+        },
+        bgcolor: 'rgba(255,255,255,0.85)',
+        bordercolor: '#cbd5e1',
+        borderwidth: 1,
+        borderpad: 2
+    }));
     
     const layout = {
         paper_bgcolor: 'rgba(0,0,0,0)',
@@ -1709,38 +1752,41 @@ function renderPlot(plotType) {
             gridcolor: '#e2e8f0',
             zerolinecolor: '#cbd5e1'
         },
-        margin: { t: 20, r: 20, b: 65, l: 60 },
+        margin: { t: 25, r: 25, b: 65, l: 60 },
         hovermode: 'closest',
+        annotations: annotations,
         shapes: []
     };
     
     // Add thresh lines
     if (plotType === "volcano") {
+        const maxY = yData.length > 0 ? Math.max(...yData) : 5;
+        const maxX = xData.length > 0 ? Math.max(...xData.map(Math.abs)) : 3;
         layout.shapes.push(
             // Vertical -thresh line
             {
                 type: 'line',
                 x0: -log2fcThresh, x1: -log2fcThresh,
-                y0: 0, y1: Math.max(...yData) * 1.05,
-                line: { color: 'rgba(15, 23, 42, 0.25)', width: 1, dash: 'dash' }
+                y0: 0, y1: maxY * 1.05,
+                line: { color: 'rgba(15, 23, 42, 0.35)', width: 1, dash: 'dash' }
             },
             // Vertical +thresh line
             {
                 type: 'line',
                 x0: log2fcThresh, x1: log2fcThresh,
-                y0: 0, y1: Math.max(...yData) * 1.05,
-                line: { color: 'rgba(15, 23, 42, 0.25)', width: 1, dash: 'dash' }
+                y0: 0, y1: maxY * 1.05,
+                line: { color: 'rgba(15, 23, 42, 0.35)', width: 1, dash: 'dash' }
             }
         );
-        if (gIsReplicateMode && statType !== "none" && pvalThresh < 1.0) {
+        if (gIsReplicateMode && statType !== "none" && pvalThresh > 0 && pvalThresh <= 1.0) {
             const hVal = -Math.log10(pvalThresh);
             layout.shapes.push(
                 // Horizontal FDR line
                 {
                     type: 'line',
-                    x0: Math.min(...xData) * 1.05, x1: Math.max(...xData) * 1.05,
+                    x0: -maxX * 1.1, x1: maxX * 1.1,
                     y0: hVal, y1: hVal,
-                    line: { color: 'rgba(15, 23, 42, 0.25)', width: 1, dash: 'dash' }
+                    line: { color: 'rgba(15, 23, 42, 0.35)', width: 1, dash: 'dash' }
                 }
             );
         }
@@ -3223,16 +3269,17 @@ function renderNetworkGraph() {
             }
         });
 
-        // Use selectedTfId if provided or default TF (e.g. YEL009C)
-        const activeTfRow = document.querySelector(".tf-row.selected-tf-row");
-        const selectedTfParam = activeTfRow ? activeTfRow.getAttribute("data-tf-id") : "YEL009C";
+        // Use gSelectedTfId if set
+        const selectedTfParam = gSelectedTfId || null;
 
         fetch(`${API_URL}/api/tf_enrichment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 genes: targetList,
-                selected_tf: selectedTfParam
+                selected_tf: selectedTfParam,
+                species: gCurrentSpecies,
+                session_id: gActiveSessionId
             })
         })
         .then(r => r.json())
@@ -3244,8 +3291,15 @@ function renderNetworkGraph() {
             
             gTFAssociationData = data.enrichment || [];
             
+            // If gSelectedTfId wasn't set, default to top 1 TF returned from backend
+            let activeTfId = selectedTfParam;
+            if (!activeTfId && gTFAssociationData.length > 0) {
+                activeTfId = gTFAssociationData[0].tf_id;
+                gSelectedTfId = activeTfId;
+            }
+            
             // 1. Render TF Enrichment Table in the Right Subtab
-            renderTFListTable(gTFAssociationData, selectedTfParam);
+            renderTFListTable(gTFAssociationData, activeTfId);
             
             // 2. Render Full Regulatory Network
             const network = data.network || { nodes: [], edges: [] };
@@ -3440,6 +3494,7 @@ function renderTFListTable(tfResults, activeTfId) {
     container.querySelectorAll(".tf-row").forEach(row => {
         row.addEventListener("click", () => {
             const tfId = row.getAttribute("data-tf-id");
+            gSelectedTfId = tfId;
             
             // Update selected indicator classes
             container.querySelectorAll(".tf-row").forEach(r => {
@@ -3575,6 +3630,8 @@ function renderGSEAList(terms) {
 function runGSEAAnalysis(termId, termName) {
     const runningDiv = document.getElementById("gsea-running-plot");
     const barcodeDiv = document.getElementById("gsea-barcode-plot");
+    const bannerDiv = document.getElementById("gsea-dashboard-banner");
+    const leCard = document.getElementById("gsea-leading-edge-card");
     
     runningDiv.innerHTML = `<div style="text-align: center; padding-top: 100px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 8px;">GSEA Running Enrichment Score 계산 중...</p></div>`;
     barcodeDiv.innerHTML = "";
@@ -3587,6 +3644,33 @@ function runGSEAAnalysis(termId, termName) {
             return;
         }
         
+        // 1. Render Dashboard Banner & Strain Engineering Insights
+        if (bannerDiv) {
+            bannerDiv.style.display = "block";
+            document.getElementById("gsea-banner-title").textContent = data.term_name || termName;
+            document.getElementById("gsea-banner-id").textContent = data.term_id || termId;
+            
+            const isPos = data.nes > 0;
+            const statusBg = isPos ? '#10b981' : '#ef4444';
+            
+            document.getElementById("gsea-badges").innerHTML = `
+                <span class="badge" style="background: ${statusBg}; color: #ffffff; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
+                    ${isPos ? '🟢' : '🔴'} ${data.status_tag || (isPos ? 'Activated' : 'Suppressed')}
+                </span>
+                <span class="badge" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
+                    NES: ${data.nes > 0 ? '+' : ''}${data.nes.toFixed(2)}
+                </span>
+                <span class="badge" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
+                    FDR: ${data.fdr.toFixed(4)}
+                </span>
+                <span class="badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
+                    🎯 Leading Edge: ${data.leading_edge_count} genes
+                </span>
+            `;
+            
+            document.getElementById("gsea-insight-text").innerHTML = data.insight_text || "분석 완료";
+        }
+        
         const profile = data.es_profile || [];
         const barcodes = data.barcode_ranks || [];
         
@@ -3596,7 +3680,7 @@ function runGSEAAnalysis(termId, termName) {
             mode: 'lines',
             type: 'scatter',
             name: 'Enrichment Score',
-            line: { color: '#22c55e', width: 3.5 }
+            line: { color: data.nes > 0 ? '#10b981' : '#ef4444', width: 3.5 }
         };
         
         const traceZero = {
@@ -3608,17 +3692,36 @@ function runGSEAAnalysis(termId, termName) {
             showlegend: false
         };
         
+        const peakAnnotation = {
+            x: data.peak_rank,
+            y: data.peak_es,
+            text: `🎯 Peak ES: ${data.peak_es.toFixed(4)} (Rank ${data.peak_rank})`,
+            showarrow: true,
+            arrowhead: 2,
+            arrowsize: 1,
+            arrowwidth: 1.5,
+            arrowcolor: data.nes > 0 ? '#10b981' : '#ef4444',
+            ax: 0,
+            ay: data.nes > 0 ? -35 : 35,
+            font: { family: 'Inter, sans-serif', size: 11, color: '#0f172a' },
+            bgcolor: 'rgba(255,255,255,0.9)',
+            bordercolor: data.nes > 0 ? '#10b981' : '#ef4444',
+            borderwidth: 1,
+            borderpad: 4
+        };
+        
         const runningLayout = {
             title: {
-                text: `GSEA Running Score for "${termName}" (ES Peak: ${data.nes.toFixed(4)})`,
+                text: `GSEA Running Score for "${termName}"`,
                 font: { size: 14, color: '#0f172a', family: 'Inter, sans-serif' }
             },
             xaxis: { title: 'Ranked Gene List Index', showgrid: false },
             yaxis: { title: 'Enrichment Score (ES)', gridcolor: '#e2e8f0' },
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
-            margin: { l: 60, r: 20, t: 50, b: 40 },
-            hovermode: 'closest'
+            margin: { l: 60, r: 20, t: 40, b: 40 },
+            hovermode: 'closest',
+            annotations: [peakAnnotation]
         };
         
         runningDiv.innerHTML = "";
@@ -3632,13 +3735,13 @@ function runGSEAAnalysis(termId, termName) {
             type: 'bar',
             name: 'Hit',
             width: 3.0,
-            marker: { color: '#0f172a', opacity: 0.8 },
+            marker: { color: barcodes.map(b => b.log2fc >= 0 ? '#ef4444' : '#3b82f6'), opacity: 0.8 },
             showlegend: false
         };
         
         const barcodeLayout = {
             title: {
-                text: 'Gene Hits in Ranked List',
+                text: 'Gene Hits in Ranked List (Red: Log2FC > 0, Blue: Log2FC < 0)',
                 font: { size: 11, color: '#64748b', family: 'Inter, sans-serif' }
             },
             xaxis: { title: 'Ranked Index', showgrid: false, range: [0, profile.length ? profile[profile.length - 1].rank : 1000] },
@@ -3650,6 +3753,54 @@ function runGSEAAnalysis(termId, termName) {
         
         barcodeDiv.innerHTML = "";
         Plotly.newPlot('gsea-barcode-plot', [traceBarcode], barcodeLayout, {responsive: true});
+        
+        // 2. Render Leading Edge Core Genes Table
+        if (leCard) {
+            leCard.style.display = "block";
+            const tbody = document.querySelector("#table-gsea-leading-edge tbody");
+            tbody.innerHTML = "";
+            
+            const leGenes = data.leading_edge_genes || [];
+            if (leGenes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Leading Edge 유전자가 없습니다.</td></tr>`;
+            } else {
+                leGenes.forEach(g => {
+                    const tr = document.createElement("tr");
+                    const isUp = g.log2fc >= 0;
+                    const actionBadge = isUp 
+                        ? `<span style="background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">⚡ ${g.recommended_action}</span>`
+                        : `<span style="background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">✂️ ${g.recommended_action}</span>`;
+                        
+                    tr.innerHTML = `
+                        <td><strong>${g.rank}</strong></td>
+                        <td><code>${g.locus_tag}</code></td>
+                        <td><strong>${g.gene_symbol}</strong></td>
+                        <td style="color: ${isUp ? '#ef4444' : '#3b82f6'}; font-weight: 600;">${g.log2fc >= 0 ? '+' : ''}${g.log2fc.toFixed(2)}</td>
+                        <td style="color: #475569;">${g.description}</td>
+                        <td>${actionBadge}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+            
+            // Export CSV listener
+            const btnExport = document.getElementById("btn-export-gsea-le");
+            if (btnExport) {
+                btnExport.onclick = () => {
+                    let csv = "Rank,Locus Tag,Gene Symbol,Log2FC,Description,Recommended Action\n";
+                    leGenes.forEach(g => {
+                        csv += `"${g.rank}","${g.locus_tag}","${g.gene_symbol}","${g.log2fc}","${g.description.replace(/"/g, '""')}","${g.recommended_action}"\n`;
+                    });
+                    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `GSEA_Leading_Edge_${data.term_id}_${data.term_name.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                };
+            }
+        }
     })
     .catch(err => {
         runningDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 100px;">오류: ${err.message}</div>`;

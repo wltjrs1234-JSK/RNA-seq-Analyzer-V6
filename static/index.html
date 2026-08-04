@@ -769,12 +769,12 @@
                 <section class="tab-pane" id="gsea-tab">
                     <div class="card glass-card">
                         <div class="card-header flex-header">
-                            <h3 class="card-title">GSEA 스타일 랭킹 기반 농축 분석 (GSEA Running Score)</h3>
+                            <h3 class="card-title"><i class="fa-solid fa-chart-line icon-margin"></i>GSEA 랭킹 기반 농축 분석 & 균주 개량 타깃 발굴</h3>
                         </div>
                         <div class="card-body">
-                            <div class="alert-box mb-20">
-                                <i class="fa-solid fa-circle-info alert-icon"></i>
-                                <p class="alert-text">전체 유전자를 발현 변화량(Log2FC) 순위로 정렬한 상태에서 특정 GO 범주가 상단(증가) 또는 하단(감소)에 유의미하게 쏠려있는지 <strong>Enrichment Score Running Curve</strong>로 정밀 분석합니다.</p>
+                            <div class="alert-box mb-20" style="background: rgba(59, 130, 246, 0.06); border-left: 4px solid #3b82f6;">
+                                <i class="fa-solid fa-circle-info alert-icon" style="color: #3b82f6;"></i>
+                                <p class="alert-text">절단 기준(Cut-off) 없이 전체 유전자를 <strong>Log2FC 순위(Rank)</strong>로 정렬하여 특정 기능/대사 경로가 전사적으로 활성화(NES > 0)되었는지 억제(NES < 0)되었는지 진단하고, <strong>균주 개량 핵심 타깃(Leading Edge 유전자)</strong>을 발굴합니다.</p>
                             </div>
                             
                             <div style="display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 24px;">
@@ -783,19 +783,63 @@
                                         <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0;"><i class="fa-solid fa-list icon-margin"></i>분석 대상 유전자 세트 목록</h4>
                                     </div>
                                     <div style="padding: 12px; border-bottom: 1px solid var(--border-color); display: flex; gap: 8px;">
-                                        <input type="text" id="gsea-search" placeholder="기능 명칭 검색..." style="width: 100%; height: 28px; padding: 2px 8px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                        <input type="text" id="gsea-search" placeholder="기능 명칭 검색..." style="width: 100%; height: 32px; padding: 2px 10px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                                     </div>
-                                    <div id="gsea-terms-list" style="overflow-y: auto; max-height: 480px; flex: 1; padding: 6px;">
-                                        <!-- Will be populated dynamically -->
+                                    <div id="gsea-terms-list" style="overflow-y: auto; max-height: 720px; flex: 1; padding: 6px;">
                                         <p class="text-center text-muted" style="padding: 20px 0;">데이터 분석 대기 중...</p>
                                     </div>
                                 </div>
                                 <div style="display: flex; flex-direction: column; gap: 20px;">
+                                    <!-- Executive Dashboard & Insights Header -->
+                                    <div id="gsea-dashboard-banner" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px;">
+                                            <div>
+                                                <h4 id="gsea-banner-title" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">기능 범주 선택 필요</h4>
+                                                <span id="gsea-banner-id" style="font-size: 12px; color: #64748b; font-family: monospace;">-</span>
+                                            </div>
+                                            <div id="gsea-badges" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                                <!-- Dynamic Badges -->
+                                            </div>
+                                        </div>
+                                        <div id="gsea-insight-box" style="background: #f8fafc; border-radius: 8px; padding: 12px 16px; border: 1px solid #e2e8f0;">
+                                            <div style="font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px;"><i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 6px;"></i>균주 개량 인사이트 (Strain Engineering Insight)</div>
+                                            <div id="gsea-insight-text" style="font-size: 13px; color: #475569; line-height: 1.6;">목록에서 기능 범주를 클릭하시면 정밀 진단 결과를 확인하실 수 있습니다.</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Charts Container -->
                                     <div class="chart-box" style="background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px; min-height: 380px;">
                                         <div id="gsea-running-plot" style="width: 100%; height: 350px;"></div>
                                     </div>
                                     <div class="chart-box" style="background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 16px; min-height: 150px;">
                                         <div id="gsea-barcode-plot" style="width: 100%; height: 120px;"></div>
+                                    </div>
+
+                                    <!-- Leading Edge Core Genes Table -->
+                                    <div id="gsea-leading-edge-card" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                            <h4 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 0;">
+                                                <i class="fa-solid fa-bullseye" style="color: #ef4444; margin-right: 6px;"></i>🎯 핵심 기여 유전자 (Leading Edge Genes) - 균주 개량 타깃 목록
+                                            </h4>
+                                            <button id="btn-export-gsea-le" class="btn btn-secondary btn-sm" style="font-size: 12px;"><i class="fa-solid fa-file-excel icon-margin"></i>엑셀 내보내기</button>
+                                        </div>
+                                        <div style="max-height: 320px; overflow-y: auto;">
+                                            <table class="data-table" id="table-gsea-leading-edge" style="width: 100%; font-size: 12px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Rank</th>
+                                                        <th>Locus Tag</th>
+                                                        <th>Symbol</th>
+                                                        <th>Log2FC</th>
+                                                        <th>Description</th>
+                                                        <th>추천 조치 (Recommended Action)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Dynamic rows -->
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
