@@ -1823,8 +1823,18 @@ function renderPlot(plotType) {
 // Helper to generate species-specific UniProt DB link URL
 function getUniprotUrl(gene) {
     if (!gene) return "https://www.uniprot.org";
-    const locus = gene.locus_tag || gene.gene_symbol || (typeof gene === 'string' ? gene : "");
-    const symbol = gene.gene_symbol || locus;
+    let locus = gene.locus_tag || gene.gene_symbol || (typeof gene === 'string' ? gene : "");
+    let symbol = gene.gene_symbol || locus;
+    
+    // For C. glutamicum, UniProtKB indexes using Cgl prefix (e.g. Cgl1206) instead of NCBI NCgl prefix (e.g. NCgl1206)
+    if (gCurrentSpecies === "cgl" && locus) {
+        if (/^NCgl/i.test(locus)) {
+            locus = locus.replace(/^NCgl/i, "Cgl");
+        } else if (/^cg/i.test(locus) && !/^Cgl/i.test(locus)) {
+            locus = locus.replace(/^cg/i, "Cgl");
+        }
+    }
+    
     const query = locus || symbol;
     
     let taxId = "";
