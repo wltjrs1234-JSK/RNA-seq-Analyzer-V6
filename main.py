@@ -147,6 +147,14 @@ def get_pfam_data(species: str = "sce"):
 
 def get_go_data(species: str = "sce"):
     """Download and cache GO Slim mapping file for selected species."""
+    if species == "eco":
+        go_file = os.path.join(CACHE_DIR, "eco_go_slim_mapping.tab")
+        if os.path.exists(go_file):
+            try:
+                return pd.read_csv(go_file, sep="\t")
+            except Exception:
+                pass
+
     if species == "cgl":
         go_file = os.path.join(CACHE_DIR, "cgl_go_slim_mapping.tab")
         if not os.path.exists(go_file):
@@ -965,15 +973,18 @@ def run_go_enrichment(payload: dict):
     if not dataset_genes:
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 파일을 업로드해주세요.")
         
-    background_genes = set(g["locus_tag"] for g in dataset_genes)
+    background_genes = set(str(g["locus_tag"]).strip().lower() for g in dataset_genes)
+    target_genes = set(str(t).strip().lower() for t in target_genes)
     
     # Intersect target genes with background just in case
     target_genes = target_genes.intersection(background_genes)
     if not target_genes:
         return {"enrichment": []}
         
-    # Filter GO mappings to background population
-    df_go_bg = df_go[df_go["locus_tag"].isin(background_genes)]
+    # Lowercase df_go locus_tag for matching
+    df_go = df_go.copy()
+    df_go["locus_tag_lower"] = df_go["locus_tag"].astype(str).str.strip().str.lower()
+    df_go_bg = df_go[df_go["locus_tag_lower"].isin(background_genes)]
     
     # Calculate Hypergeometric test for each GO Term
     # Total background size N
@@ -986,7 +997,7 @@ def run_go_enrichment(payload: dict):
     
     results = []
     for (goid, term_name, aspect), group in go_groups:
-        term_bg_genes = set(group["locus_tag"])
+        term_bg_genes = set(group["locus_tag_lower"])
         # M is number of genes in background with this GO term
         M = len(term_bg_genes)
         # k is overlap (number of target genes with this GO term)
@@ -1237,7 +1248,7 @@ def run_motif_discovery(payload: dict):
         else:
             base_seq = "".join(random.choices(["A", "T", "G", "C"], k=90))
             insert_pos = random.randint(10, 70)
-            motif_seq = "TGTGAACC" if species == "cgl" else "TGACTCAT"
+            motif_seq = "TGTGAACC" if species == "cgl" else ("TGTGA" if species == "eco" else "TGACTCAT")
             base_seq = base_seq[:insert_pos] + motif_seq + base_seq[insert_pos+motif_len:]
             sequences.append(base_seq)
             
@@ -1657,7 +1668,7 @@ def get_tf_activity(payload: dict):
     if not genes:
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 파일을 업로드해주세요.")
         
-    tf_db_path = "data/corynebacterium_tf_mini.json" if species == "cgl" else "data/yeastract_mini.json"
+    tf_db_path = "data/ecoli_tf_mini.json" if species == "eco" else ("data/corynebacterium_tf_mini.json" if species == "cgl" else "data/yeastract_mini.json")
     if not os.path.exists(tf_db_path):
         raise HTTPException(status_code=500, detail="TF 데이터베이스 파일을 찾을 수 없습니다.")
         
@@ -1681,7 +1692,16 @@ def get_tf_activity(payload: dict):
     
     tf_results = []
     for tf_name, tf_info in tf_db.items():
-        targets = [t.upper() for t in tf_info["targets"]]
+        raw_targets = tf_info.get("targets", [])
+        targets = []
+        for t in raw_targets:
+            if isinstance(t, dict):
+                tag = t.get("locus_tag") or t.get("gene_symbol")
+                if tag:
+                    targets.append(str(tag).upper())
+            else:
+                targets.append(str(t).upper())
+                
         # Intersect with dataset genes
         matched_targets = [t for t in targets if t in gene_map]
         if not matched_targets:
@@ -2531,7 +2551,7 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
         
     sp = species or get_session_species(session_id)
-    tax_id = 85962 if sp == "cgl" else 4932
+    tax_id = 83333 if sp == "eco" else (85962 if sp == "cgl" else 4932)
     
     degs = [g for g in dataset_genes if g.get("locus_tag")]
     

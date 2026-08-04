@@ -67,6 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadMockData();
             });
         }
+        const mockEcoliBtn = document.getElementById("load-mock-ecoli-btn");
+        if (mockEcoliBtn) {
+            mockEcoliBtn.addEventListener("click", () => {
+                gCurrentSpecies = "eco";
+                const select = document.getElementById("species-select");
+                if (select) select.value = "eco";
+                updateSpeciesTitle("eco");
+                loadMockData();
+            });
+        }
     });
 });
 
@@ -92,6 +102,10 @@ function updateSpeciesTitle(species) {
         if (titleEl) titleEl.textContent = `C. glutamicum RNA-seq - ${menuStr}`;
         if (subTitleEl) subTitleEl.textContent = "코리네박테리움 글루타미쿰 raw expression 데이터 기반 DEG 시각화 및 기능성 맵핑 분석 도구";
         if (logoText) logoText.textContent = "CoryneRNA";
+    } else if (gCurrentSpecies === 'eco') {
+        if (titleEl) titleEl.textContent = `E. coli RNA-seq - ${menuStr}`;
+        if (subTitleEl) subTitleEl.textContent = "대장균 (Escherichia coli K-12) raw expression 데이터 기반 DEG 시각화 및 기능성 맵핑 분석 도구";
+        if (logoText) logoText.textContent = "ColiRNA";
     } else {
         if (titleEl) titleEl.textContent = `S. cerevisiae RNA-seq - ${menuStr}`;
         if (subTitleEl) subTitleEl.textContent = "효모 raw expression 데이터 기반 DEG 시각화 및 기능성 맵핑 분석 도구";
@@ -158,8 +172,11 @@ function switchTab(tabId) {
     
     // Update Header Title dynamically based on Tab and active Species
     const titleEl = document.getElementById("page-title");
-    const menuText = document.querySelector(`.menu-item[data-tab="${tabId}"] .menu-text`).textContent;
-    const speciesName = (gCurrentSpecies === 'cgl') ? 'C. glutamicum' : 'S. cerevisiae';
+    const menuItem = document.querySelector(`.menu-item[data-tab="${tabId}"] .menu-text`);
+    const menuText = menuItem ? menuItem.textContent : "";
+    let speciesName = 'S. cerevisiae';
+    if (gCurrentSpecies === 'cgl') speciesName = 'C. glutamicum';
+    else if (gCurrentSpecies === 'eco') speciesName = 'E. coli';
     if (titleEl) titleEl.textContent = `${speciesName} RNA-seq - ${menuText}`;
     
     // Trigger chart redraws if necessary (Plotly sometimes needs to resize on tab show)
@@ -994,8 +1011,15 @@ function uploadText(text) {
 
 function loadMockData() {
     updateStatus("analyzing", "Mock 데이터 생성 및 로드 중...");
-    const mockFileUrl = (gCurrentSpecies === "cgl") ? "/mock_coryne_rnaseq.xlsx" : "/mock_yeast_rnaseq.xlsx";
-    const fileName = (gCurrentSpecies === "cgl") ? "mock_coryne_rnaseq.xlsx" : "mock_yeast_rnaseq.xlsx";
+    let mockFileUrl = "/mock_yeast_rnaseq.xlsx";
+    let fileName = "mock_yeast_rnaseq.xlsx";
+    if (gCurrentSpecies === "cgl") {
+        mockFileUrl = "/mock_coryne_rnaseq.xlsx";
+        fileName = "mock_coryne_rnaseq.xlsx";
+    } else if (gCurrentSpecies === "eco") {
+        mockFileUrl = "/mock_ecoli_rnaseq.xlsx";
+        fileName = "mock_ecoli_rnaseq.xlsx";
+    }
     
     fetch(mockFileUrl)
         .then(res => {
@@ -2613,12 +2637,22 @@ function runGOEnrichment() {
         return;
     }
     
+    const dbInfoEl = document.getElementById("go-db-info-text");
+    if (dbInfoEl) {
+        let dbName = "SGD Yeast GO Slim";
+        if (gCurrentSpecies === "cgl") dbName = "Corynebacterium GO Slim";
+        else if (gCurrentSpecies === "eco") dbName = "Escherichia coli K-12 GO Slim";
+        dbInfoEl.innerHTML = `선택한 유전자군에 대해 <strong>${dbName}</strong> 데이터셋을 기반으로 Hypergeometric test(초기하 분포 통계 검정)를 수행하여 통계적으로 유의미한 기능 범주를 도출합니다.`;
+    }
+    
     fetch(`${API_URL}/api/go_enrichment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             genes: targetList,
-            direction: direction
+            direction: direction,
+            species: gCurrentSpecies,
+            session_id: gActiveSessionId
         })
     })
     .then(r => {

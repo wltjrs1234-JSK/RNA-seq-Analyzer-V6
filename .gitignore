@@ -14,6 +14,7 @@ venv.bak/
 
 # Local cache & data
 data_cache/
+cache/
 *.xlsx
 # We can exclude mock files but maybe keep the code to generate them
 mock_yeast_rnaseq.xlsx

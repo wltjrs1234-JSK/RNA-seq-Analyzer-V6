@@ -1,0 +1,362 @@
+{
+  "CRP": {
+    "description": "cAMP-receptor protein, master regulator of catabolite repression",
+    "targets": [
+      {
+        "locus_tag": "b0002",
+        "gene_symbol": "thrA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0344",
+        "gene_symbol": "lacZ",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0343",
+        "gene_symbol": "lacY",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0342",
+        "gene_symbol": "lacA",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b3357",
+        "gene_symbol": "crp",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b2416",
+        "gene_symbol": "ptsG",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b1779",
+        "gene_symbol": "gapA",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b1676",
+        "gene_symbol": "pykF",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b3925",
+        "gene_symbol": "glpD",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0118",
+        "gene_symbol": "aceE",
+        "effect": "activation"
+      }
+    ]
+  },
+  "FNR": {
+    "description": "Fumarate and nitrate reduction regulatory protein, master anaerobic regulator",
+    "targets": [
+      {
+        "locus_tag": "b4123",
+        "gene_symbol": "fnr",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b1612",
+        "gene_symbol": "fumB",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b1611",
+        "gene_symbol": "fumA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b2210",
+        "gene_symbol": "dcuB",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b4151",
+        "gene_symbol": "frdA",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b2212",
+        "gene_symbol": "fdhF",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b1241",
+        "gene_symbol": "adhE",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b1380",
+        "gene_symbol": "ldhA",
+        "effect": "activation"
+      }
+    ]
+  },
+  "ArcA": {
+    "description": "Aerobic respiration control protein, response regulator",
+    "targets": [
+      {
+        "locus_tag": "b4401",
+        "gene_symbol": "arcA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0720",
+        "gene_symbol": "gltA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b1136",
+        "gene_symbol": "icd",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0726",
+        "gene_symbol": "sucA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0727",
+        "gene_symbol": "sucB",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0728",
+        "gene_symbol": "sucC",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0729",
+        "gene_symbol": "sucD",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0723",
+        "gene_symbol": "sdhA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0724",
+        "gene_symbol": "sdhB",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0721",
+        "gene_symbol": "sdhC",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0722",
+        "gene_symbol": "sdhD",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b1612",
+        "gene_symbol": "fumB",
+        "effect": "activation"
+      }
+    ]
+  },
+  "Lrp": {
+    "description": "Leucine-responsive regulatory protein, global regulator of amino acid metabolism",
+    "targets": [
+      {
+        "locus_tag": "b0889",
+        "gene_symbol": "lrp",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0002",
+        "gene_symbol": "thrA",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0003",
+        "gene_symbol": "thrB",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0004",
+        "gene_symbol": "thrC",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b2609",
+        "gene_symbol": "ilvI",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b2610",
+        "gene_symbol": "ilvH",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b3771",
+        "gene_symbol": "ilvC",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b3770",
+        "gene_symbol": "ilvD",
+        "effect": "activation"
+      }
+    ]
+  },
+  "Fis": {
+    "description": "Factor for inversion stimulation, nucleoid-associated protein",
+    "targets": [
+      {
+        "locus_tag": "b3261",
+        "gene_symbol": "fis",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b3357",
+        "gene_symbol": "crp",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b3987",
+        "gene_symbol": "rpoS",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b3296",
+        "gene_symbol": "rpoD",
+        "effect": "activation"
+      }
+    ]
+  },
+  "H-NS": {
+    "description": "Histone-like nucleoid-structuring protein, global silencer",
+    "targets": [
+      {
+        "locus_tag": "b1237",
+        "gene_symbol": "hns",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b3987",
+        "gene_symbol": "rpoS",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0344",
+        "gene_symbol": "lacZ",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b3556",
+        "gene_symbol": "cspA",
+        "effect": "repression"
+      }
+    ]
+  },
+  "OxyR": {
+    "description": "Hydrogen peroxide-inducible genes activator",
+    "targets": [
+      {
+        "locus_tag": "b3961",
+        "gene_symbol": "oxyR",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b3942",
+        "gene_symbol": "katG",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0605",
+        "gene_symbol": "ahpC",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0606",
+        "gene_symbol": "ahpF",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b0907",
+        "gene_symbol": "dps",
+        "effect": "activation"
+      },
+      {
+        "locus_tag": "b4209",
+        "gene_symbol": "grxA",
+        "effect": "activation"
+      }
+    ]
+  },
+  "Fur": {
+    "description": "Ferric uptake regulation protein, iron homeostasis master regulator",
+    "targets": [
+      {
+        "locus_tag": "b0683",
+        "gene_symbol": "fur",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0586",
+        "gene_symbol": "entA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0587",
+        "gene_symbol": "entB",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0588",
+        "gene_symbol": "entC",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b1656",
+        "gene_symbol": "sodB",
+        "effect": "activation"
+      }
+    ]
+  },
+  "LexA": {
+    "description": "Repressor of SOS regulon genes",
+    "targets": [
+      {
+        "locus_tag": "b4043",
+        "gene_symbol": "lexA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b2699",
+        "gene_symbol": "recA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b4058",
+        "gene_symbol": "uvrA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0779",
+        "gene_symbol": "uvrB",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0958",
+        "gene_symbol": "sulA",
+        "effect": "repression"
+      },
+      {
+        "locus_tag": "b0231",
+        "gene_symbol": "dinB",
+        "effect": "repression"
+      }
+    ]
+  }
+}

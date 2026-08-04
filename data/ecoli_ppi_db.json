@@ -1,0 +1,42 @@
+[
+  {
+    "protein1": "b0002",
+    "protein2": "b0003",
+    "score": 950
+  },
+  {
+    "protein1": "b0003",
+    "protein2": "b0004",
+    "score": 960
+  },
+  {
+    "protein1": "b0344",
+    "protein2": "b0343",
+    "score": 990
+  },
+  {
+    "protein1": "b0343",
+    "protein2": "b0342",
+    "score": 980
+  },
+  {
+    "protein1": "b3357",
+    "protein2": "b2416",
+    "score": 910
+  },
+  {
+    "protein1": "b4043",
+    "protein2": "b2699",
+    "score": 995
+  },
+  {
+    "protein1": "b3067",
+    "protein2": "b4142",
+    "score": 920
+  },
+  {
+    "protein1": "b4142",
+    "protein2": "b4143",
+    "score": 999
+  }
+]

@@ -1,0 +1,1624 @@
+locus_tag	symbol	sgdid	aspect	term_name	goid	feature_type
+b0002	thrA	b0002	P	threonine biosynthetic process	GO:0009088	ORF
+b0002	thrA	b0002	F	aspartokinase activity	GO:0004071	ORF
+b0002	thrA	b0002	C	cytoplasm	GO:0005737	ORF
+b0003	thrB	b0003	P	threonine biosynthetic process	GO:0009088	ORF
+b0003	thrB	b0003	F	homoserine kinase activity	GO:0004413	ORF
+b0004	thrC	b0004	P	threonine biosynthetic process	GO:0009088	ORF
+b0004	thrC	b0004	F	threonine synthase activity	GO:0004795	ORF
+b0344	lacZ	b0344	P	lactose catabolic process	GO:0000016	ORF
+b0344	lacZ	b0344	F	beta-galactosidase activity	GO:0004565	ORF
+b0344	lacZ	b0344	C	cytoplasm	GO:0005737	ORF
+b0343	lacY	b0343	P	lactose transport	GO:0015767	ORF
+b0343	lacY	b0343	F	lactose transmembrane transporter activity	GO:0015194	ORF
+b0343	lacY	b0343	C	plasma membrane	GO:0005886	ORF
+b0342	lacA	b0342	P	carbohydrate metabolic process	GO:0005975	ORF
+b0342	lacA	b0342	F	galactoside O-acetyltransferase activity	GO:0004335	ORF
+b3357	crp	b3357	P	transcription regulation	GO:0006355	ORF
+b3357	crp	b3357	F	cAMP-dependent DNA-binding transcription factor activity	GO:0003700	ORF
+b4123	fnr	b4123	P	anaerobic respiration	GO:0009061	ORF
+b4123	fnr	b4123	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b4401	arcA	b4401	P	aerobic respiration control	GO:0009060	ORF
+b4401	arcA	b4401	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b2699	recA	b2699	P	SOS response	GO:0009432	ORF
+b2699	recA	b2699	P	DNA repair	GO:0006281	ORF
+b2699	recA	b2699	F	ATP-dependent DNA recombinase activity	GO:0000150	ORF
+b4043	lexA	b4043	P	SOS response	GO:0009432	ORF
+b4043	lexA	b4043	F	transcription repressor activity	GO:0003700	ORF
+b4058	uvrA	b4058	P	DNA repair	GO:0006281	ORF
+b0779	uvrB	b0779	P	DNA repair	GO:0006281	ORF
+b0958	sulA	b0958	P	SOS response	GO:0009432	ORF
+b3961	oxyR	b3961	P	response to oxidative stress	GO:0006979	ORF
+b3942	katG	b3942	P	response to oxidative stress	GO:0006979	ORF
+b3942	katG	b3942	F	catalase activity	GO:0004096	ORF
+b0605	ahpC	b0605	P	response to oxidative stress	GO:0006979	ORF
+b0606	ahpF	b0606	P	response to oxidative stress	GO:0006979	ORF
+b3067	rpoH	b3067	P	response to heat	GO:0009408	ORF
+b4143	groEL	b4143	P	protein folding	GO:0006457	ORF
+b4143	groEL	b4143	P	response to heat	GO:0009408	ORF
+b4142	groES	b4142	P	protein folding	GO:0006457	ORF
+b3556	cspA	b3556	P	response to cold	GO:0009409	ORF
+b2416	ptsG	b2416	P	glycolytic process	GO:0006096	ORF
+b2416	ptsG	b2416	P	glucose import	GO:0046323	ORF
+b1779	gapA	b1779	P	glycolytic process	GO:0006096	ORF
+b1779	gapA	b1779	F	glyceraldehyde-3-phosphate dehydrogenase activity	GO:0004365	ORF
+b1676	pykF	b1676	P	glycolytic process	GO:0006096	ORF
+b1676	pykF	b1676	F	pyruvate kinase activity	GO:0004743	ORF
+b0720	gltA	b0720	P	tricarboxylic acid cycle	GO:0006099	ORF
+b1136	icd	b1136	P	tricarboxylic acid cycle	GO:0006099	ORF
+b1380	ldhA	b1380	P	fermentation	GO:0046835	ORF
+b0001	eco_0001	b0001	P	amino acid biosynthetic process	GO:0008652	ORF
+b0001	eco_0001	b0001	F	catalytic activity	GO:0003824	ORF
+b0001	eco_0001	b0001	C	plasma membrane	GO:0005886	ORF
+b0002	eco_0002	b0002	P	translation	GO:0006412	ORF
+b0002	eco_0002	b0002	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0002	eco_0002	b0002	C	ribosome	GO:0005840	ORF
+b0003	eco_0003	b0003	P	transcription regulation	GO:0006355	ORF
+b0003	eco_0003	b0003	F	oxidoreductase activity	GO:0016491	ORF
+b0003	eco_0003	b0003	C	cytoplasm	GO:0005737	ORF
+b0004	eco_0004	b0004	P	transmembrane transport	GO:0055085	ORF
+b0004	eco_0004	b0004	F	transporter activity	GO:0005215	ORF
+b0004	eco_0004	b0004	C	plasma membrane	GO:0005886	ORF
+b0005	eco_0005	b0005	P	aerobic respiration	GO:0009060	ORF
+b0005	eco_0005	b0005	F	ATP binding	GO:0005524	ORF
+b0005	eco_0005	b0005	C	ribosome	GO:0005840	ORF
+b0006	eco_0006	b0006	P	lipid metabolic process	GO:0006629	ORF
+b0006	eco_0006	b0006	F	catalytic activity	GO:0003824	ORF
+b0006	eco_0006	b0006	C	cytoplasm	GO:0005737	ORF
+b0007	eco_0007	b0007	P	cellular response to stress	GO:0033554	ORF
+b0007	eco_0007	b0007	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0007	eco_0007	b0007	C	plasma membrane	GO:0005886	ORF
+b0008	eco_0008	b0008	P	carbohydrate metabolic process	GO:0005975	ORF
+b0008	eco_0008	b0008	F	oxidoreductase activity	GO:0016491	ORF
+b0008	eco_0008	b0008	C	ribosome	GO:0005840	ORF
+b0009	eco_0009	b0009	P	amino acid biosynthetic process	GO:0008652	ORF
+b0009	eco_0009	b0009	F	transporter activity	GO:0005215	ORF
+b0009	eco_0009	b0009	C	cytoplasm	GO:0005737	ORF
+b0010	eco_0010	b0010	P	translation	GO:0006412	ORF
+b0010	eco_0010	b0010	F	ATP binding	GO:0005524	ORF
+b0010	eco_0010	b0010	C	plasma membrane	GO:0005886	ORF
+b0011	eco_0011	b0011	P	transcription regulation	GO:0006355	ORF
+b0011	eco_0011	b0011	F	catalytic activity	GO:0003824	ORF
+b0011	eco_0011	b0011	C	ribosome	GO:0005840	ORF
+b0012	eco_0012	b0012	P	transmembrane transport	GO:0055085	ORF
+b0012	eco_0012	b0012	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0012	eco_0012	b0012	C	cytoplasm	GO:0005737	ORF
+b0013	eco_0013	b0013	P	aerobic respiration	GO:0009060	ORF
+b0013	eco_0013	b0013	F	oxidoreductase activity	GO:0016491	ORF
+b0013	eco_0013	b0013	C	plasma membrane	GO:0005886	ORF
+b0014	eco_0014	b0014	P	lipid metabolic process	GO:0006629	ORF
+b0014	eco_0014	b0014	F	transporter activity	GO:0005215	ORF
+b0014	eco_0014	b0014	C	ribosome	GO:0005840	ORF
+b0015	eco_0015	b0015	P	cellular response to stress	GO:0033554	ORF
+b0015	eco_0015	b0015	F	ATP binding	GO:0005524	ORF
+b0015	eco_0015	b0015	C	cytoplasm	GO:0005737	ORF
+b0016	eco_0016	b0016	P	carbohydrate metabolic process	GO:0005975	ORF
+b0016	eco_0016	b0016	F	catalytic activity	GO:0003824	ORF
+b0016	eco_0016	b0016	C	plasma membrane	GO:0005886	ORF
+b0017	eco_0017	b0017	P	amino acid biosynthetic process	GO:0008652	ORF
+b0017	eco_0017	b0017	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0017	eco_0017	b0017	C	ribosome	GO:0005840	ORF
+b0018	eco_0018	b0018	P	translation	GO:0006412	ORF
+b0018	eco_0018	b0018	F	oxidoreductase activity	GO:0016491	ORF
+b0018	eco_0018	b0018	C	cytoplasm	GO:0005737	ORF
+b0019	eco_0019	b0019	P	transcription regulation	GO:0006355	ORF
+b0019	eco_0019	b0019	F	transporter activity	GO:0005215	ORF
+b0019	eco_0019	b0019	C	plasma membrane	GO:0005886	ORF
+b0020	eco_0020	b0020	P	transmembrane transport	GO:0055085	ORF
+b0020	eco_0020	b0020	F	ATP binding	GO:0005524	ORF
+b0020	eco_0020	b0020	C	ribosome	GO:0005840	ORF
+b0021	eco_0021	b0021	P	aerobic respiration	GO:0009060	ORF
+b0021	eco_0021	b0021	F	catalytic activity	GO:0003824	ORF
+b0021	eco_0021	b0021	C	cytoplasm	GO:0005737	ORF
+b0022	eco_0022	b0022	P	lipid metabolic process	GO:0006629	ORF
+b0022	eco_0022	b0022	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0022	eco_0022	b0022	C	plasma membrane	GO:0005886	ORF
+b0023	eco_0023	b0023	P	cellular response to stress	GO:0033554	ORF
+b0023	eco_0023	b0023	F	oxidoreductase activity	GO:0016491	ORF
+b0023	eco_0023	b0023	C	ribosome	GO:0005840	ORF
+b0024	eco_0024	b0024	P	carbohydrate metabolic process	GO:0005975	ORF
+b0024	eco_0024	b0024	F	transporter activity	GO:0005215	ORF
+b0024	eco_0024	b0024	C	cytoplasm	GO:0005737	ORF
+b0025	eco_0025	b0025	P	amino acid biosynthetic process	GO:0008652	ORF
+b0025	eco_0025	b0025	F	ATP binding	GO:0005524	ORF
+b0025	eco_0025	b0025	C	plasma membrane	GO:0005886	ORF
+b0026	eco_0026	b0026	P	translation	GO:0006412	ORF
+b0026	eco_0026	b0026	F	catalytic activity	GO:0003824	ORF
+b0026	eco_0026	b0026	C	ribosome	GO:0005840	ORF
+b0027	eco_0027	b0027	P	transcription regulation	GO:0006355	ORF
+b0027	eco_0027	b0027	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0027	eco_0027	b0027	C	cytoplasm	GO:0005737	ORF
+b0028	eco_0028	b0028	P	transmembrane transport	GO:0055085	ORF
+b0028	eco_0028	b0028	F	oxidoreductase activity	GO:0016491	ORF
+b0028	eco_0028	b0028	C	plasma membrane	GO:0005886	ORF
+b0029	eco_0029	b0029	P	aerobic respiration	GO:0009060	ORF
+b0029	eco_0029	b0029	F	transporter activity	GO:0005215	ORF
+b0029	eco_0029	b0029	C	ribosome	GO:0005840	ORF
+b0030	eco_0030	b0030	P	lipid metabolic process	GO:0006629	ORF
+b0030	eco_0030	b0030	F	ATP binding	GO:0005524	ORF
+b0030	eco_0030	b0030	C	cytoplasm	GO:0005737	ORF
+b0031	eco_0031	b0031	P	cellular response to stress	GO:0033554	ORF
+b0031	eco_0031	b0031	F	catalytic activity	GO:0003824	ORF
+b0031	eco_0031	b0031	C	plasma membrane	GO:0005886	ORF
+b0032	eco_0032	b0032	P	carbohydrate metabolic process	GO:0005975	ORF
+b0032	eco_0032	b0032	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0032	eco_0032	b0032	C	ribosome	GO:0005840	ORF
+b0033	eco_0033	b0033	P	amino acid biosynthetic process	GO:0008652	ORF
+b0033	eco_0033	b0033	F	oxidoreductase activity	GO:0016491	ORF
+b0033	eco_0033	b0033	C	cytoplasm	GO:0005737	ORF
+b0034	eco_0034	b0034	P	translation	GO:0006412	ORF
+b0034	eco_0034	b0034	F	transporter activity	GO:0005215	ORF
+b0034	eco_0034	b0034	C	plasma membrane	GO:0005886	ORF
+b0035	eco_0035	b0035	P	transcription regulation	GO:0006355	ORF
+b0035	eco_0035	b0035	F	ATP binding	GO:0005524	ORF
+b0035	eco_0035	b0035	C	ribosome	GO:0005840	ORF
+b0036	eco_0036	b0036	P	transmembrane transport	GO:0055085	ORF
+b0036	eco_0036	b0036	F	catalytic activity	GO:0003824	ORF
+b0036	eco_0036	b0036	C	cytoplasm	GO:0005737	ORF
+b0037	eco_0037	b0037	P	aerobic respiration	GO:0009060	ORF
+b0037	eco_0037	b0037	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0037	eco_0037	b0037	C	plasma membrane	GO:0005886	ORF
+b0038	eco_0038	b0038	P	lipid metabolic process	GO:0006629	ORF
+b0038	eco_0038	b0038	F	oxidoreductase activity	GO:0016491	ORF
+b0038	eco_0038	b0038	C	ribosome	GO:0005840	ORF
+b0039	eco_0039	b0039	P	cellular response to stress	GO:0033554	ORF
+b0039	eco_0039	b0039	F	transporter activity	GO:0005215	ORF
+b0039	eco_0039	b0039	C	cytoplasm	GO:0005737	ORF
+b0040	eco_0040	b0040	P	carbohydrate metabolic process	GO:0005975	ORF
+b0040	eco_0040	b0040	F	ATP binding	GO:0005524	ORF
+b0040	eco_0040	b0040	C	plasma membrane	GO:0005886	ORF
+b0041	eco_0041	b0041	P	amino acid biosynthetic process	GO:0008652	ORF
+b0041	eco_0041	b0041	F	catalytic activity	GO:0003824	ORF
+b0041	eco_0041	b0041	C	ribosome	GO:0005840	ORF
+b0042	eco_0042	b0042	P	translation	GO:0006412	ORF
+b0042	eco_0042	b0042	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0042	eco_0042	b0042	C	cytoplasm	GO:0005737	ORF
+b0043	eco_0043	b0043	P	transcription regulation	GO:0006355	ORF
+b0043	eco_0043	b0043	F	oxidoreductase activity	GO:0016491	ORF
+b0043	eco_0043	b0043	C	plasma membrane	GO:0005886	ORF
+b0044	eco_0044	b0044	P	transmembrane transport	GO:0055085	ORF
+b0044	eco_0044	b0044	F	transporter activity	GO:0005215	ORF
+b0044	eco_0044	b0044	C	ribosome	GO:0005840	ORF
+b0045	eco_0045	b0045	P	aerobic respiration	GO:0009060	ORF
+b0045	eco_0045	b0045	F	ATP binding	GO:0005524	ORF
+b0045	eco_0045	b0045	C	cytoplasm	GO:0005737	ORF
+b0046	eco_0046	b0046	P	lipid metabolic process	GO:0006629	ORF
+b0046	eco_0046	b0046	F	catalytic activity	GO:0003824	ORF
+b0046	eco_0046	b0046	C	plasma membrane	GO:0005886	ORF
+b0047	eco_0047	b0047	P	cellular response to stress	GO:0033554	ORF
+b0047	eco_0047	b0047	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0047	eco_0047	b0047	C	ribosome	GO:0005840	ORF
+b0048	eco_0048	b0048	P	carbohydrate metabolic process	GO:0005975	ORF
+b0048	eco_0048	b0048	F	oxidoreductase activity	GO:0016491	ORF
+b0048	eco_0048	b0048	C	cytoplasm	GO:0005737	ORF
+b0049	eco_0049	b0049	P	amino acid biosynthetic process	GO:0008652	ORF
+b0049	eco_0049	b0049	F	transporter activity	GO:0005215	ORF
+b0049	eco_0049	b0049	C	plasma membrane	GO:0005886	ORF
+b0050	eco_0050	b0050	P	translation	GO:0006412	ORF
+b0050	eco_0050	b0050	F	ATP binding	GO:0005524	ORF
+b0050	eco_0050	b0050	C	ribosome	GO:0005840	ORF
+b0051	eco_0051	b0051	P	transcription regulation	GO:0006355	ORF
+b0051	eco_0051	b0051	F	catalytic activity	GO:0003824	ORF
+b0051	eco_0051	b0051	C	cytoplasm	GO:0005737	ORF
+b0052	eco_0052	b0052	P	transmembrane transport	GO:0055085	ORF
+b0052	eco_0052	b0052	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0052	eco_0052	b0052	C	plasma membrane	GO:0005886	ORF
+b0053	eco_0053	b0053	P	aerobic respiration	GO:0009060	ORF
+b0053	eco_0053	b0053	F	oxidoreductase activity	GO:0016491	ORF
+b0053	eco_0053	b0053	C	ribosome	GO:0005840	ORF
+b0054	eco_0054	b0054	P	lipid metabolic process	GO:0006629	ORF
+b0054	eco_0054	b0054	F	transporter activity	GO:0005215	ORF
+b0054	eco_0054	b0054	C	cytoplasm	GO:0005737	ORF
+b0055	eco_0055	b0055	P	cellular response to stress	GO:0033554	ORF
+b0055	eco_0055	b0055	F	ATP binding	GO:0005524	ORF
+b0055	eco_0055	b0055	C	plasma membrane	GO:0005886	ORF
+b0056	eco_0056	b0056	P	carbohydrate metabolic process	GO:0005975	ORF
+b0056	eco_0056	b0056	F	catalytic activity	GO:0003824	ORF
+b0056	eco_0056	b0056	C	ribosome	GO:0005840	ORF
+b0057	eco_0057	b0057	P	amino acid biosynthetic process	GO:0008652	ORF
+b0057	eco_0057	b0057	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0057	eco_0057	b0057	C	cytoplasm	GO:0005737	ORF
+b0058	eco_0058	b0058	P	translation	GO:0006412	ORF
+b0058	eco_0058	b0058	F	oxidoreductase activity	GO:0016491	ORF
+b0058	eco_0058	b0058	C	plasma membrane	GO:0005886	ORF
+b0059	eco_0059	b0059	P	transcription regulation	GO:0006355	ORF
+b0059	eco_0059	b0059	F	transporter activity	GO:0005215	ORF
+b0059	eco_0059	b0059	C	ribosome	GO:0005840	ORF
+b0060	eco_0060	b0060	P	transmembrane transport	GO:0055085	ORF
+b0060	eco_0060	b0060	F	ATP binding	GO:0005524	ORF
+b0060	eco_0060	b0060	C	cytoplasm	GO:0005737	ORF
+b0061	eco_0061	b0061	P	aerobic respiration	GO:0009060	ORF
+b0061	eco_0061	b0061	F	catalytic activity	GO:0003824	ORF
+b0061	eco_0061	b0061	C	plasma membrane	GO:0005886	ORF
+b0062	eco_0062	b0062	P	lipid metabolic process	GO:0006629	ORF
+b0062	eco_0062	b0062	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0062	eco_0062	b0062	C	ribosome	GO:0005840	ORF
+b0063	eco_0063	b0063	P	cellular response to stress	GO:0033554	ORF
+b0063	eco_0063	b0063	F	oxidoreductase activity	GO:0016491	ORF
+b0063	eco_0063	b0063	C	cytoplasm	GO:0005737	ORF
+b0064	eco_0064	b0064	P	carbohydrate metabolic process	GO:0005975	ORF
+b0064	eco_0064	b0064	F	transporter activity	GO:0005215	ORF
+b0064	eco_0064	b0064	C	plasma membrane	GO:0005886	ORF
+b0065	eco_0065	b0065	P	amino acid biosynthetic process	GO:0008652	ORF
+b0065	eco_0065	b0065	F	ATP binding	GO:0005524	ORF
+b0065	eco_0065	b0065	C	ribosome	GO:0005840	ORF
+b0066	eco_0066	b0066	P	translation	GO:0006412	ORF
+b0066	eco_0066	b0066	F	catalytic activity	GO:0003824	ORF
+b0066	eco_0066	b0066	C	cytoplasm	GO:0005737	ORF
+b0067	eco_0067	b0067	P	transcription regulation	GO:0006355	ORF
+b0067	eco_0067	b0067	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0067	eco_0067	b0067	C	plasma membrane	GO:0005886	ORF
+b0068	eco_0068	b0068	P	transmembrane transport	GO:0055085	ORF
+b0068	eco_0068	b0068	F	oxidoreductase activity	GO:0016491	ORF
+b0068	eco_0068	b0068	C	ribosome	GO:0005840	ORF
+b0069	eco_0069	b0069	P	aerobic respiration	GO:0009060	ORF
+b0069	eco_0069	b0069	F	transporter activity	GO:0005215	ORF
+b0069	eco_0069	b0069	C	cytoplasm	GO:0005737	ORF
+b0070	eco_0070	b0070	P	lipid metabolic process	GO:0006629	ORF
+b0070	eco_0070	b0070	F	ATP binding	GO:0005524	ORF
+b0070	eco_0070	b0070	C	plasma membrane	GO:0005886	ORF
+b0071	eco_0071	b0071	P	cellular response to stress	GO:0033554	ORF
+b0071	eco_0071	b0071	F	catalytic activity	GO:0003824	ORF
+b0071	eco_0071	b0071	C	ribosome	GO:0005840	ORF
+b0072	eco_0072	b0072	P	carbohydrate metabolic process	GO:0005975	ORF
+b0072	eco_0072	b0072	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0072	eco_0072	b0072	C	cytoplasm	GO:0005737	ORF
+b0073	eco_0073	b0073	P	amino acid biosynthetic process	GO:0008652	ORF
+b0073	eco_0073	b0073	F	oxidoreductase activity	GO:0016491	ORF
+b0073	eco_0073	b0073	C	plasma membrane	GO:0005886	ORF
+b0074	eco_0074	b0074	P	translation	GO:0006412	ORF
+b0074	eco_0074	b0074	F	transporter activity	GO:0005215	ORF
+b0074	eco_0074	b0074	C	ribosome	GO:0005840	ORF
+b0075	eco_0075	b0075	P	transcription regulation	GO:0006355	ORF
+b0075	eco_0075	b0075	F	ATP binding	GO:0005524	ORF
+b0075	eco_0075	b0075	C	cytoplasm	GO:0005737	ORF
+b0076	eco_0076	b0076	P	transmembrane transport	GO:0055085	ORF
+b0076	eco_0076	b0076	F	catalytic activity	GO:0003824	ORF
+b0076	eco_0076	b0076	C	plasma membrane	GO:0005886	ORF
+b0077	eco_0077	b0077	P	aerobic respiration	GO:0009060	ORF
+b0077	eco_0077	b0077	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0077	eco_0077	b0077	C	ribosome	GO:0005840	ORF
+b0078	eco_0078	b0078	P	lipid metabolic process	GO:0006629	ORF
+b0078	eco_0078	b0078	F	oxidoreductase activity	GO:0016491	ORF
+b0078	eco_0078	b0078	C	cytoplasm	GO:0005737	ORF
+b0079	eco_0079	b0079	P	cellular response to stress	GO:0033554	ORF
+b0079	eco_0079	b0079	F	transporter activity	GO:0005215	ORF
+b0079	eco_0079	b0079	C	plasma membrane	GO:0005886	ORF
+b0080	eco_0080	b0080	P	carbohydrate metabolic process	GO:0005975	ORF
+b0080	eco_0080	b0080	F	ATP binding	GO:0005524	ORF
+b0080	eco_0080	b0080	C	ribosome	GO:0005840	ORF
+b0081	eco_0081	b0081	P	amino acid biosynthetic process	GO:0008652	ORF
+b0081	eco_0081	b0081	F	catalytic activity	GO:0003824	ORF
+b0081	eco_0081	b0081	C	cytoplasm	GO:0005737	ORF
+b0082	eco_0082	b0082	P	translation	GO:0006412	ORF
+b0082	eco_0082	b0082	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0082	eco_0082	b0082	C	plasma membrane	GO:0005886	ORF
+b0083	eco_0083	b0083	P	transcription regulation	GO:0006355	ORF
+b0083	eco_0083	b0083	F	oxidoreductase activity	GO:0016491	ORF
+b0083	eco_0083	b0083	C	ribosome	GO:0005840	ORF
+b0084	eco_0084	b0084	P	transmembrane transport	GO:0055085	ORF
+b0084	eco_0084	b0084	F	transporter activity	GO:0005215	ORF
+b0084	eco_0084	b0084	C	cytoplasm	GO:0005737	ORF
+b0085	eco_0085	b0085	P	aerobic respiration	GO:0009060	ORF
+b0085	eco_0085	b0085	F	ATP binding	GO:0005524	ORF
+b0085	eco_0085	b0085	C	plasma membrane	GO:0005886	ORF
+b0086	eco_0086	b0086	P	lipid metabolic process	GO:0006629	ORF
+b0086	eco_0086	b0086	F	catalytic activity	GO:0003824	ORF
+b0086	eco_0086	b0086	C	ribosome	GO:0005840	ORF
+b0087	eco_0087	b0087	P	cellular response to stress	GO:0033554	ORF
+b0087	eco_0087	b0087	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0087	eco_0087	b0087	C	cytoplasm	GO:0005737	ORF
+b0088	eco_0088	b0088	P	carbohydrate metabolic process	GO:0005975	ORF
+b0088	eco_0088	b0088	F	oxidoreductase activity	GO:0016491	ORF
+b0088	eco_0088	b0088	C	plasma membrane	GO:0005886	ORF
+b0089	eco_0089	b0089	P	amino acid biosynthetic process	GO:0008652	ORF
+b0089	eco_0089	b0089	F	transporter activity	GO:0005215	ORF
+b0089	eco_0089	b0089	C	ribosome	GO:0005840	ORF
+b0090	eco_0090	b0090	P	translation	GO:0006412	ORF
+b0090	eco_0090	b0090	F	ATP binding	GO:0005524	ORF
+b0090	eco_0090	b0090	C	cytoplasm	GO:0005737	ORF
+b0091	eco_0091	b0091	P	transcription regulation	GO:0006355	ORF
+b0091	eco_0091	b0091	F	catalytic activity	GO:0003824	ORF
+b0091	eco_0091	b0091	C	plasma membrane	GO:0005886	ORF
+b0092	eco_0092	b0092	P	transmembrane transport	GO:0055085	ORF
+b0092	eco_0092	b0092	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0092	eco_0092	b0092	C	ribosome	GO:0005840	ORF
+b0093	eco_0093	b0093	P	aerobic respiration	GO:0009060	ORF
+b0093	eco_0093	b0093	F	oxidoreductase activity	GO:0016491	ORF
+b0093	eco_0093	b0093	C	cytoplasm	GO:0005737	ORF
+b0094	eco_0094	b0094	P	lipid metabolic process	GO:0006629	ORF
+b0094	eco_0094	b0094	F	transporter activity	GO:0005215	ORF
+b0094	eco_0094	b0094	C	plasma membrane	GO:0005886	ORF
+b0095	eco_0095	b0095	P	cellular response to stress	GO:0033554	ORF
+b0095	eco_0095	b0095	F	ATP binding	GO:0005524	ORF
+b0095	eco_0095	b0095	C	ribosome	GO:0005840	ORF
+b0096	eco_0096	b0096	P	carbohydrate metabolic process	GO:0005975	ORF
+b0096	eco_0096	b0096	F	catalytic activity	GO:0003824	ORF
+b0096	eco_0096	b0096	C	cytoplasm	GO:0005737	ORF
+b0097	eco_0097	b0097	P	amino acid biosynthetic process	GO:0008652	ORF
+b0097	eco_0097	b0097	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0097	eco_0097	b0097	C	plasma membrane	GO:0005886	ORF
+b0098	eco_0098	b0098	P	translation	GO:0006412	ORF
+b0098	eco_0098	b0098	F	oxidoreductase activity	GO:0016491	ORF
+b0098	eco_0098	b0098	C	ribosome	GO:0005840	ORF
+b0099	eco_0099	b0099	P	transcription regulation	GO:0006355	ORF
+b0099	eco_0099	b0099	F	transporter activity	GO:0005215	ORF
+b0099	eco_0099	b0099	C	cytoplasm	GO:0005737	ORF
+b0100	eco_0100	b0100	P	transmembrane transport	GO:0055085	ORF
+b0100	eco_0100	b0100	F	ATP binding	GO:0005524	ORF
+b0100	eco_0100	b0100	C	plasma membrane	GO:0005886	ORF
+b0101	eco_0101	b0101	P	aerobic respiration	GO:0009060	ORF
+b0101	eco_0101	b0101	F	catalytic activity	GO:0003824	ORF
+b0101	eco_0101	b0101	C	ribosome	GO:0005840	ORF
+b0102	eco_0102	b0102	P	lipid metabolic process	GO:0006629	ORF
+b0102	eco_0102	b0102	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0102	eco_0102	b0102	C	cytoplasm	GO:0005737	ORF
+b0103	eco_0103	b0103	P	cellular response to stress	GO:0033554	ORF
+b0103	eco_0103	b0103	F	oxidoreductase activity	GO:0016491	ORF
+b0103	eco_0103	b0103	C	plasma membrane	GO:0005886	ORF
+b0104	eco_0104	b0104	P	carbohydrate metabolic process	GO:0005975	ORF
+b0104	eco_0104	b0104	F	transporter activity	GO:0005215	ORF
+b0104	eco_0104	b0104	C	ribosome	GO:0005840	ORF
+b0105	eco_0105	b0105	P	amino acid biosynthetic process	GO:0008652	ORF
+b0105	eco_0105	b0105	F	ATP binding	GO:0005524	ORF
+b0105	eco_0105	b0105	C	cytoplasm	GO:0005737	ORF
+b0106	eco_0106	b0106	P	translation	GO:0006412	ORF
+b0106	eco_0106	b0106	F	catalytic activity	GO:0003824	ORF
+b0106	eco_0106	b0106	C	plasma membrane	GO:0005886	ORF
+b0107	eco_0107	b0107	P	transcription regulation	GO:0006355	ORF
+b0107	eco_0107	b0107	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0107	eco_0107	b0107	C	ribosome	GO:0005840	ORF
+b0108	eco_0108	b0108	P	transmembrane transport	GO:0055085	ORF
+b0108	eco_0108	b0108	F	oxidoreductase activity	GO:0016491	ORF
+b0108	eco_0108	b0108	C	cytoplasm	GO:0005737	ORF
+b0109	eco_0109	b0109	P	aerobic respiration	GO:0009060	ORF
+b0109	eco_0109	b0109	F	transporter activity	GO:0005215	ORF
+b0109	eco_0109	b0109	C	plasma membrane	GO:0005886	ORF
+b0110	eco_0110	b0110	P	lipid metabolic process	GO:0006629	ORF
+b0110	eco_0110	b0110	F	ATP binding	GO:0005524	ORF
+b0110	eco_0110	b0110	C	ribosome	GO:0005840	ORF
+b0111	eco_0111	b0111	P	cellular response to stress	GO:0033554	ORF
+b0111	eco_0111	b0111	F	catalytic activity	GO:0003824	ORF
+b0111	eco_0111	b0111	C	cytoplasm	GO:0005737	ORF
+b0112	eco_0112	b0112	P	carbohydrate metabolic process	GO:0005975	ORF
+b0112	eco_0112	b0112	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0112	eco_0112	b0112	C	plasma membrane	GO:0005886	ORF
+b0113	eco_0113	b0113	P	amino acid biosynthetic process	GO:0008652	ORF
+b0113	eco_0113	b0113	F	oxidoreductase activity	GO:0016491	ORF
+b0113	eco_0113	b0113	C	ribosome	GO:0005840	ORF
+b0114	eco_0114	b0114	P	translation	GO:0006412	ORF
+b0114	eco_0114	b0114	F	transporter activity	GO:0005215	ORF
+b0114	eco_0114	b0114	C	cytoplasm	GO:0005737	ORF
+b0115	eco_0115	b0115	P	transcription regulation	GO:0006355	ORF
+b0115	eco_0115	b0115	F	ATP binding	GO:0005524	ORF
+b0115	eco_0115	b0115	C	plasma membrane	GO:0005886	ORF
+b0116	eco_0116	b0116	P	transmembrane transport	GO:0055085	ORF
+b0116	eco_0116	b0116	F	catalytic activity	GO:0003824	ORF
+b0116	eco_0116	b0116	C	ribosome	GO:0005840	ORF
+b0117	eco_0117	b0117	P	aerobic respiration	GO:0009060	ORF
+b0117	eco_0117	b0117	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0117	eco_0117	b0117	C	cytoplasm	GO:0005737	ORF
+b0118	eco_0118	b0118	P	lipid metabolic process	GO:0006629	ORF
+b0118	eco_0118	b0118	F	oxidoreductase activity	GO:0016491	ORF
+b0118	eco_0118	b0118	C	plasma membrane	GO:0005886	ORF
+b0119	eco_0119	b0119	P	cellular response to stress	GO:0033554	ORF
+b0119	eco_0119	b0119	F	transporter activity	GO:0005215	ORF
+b0119	eco_0119	b0119	C	ribosome	GO:0005840	ORF
+b0120	eco_0120	b0120	P	carbohydrate metabolic process	GO:0005975	ORF
+b0120	eco_0120	b0120	F	ATP binding	GO:0005524	ORF
+b0120	eco_0120	b0120	C	cytoplasm	GO:0005737	ORF
+b0121	eco_0121	b0121	P	amino acid biosynthetic process	GO:0008652	ORF
+b0121	eco_0121	b0121	F	catalytic activity	GO:0003824	ORF
+b0121	eco_0121	b0121	C	plasma membrane	GO:0005886	ORF
+b0122	eco_0122	b0122	P	translation	GO:0006412	ORF
+b0122	eco_0122	b0122	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0122	eco_0122	b0122	C	ribosome	GO:0005840	ORF
+b0123	eco_0123	b0123	P	transcription regulation	GO:0006355	ORF
+b0123	eco_0123	b0123	F	oxidoreductase activity	GO:0016491	ORF
+b0123	eco_0123	b0123	C	cytoplasm	GO:0005737	ORF
+b0124	eco_0124	b0124	P	transmembrane transport	GO:0055085	ORF
+b0124	eco_0124	b0124	F	transporter activity	GO:0005215	ORF
+b0124	eco_0124	b0124	C	plasma membrane	GO:0005886	ORF
+b0125	eco_0125	b0125	P	aerobic respiration	GO:0009060	ORF
+b0125	eco_0125	b0125	F	ATP binding	GO:0005524	ORF
+b0125	eco_0125	b0125	C	ribosome	GO:0005840	ORF
+b0126	eco_0126	b0126	P	lipid metabolic process	GO:0006629	ORF
+b0126	eco_0126	b0126	F	catalytic activity	GO:0003824	ORF
+b0126	eco_0126	b0126	C	cytoplasm	GO:0005737	ORF
+b0127	eco_0127	b0127	P	cellular response to stress	GO:0033554	ORF
+b0127	eco_0127	b0127	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0127	eco_0127	b0127	C	plasma membrane	GO:0005886	ORF
+b0128	eco_0128	b0128	P	carbohydrate metabolic process	GO:0005975	ORF
+b0128	eco_0128	b0128	F	oxidoreductase activity	GO:0016491	ORF
+b0128	eco_0128	b0128	C	ribosome	GO:0005840	ORF
+b0129	eco_0129	b0129	P	amino acid biosynthetic process	GO:0008652	ORF
+b0129	eco_0129	b0129	F	transporter activity	GO:0005215	ORF
+b0129	eco_0129	b0129	C	cytoplasm	GO:0005737	ORF
+b0130	eco_0130	b0130	P	translation	GO:0006412	ORF
+b0130	eco_0130	b0130	F	ATP binding	GO:0005524	ORF
+b0130	eco_0130	b0130	C	plasma membrane	GO:0005886	ORF
+b0131	eco_0131	b0131	P	transcription regulation	GO:0006355	ORF
+b0131	eco_0131	b0131	F	catalytic activity	GO:0003824	ORF
+b0131	eco_0131	b0131	C	ribosome	GO:0005840	ORF
+b0132	eco_0132	b0132	P	transmembrane transport	GO:0055085	ORF
+b0132	eco_0132	b0132	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0132	eco_0132	b0132	C	cytoplasm	GO:0005737	ORF
+b0133	eco_0133	b0133	P	aerobic respiration	GO:0009060	ORF
+b0133	eco_0133	b0133	F	oxidoreductase activity	GO:0016491	ORF
+b0133	eco_0133	b0133	C	plasma membrane	GO:0005886	ORF
+b0134	eco_0134	b0134	P	lipid metabolic process	GO:0006629	ORF
+b0134	eco_0134	b0134	F	transporter activity	GO:0005215	ORF
+b0134	eco_0134	b0134	C	ribosome	GO:0005840	ORF
+b0135	eco_0135	b0135	P	cellular response to stress	GO:0033554	ORF
+b0135	eco_0135	b0135	F	ATP binding	GO:0005524	ORF
+b0135	eco_0135	b0135	C	cytoplasm	GO:0005737	ORF
+b0136	eco_0136	b0136	P	carbohydrate metabolic process	GO:0005975	ORF
+b0136	eco_0136	b0136	F	catalytic activity	GO:0003824	ORF
+b0136	eco_0136	b0136	C	plasma membrane	GO:0005886	ORF
+b0137	eco_0137	b0137	P	amino acid biosynthetic process	GO:0008652	ORF
+b0137	eco_0137	b0137	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0137	eco_0137	b0137	C	ribosome	GO:0005840	ORF
+b0138	eco_0138	b0138	P	translation	GO:0006412	ORF
+b0138	eco_0138	b0138	F	oxidoreductase activity	GO:0016491	ORF
+b0138	eco_0138	b0138	C	cytoplasm	GO:0005737	ORF
+b0139	eco_0139	b0139	P	transcription regulation	GO:0006355	ORF
+b0139	eco_0139	b0139	F	transporter activity	GO:0005215	ORF
+b0139	eco_0139	b0139	C	plasma membrane	GO:0005886	ORF
+b0140	eco_0140	b0140	P	transmembrane transport	GO:0055085	ORF
+b0140	eco_0140	b0140	F	ATP binding	GO:0005524	ORF
+b0140	eco_0140	b0140	C	ribosome	GO:0005840	ORF
+b0141	eco_0141	b0141	P	aerobic respiration	GO:0009060	ORF
+b0141	eco_0141	b0141	F	catalytic activity	GO:0003824	ORF
+b0141	eco_0141	b0141	C	cytoplasm	GO:0005737	ORF
+b0142	eco_0142	b0142	P	lipid metabolic process	GO:0006629	ORF
+b0142	eco_0142	b0142	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0142	eco_0142	b0142	C	plasma membrane	GO:0005886	ORF
+b0143	eco_0143	b0143	P	cellular response to stress	GO:0033554	ORF
+b0143	eco_0143	b0143	F	oxidoreductase activity	GO:0016491	ORF
+b0143	eco_0143	b0143	C	ribosome	GO:0005840	ORF
+b0144	eco_0144	b0144	P	carbohydrate metabolic process	GO:0005975	ORF
+b0144	eco_0144	b0144	F	transporter activity	GO:0005215	ORF
+b0144	eco_0144	b0144	C	cytoplasm	GO:0005737	ORF
+b0145	eco_0145	b0145	P	amino acid biosynthetic process	GO:0008652	ORF
+b0145	eco_0145	b0145	F	ATP binding	GO:0005524	ORF
+b0145	eco_0145	b0145	C	plasma membrane	GO:0005886	ORF
+b0146	eco_0146	b0146	P	translation	GO:0006412	ORF
+b0146	eco_0146	b0146	F	catalytic activity	GO:0003824	ORF
+b0146	eco_0146	b0146	C	ribosome	GO:0005840	ORF
+b0147	eco_0147	b0147	P	transcription regulation	GO:0006355	ORF
+b0147	eco_0147	b0147	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0147	eco_0147	b0147	C	cytoplasm	GO:0005737	ORF
+b0148	eco_0148	b0148	P	transmembrane transport	GO:0055085	ORF
+b0148	eco_0148	b0148	F	oxidoreductase activity	GO:0016491	ORF
+b0148	eco_0148	b0148	C	plasma membrane	GO:0005886	ORF
+b0149	eco_0149	b0149	P	aerobic respiration	GO:0009060	ORF
+b0149	eco_0149	b0149	F	transporter activity	GO:0005215	ORF
+b0149	eco_0149	b0149	C	ribosome	GO:0005840	ORF
+b0150	eco_0150	b0150	P	lipid metabolic process	GO:0006629	ORF
+b0150	eco_0150	b0150	F	ATP binding	GO:0005524	ORF
+b0150	eco_0150	b0150	C	cytoplasm	GO:0005737	ORF
+b0151	eco_0151	b0151	P	cellular response to stress	GO:0033554	ORF
+b0151	eco_0151	b0151	F	catalytic activity	GO:0003824	ORF
+b0151	eco_0151	b0151	C	plasma membrane	GO:0005886	ORF
+b0152	eco_0152	b0152	P	carbohydrate metabolic process	GO:0005975	ORF
+b0152	eco_0152	b0152	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0152	eco_0152	b0152	C	ribosome	GO:0005840	ORF
+b0153	eco_0153	b0153	P	amino acid biosynthetic process	GO:0008652	ORF
+b0153	eco_0153	b0153	F	oxidoreductase activity	GO:0016491	ORF
+b0153	eco_0153	b0153	C	cytoplasm	GO:0005737	ORF
+b0154	eco_0154	b0154	P	translation	GO:0006412	ORF
+b0154	eco_0154	b0154	F	transporter activity	GO:0005215	ORF
+b0154	eco_0154	b0154	C	plasma membrane	GO:0005886	ORF
+b0155	eco_0155	b0155	P	transcription regulation	GO:0006355	ORF
+b0155	eco_0155	b0155	F	ATP binding	GO:0005524	ORF
+b0155	eco_0155	b0155	C	ribosome	GO:0005840	ORF
+b0156	eco_0156	b0156	P	transmembrane transport	GO:0055085	ORF
+b0156	eco_0156	b0156	F	catalytic activity	GO:0003824	ORF
+b0156	eco_0156	b0156	C	cytoplasm	GO:0005737	ORF
+b0157	eco_0157	b0157	P	aerobic respiration	GO:0009060	ORF
+b0157	eco_0157	b0157	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0157	eco_0157	b0157	C	plasma membrane	GO:0005886	ORF
+b0158	eco_0158	b0158	P	lipid metabolic process	GO:0006629	ORF
+b0158	eco_0158	b0158	F	oxidoreductase activity	GO:0016491	ORF
+b0158	eco_0158	b0158	C	ribosome	GO:0005840	ORF
+b0159	eco_0159	b0159	P	cellular response to stress	GO:0033554	ORF
+b0159	eco_0159	b0159	F	transporter activity	GO:0005215	ORF
+b0159	eco_0159	b0159	C	cytoplasm	GO:0005737	ORF
+b0160	eco_0160	b0160	P	carbohydrate metabolic process	GO:0005975	ORF
+b0160	eco_0160	b0160	F	ATP binding	GO:0005524	ORF
+b0160	eco_0160	b0160	C	plasma membrane	GO:0005886	ORF
+b0161	eco_0161	b0161	P	amino acid biosynthetic process	GO:0008652	ORF
+b0161	eco_0161	b0161	F	catalytic activity	GO:0003824	ORF
+b0161	eco_0161	b0161	C	ribosome	GO:0005840	ORF
+b0162	eco_0162	b0162	P	translation	GO:0006412	ORF
+b0162	eco_0162	b0162	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0162	eco_0162	b0162	C	cytoplasm	GO:0005737	ORF
+b0163	eco_0163	b0163	P	transcription regulation	GO:0006355	ORF
+b0163	eco_0163	b0163	F	oxidoreductase activity	GO:0016491	ORF
+b0163	eco_0163	b0163	C	plasma membrane	GO:0005886	ORF
+b0164	eco_0164	b0164	P	transmembrane transport	GO:0055085	ORF
+b0164	eco_0164	b0164	F	transporter activity	GO:0005215	ORF
+b0164	eco_0164	b0164	C	ribosome	GO:0005840	ORF
+b0165	eco_0165	b0165	P	aerobic respiration	GO:0009060	ORF
+b0165	eco_0165	b0165	F	ATP binding	GO:0005524	ORF
+b0165	eco_0165	b0165	C	cytoplasm	GO:0005737	ORF
+b0166	eco_0166	b0166	P	lipid metabolic process	GO:0006629	ORF
+b0166	eco_0166	b0166	F	catalytic activity	GO:0003824	ORF
+b0166	eco_0166	b0166	C	plasma membrane	GO:0005886	ORF
+b0167	eco_0167	b0167	P	cellular response to stress	GO:0033554	ORF
+b0167	eco_0167	b0167	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0167	eco_0167	b0167	C	ribosome	GO:0005840	ORF
+b0168	eco_0168	b0168	P	carbohydrate metabolic process	GO:0005975	ORF
+b0168	eco_0168	b0168	F	oxidoreductase activity	GO:0016491	ORF
+b0168	eco_0168	b0168	C	cytoplasm	GO:0005737	ORF
+b0169	eco_0169	b0169	P	amino acid biosynthetic process	GO:0008652	ORF
+b0169	eco_0169	b0169	F	transporter activity	GO:0005215	ORF
+b0169	eco_0169	b0169	C	plasma membrane	GO:0005886	ORF
+b0170	eco_0170	b0170	P	translation	GO:0006412	ORF
+b0170	eco_0170	b0170	F	ATP binding	GO:0005524	ORF
+b0170	eco_0170	b0170	C	ribosome	GO:0005840	ORF
+b0171	eco_0171	b0171	P	transcription regulation	GO:0006355	ORF
+b0171	eco_0171	b0171	F	catalytic activity	GO:0003824	ORF
+b0171	eco_0171	b0171	C	cytoplasm	GO:0005737	ORF
+b0172	eco_0172	b0172	P	transmembrane transport	GO:0055085	ORF
+b0172	eco_0172	b0172	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0172	eco_0172	b0172	C	plasma membrane	GO:0005886	ORF
+b0173	eco_0173	b0173	P	aerobic respiration	GO:0009060	ORF
+b0173	eco_0173	b0173	F	oxidoreductase activity	GO:0016491	ORF
+b0173	eco_0173	b0173	C	ribosome	GO:0005840	ORF
+b0174	eco_0174	b0174	P	lipid metabolic process	GO:0006629	ORF
+b0174	eco_0174	b0174	F	transporter activity	GO:0005215	ORF
+b0174	eco_0174	b0174	C	cytoplasm	GO:0005737	ORF
+b0175	eco_0175	b0175	P	cellular response to stress	GO:0033554	ORF
+b0175	eco_0175	b0175	F	ATP binding	GO:0005524	ORF
+b0175	eco_0175	b0175	C	plasma membrane	GO:0005886	ORF
+b0176	eco_0176	b0176	P	carbohydrate metabolic process	GO:0005975	ORF
+b0176	eco_0176	b0176	F	catalytic activity	GO:0003824	ORF
+b0176	eco_0176	b0176	C	ribosome	GO:0005840	ORF
+b0177	eco_0177	b0177	P	amino acid biosynthetic process	GO:0008652	ORF
+b0177	eco_0177	b0177	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0177	eco_0177	b0177	C	cytoplasm	GO:0005737	ORF
+b0178	eco_0178	b0178	P	translation	GO:0006412	ORF
+b0178	eco_0178	b0178	F	oxidoreductase activity	GO:0016491	ORF
+b0178	eco_0178	b0178	C	plasma membrane	GO:0005886	ORF
+b0179	eco_0179	b0179	P	transcription regulation	GO:0006355	ORF
+b0179	eco_0179	b0179	F	transporter activity	GO:0005215	ORF
+b0179	eco_0179	b0179	C	ribosome	GO:0005840	ORF
+b0180	eco_0180	b0180	P	transmembrane transport	GO:0055085	ORF
+b0180	eco_0180	b0180	F	ATP binding	GO:0005524	ORF
+b0180	eco_0180	b0180	C	cytoplasm	GO:0005737	ORF
+b0181	eco_0181	b0181	P	aerobic respiration	GO:0009060	ORF
+b0181	eco_0181	b0181	F	catalytic activity	GO:0003824	ORF
+b0181	eco_0181	b0181	C	plasma membrane	GO:0005886	ORF
+b0182	eco_0182	b0182	P	lipid metabolic process	GO:0006629	ORF
+b0182	eco_0182	b0182	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0182	eco_0182	b0182	C	ribosome	GO:0005840	ORF
+b0183	eco_0183	b0183	P	cellular response to stress	GO:0033554	ORF
+b0183	eco_0183	b0183	F	oxidoreductase activity	GO:0016491	ORF
+b0183	eco_0183	b0183	C	cytoplasm	GO:0005737	ORF
+b0184	eco_0184	b0184	P	carbohydrate metabolic process	GO:0005975	ORF
+b0184	eco_0184	b0184	F	transporter activity	GO:0005215	ORF
+b0184	eco_0184	b0184	C	plasma membrane	GO:0005886	ORF
+b0185	eco_0185	b0185	P	amino acid biosynthetic process	GO:0008652	ORF
+b0185	eco_0185	b0185	F	ATP binding	GO:0005524	ORF
+b0185	eco_0185	b0185	C	ribosome	GO:0005840	ORF
+b0186	eco_0186	b0186	P	translation	GO:0006412	ORF
+b0186	eco_0186	b0186	F	catalytic activity	GO:0003824	ORF
+b0186	eco_0186	b0186	C	cytoplasm	GO:0005737	ORF
+b0187	eco_0187	b0187	P	transcription regulation	GO:0006355	ORF
+b0187	eco_0187	b0187	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0187	eco_0187	b0187	C	plasma membrane	GO:0005886	ORF
+b0188	eco_0188	b0188	P	transmembrane transport	GO:0055085	ORF
+b0188	eco_0188	b0188	F	oxidoreductase activity	GO:0016491	ORF
+b0188	eco_0188	b0188	C	ribosome	GO:0005840	ORF
+b0189	eco_0189	b0189	P	aerobic respiration	GO:0009060	ORF
+b0189	eco_0189	b0189	F	transporter activity	GO:0005215	ORF
+b0189	eco_0189	b0189	C	cytoplasm	GO:0005737	ORF
+b0190	eco_0190	b0190	P	lipid metabolic process	GO:0006629	ORF
+b0190	eco_0190	b0190	F	ATP binding	GO:0005524	ORF
+b0190	eco_0190	b0190	C	plasma membrane	GO:0005886	ORF
+b0191	eco_0191	b0191	P	cellular response to stress	GO:0033554	ORF
+b0191	eco_0191	b0191	F	catalytic activity	GO:0003824	ORF
+b0191	eco_0191	b0191	C	ribosome	GO:0005840	ORF
+b0192	eco_0192	b0192	P	carbohydrate metabolic process	GO:0005975	ORF
+b0192	eco_0192	b0192	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0192	eco_0192	b0192	C	cytoplasm	GO:0005737	ORF
+b0193	eco_0193	b0193	P	amino acid biosynthetic process	GO:0008652	ORF
+b0193	eco_0193	b0193	F	oxidoreductase activity	GO:0016491	ORF
+b0193	eco_0193	b0193	C	plasma membrane	GO:0005886	ORF
+b0194	eco_0194	b0194	P	translation	GO:0006412	ORF
+b0194	eco_0194	b0194	F	transporter activity	GO:0005215	ORF
+b0194	eco_0194	b0194	C	ribosome	GO:0005840	ORF
+b0195	eco_0195	b0195	P	transcription regulation	GO:0006355	ORF
+b0195	eco_0195	b0195	F	ATP binding	GO:0005524	ORF
+b0195	eco_0195	b0195	C	cytoplasm	GO:0005737	ORF
+b0196	eco_0196	b0196	P	transmembrane transport	GO:0055085	ORF
+b0196	eco_0196	b0196	F	catalytic activity	GO:0003824	ORF
+b0196	eco_0196	b0196	C	plasma membrane	GO:0005886	ORF
+b0197	eco_0197	b0197	P	aerobic respiration	GO:0009060	ORF
+b0197	eco_0197	b0197	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0197	eco_0197	b0197	C	ribosome	GO:0005840	ORF
+b0198	eco_0198	b0198	P	lipid metabolic process	GO:0006629	ORF
+b0198	eco_0198	b0198	F	oxidoreductase activity	GO:0016491	ORF
+b0198	eco_0198	b0198	C	cytoplasm	GO:0005737	ORF
+b0199	eco_0199	b0199	P	cellular response to stress	GO:0033554	ORF
+b0199	eco_0199	b0199	F	transporter activity	GO:0005215	ORF
+b0199	eco_0199	b0199	C	plasma membrane	GO:0005886	ORF
+b0200	eco_0200	b0200	P	carbohydrate metabolic process	GO:0005975	ORF
+b0200	eco_0200	b0200	F	ATP binding	GO:0005524	ORF
+b0200	eco_0200	b0200	C	ribosome	GO:0005840	ORF
+b0201	eco_0201	b0201	P	amino acid biosynthetic process	GO:0008652	ORF
+b0201	eco_0201	b0201	F	catalytic activity	GO:0003824	ORF
+b0201	eco_0201	b0201	C	cytoplasm	GO:0005737	ORF
+b0202	eco_0202	b0202	P	translation	GO:0006412	ORF
+b0202	eco_0202	b0202	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0202	eco_0202	b0202	C	plasma membrane	GO:0005886	ORF
+b0203	eco_0203	b0203	P	transcription regulation	GO:0006355	ORF
+b0203	eco_0203	b0203	F	oxidoreductase activity	GO:0016491	ORF
+b0203	eco_0203	b0203	C	ribosome	GO:0005840	ORF
+b0204	eco_0204	b0204	P	transmembrane transport	GO:0055085	ORF
+b0204	eco_0204	b0204	F	transporter activity	GO:0005215	ORF
+b0204	eco_0204	b0204	C	cytoplasm	GO:0005737	ORF
+b0205	eco_0205	b0205	P	aerobic respiration	GO:0009060	ORF
+b0205	eco_0205	b0205	F	ATP binding	GO:0005524	ORF
+b0205	eco_0205	b0205	C	plasma membrane	GO:0005886	ORF
+b0206	eco_0206	b0206	P	lipid metabolic process	GO:0006629	ORF
+b0206	eco_0206	b0206	F	catalytic activity	GO:0003824	ORF
+b0206	eco_0206	b0206	C	ribosome	GO:0005840	ORF
+b0207	eco_0207	b0207	P	cellular response to stress	GO:0033554	ORF
+b0207	eco_0207	b0207	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0207	eco_0207	b0207	C	cytoplasm	GO:0005737	ORF
+b0208	eco_0208	b0208	P	carbohydrate metabolic process	GO:0005975	ORF
+b0208	eco_0208	b0208	F	oxidoreductase activity	GO:0016491	ORF
+b0208	eco_0208	b0208	C	plasma membrane	GO:0005886	ORF
+b0209	eco_0209	b0209	P	amino acid biosynthetic process	GO:0008652	ORF
+b0209	eco_0209	b0209	F	transporter activity	GO:0005215	ORF
+b0209	eco_0209	b0209	C	ribosome	GO:0005840	ORF
+b0210	eco_0210	b0210	P	translation	GO:0006412	ORF
+b0210	eco_0210	b0210	F	ATP binding	GO:0005524	ORF
+b0210	eco_0210	b0210	C	cytoplasm	GO:0005737	ORF
+b0211	eco_0211	b0211	P	transcription regulation	GO:0006355	ORF
+b0211	eco_0211	b0211	F	catalytic activity	GO:0003824	ORF
+b0211	eco_0211	b0211	C	plasma membrane	GO:0005886	ORF
+b0212	eco_0212	b0212	P	transmembrane transport	GO:0055085	ORF
+b0212	eco_0212	b0212	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0212	eco_0212	b0212	C	ribosome	GO:0005840	ORF
+b0213	eco_0213	b0213	P	aerobic respiration	GO:0009060	ORF
+b0213	eco_0213	b0213	F	oxidoreductase activity	GO:0016491	ORF
+b0213	eco_0213	b0213	C	cytoplasm	GO:0005737	ORF
+b0214	eco_0214	b0214	P	lipid metabolic process	GO:0006629	ORF
+b0214	eco_0214	b0214	F	transporter activity	GO:0005215	ORF
+b0214	eco_0214	b0214	C	plasma membrane	GO:0005886	ORF
+b0215	eco_0215	b0215	P	cellular response to stress	GO:0033554	ORF
+b0215	eco_0215	b0215	F	ATP binding	GO:0005524	ORF
+b0215	eco_0215	b0215	C	ribosome	GO:0005840	ORF
+b0216	eco_0216	b0216	P	carbohydrate metabolic process	GO:0005975	ORF
+b0216	eco_0216	b0216	F	catalytic activity	GO:0003824	ORF
+b0216	eco_0216	b0216	C	cytoplasm	GO:0005737	ORF
+b0217	eco_0217	b0217	P	amino acid biosynthetic process	GO:0008652	ORF
+b0217	eco_0217	b0217	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0217	eco_0217	b0217	C	plasma membrane	GO:0005886	ORF
+b0218	eco_0218	b0218	P	translation	GO:0006412	ORF
+b0218	eco_0218	b0218	F	oxidoreductase activity	GO:0016491	ORF
+b0218	eco_0218	b0218	C	ribosome	GO:0005840	ORF
+b0219	eco_0219	b0219	P	transcription regulation	GO:0006355	ORF
+b0219	eco_0219	b0219	F	transporter activity	GO:0005215	ORF
+b0219	eco_0219	b0219	C	cytoplasm	GO:0005737	ORF
+b0220	eco_0220	b0220	P	transmembrane transport	GO:0055085	ORF
+b0220	eco_0220	b0220	F	ATP binding	GO:0005524	ORF
+b0220	eco_0220	b0220	C	plasma membrane	GO:0005886	ORF
+b0221	eco_0221	b0221	P	aerobic respiration	GO:0009060	ORF
+b0221	eco_0221	b0221	F	catalytic activity	GO:0003824	ORF
+b0221	eco_0221	b0221	C	ribosome	GO:0005840	ORF
+b0222	eco_0222	b0222	P	lipid metabolic process	GO:0006629	ORF
+b0222	eco_0222	b0222	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0222	eco_0222	b0222	C	cytoplasm	GO:0005737	ORF
+b0223	eco_0223	b0223	P	cellular response to stress	GO:0033554	ORF
+b0223	eco_0223	b0223	F	oxidoreductase activity	GO:0016491	ORF
+b0223	eco_0223	b0223	C	plasma membrane	GO:0005886	ORF
+b0224	eco_0224	b0224	P	carbohydrate metabolic process	GO:0005975	ORF
+b0224	eco_0224	b0224	F	transporter activity	GO:0005215	ORF
+b0224	eco_0224	b0224	C	ribosome	GO:0005840	ORF
+b0225	eco_0225	b0225	P	amino acid biosynthetic process	GO:0008652	ORF
+b0225	eco_0225	b0225	F	ATP binding	GO:0005524	ORF
+b0225	eco_0225	b0225	C	cytoplasm	GO:0005737	ORF
+b0226	eco_0226	b0226	P	translation	GO:0006412	ORF
+b0226	eco_0226	b0226	F	catalytic activity	GO:0003824	ORF
+b0226	eco_0226	b0226	C	plasma membrane	GO:0005886	ORF
+b0227	eco_0227	b0227	P	transcription regulation	GO:0006355	ORF
+b0227	eco_0227	b0227	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0227	eco_0227	b0227	C	ribosome	GO:0005840	ORF
+b0228	eco_0228	b0228	P	transmembrane transport	GO:0055085	ORF
+b0228	eco_0228	b0228	F	oxidoreductase activity	GO:0016491	ORF
+b0228	eco_0228	b0228	C	cytoplasm	GO:0005737	ORF
+b0229	eco_0229	b0229	P	aerobic respiration	GO:0009060	ORF
+b0229	eco_0229	b0229	F	transporter activity	GO:0005215	ORF
+b0229	eco_0229	b0229	C	plasma membrane	GO:0005886	ORF
+b0230	eco_0230	b0230	P	lipid metabolic process	GO:0006629	ORF
+b0230	eco_0230	b0230	F	ATP binding	GO:0005524	ORF
+b0230	eco_0230	b0230	C	ribosome	GO:0005840	ORF
+b0231	eco_0231	b0231	P	cellular response to stress	GO:0033554	ORF
+b0231	eco_0231	b0231	F	catalytic activity	GO:0003824	ORF
+b0231	eco_0231	b0231	C	cytoplasm	GO:0005737	ORF
+b0232	eco_0232	b0232	P	carbohydrate metabolic process	GO:0005975	ORF
+b0232	eco_0232	b0232	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0232	eco_0232	b0232	C	plasma membrane	GO:0005886	ORF
+b0233	eco_0233	b0233	P	amino acid biosynthetic process	GO:0008652	ORF
+b0233	eco_0233	b0233	F	oxidoreductase activity	GO:0016491	ORF
+b0233	eco_0233	b0233	C	ribosome	GO:0005840	ORF
+b0234	eco_0234	b0234	P	translation	GO:0006412	ORF
+b0234	eco_0234	b0234	F	transporter activity	GO:0005215	ORF
+b0234	eco_0234	b0234	C	cytoplasm	GO:0005737	ORF
+b0235	eco_0235	b0235	P	transcription regulation	GO:0006355	ORF
+b0235	eco_0235	b0235	F	ATP binding	GO:0005524	ORF
+b0235	eco_0235	b0235	C	plasma membrane	GO:0005886	ORF
+b0236	eco_0236	b0236	P	transmembrane transport	GO:0055085	ORF
+b0236	eco_0236	b0236	F	catalytic activity	GO:0003824	ORF
+b0236	eco_0236	b0236	C	ribosome	GO:0005840	ORF
+b0237	eco_0237	b0237	P	aerobic respiration	GO:0009060	ORF
+b0237	eco_0237	b0237	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0237	eco_0237	b0237	C	cytoplasm	GO:0005737	ORF
+b0238	eco_0238	b0238	P	lipid metabolic process	GO:0006629	ORF
+b0238	eco_0238	b0238	F	oxidoreductase activity	GO:0016491	ORF
+b0238	eco_0238	b0238	C	plasma membrane	GO:0005886	ORF
+b0239	eco_0239	b0239	P	cellular response to stress	GO:0033554	ORF
+b0239	eco_0239	b0239	F	transporter activity	GO:0005215	ORF
+b0239	eco_0239	b0239	C	ribosome	GO:0005840	ORF
+b0240	eco_0240	b0240	P	carbohydrate metabolic process	GO:0005975	ORF
+b0240	eco_0240	b0240	F	ATP binding	GO:0005524	ORF
+b0240	eco_0240	b0240	C	cytoplasm	GO:0005737	ORF
+b0241	eco_0241	b0241	P	amino acid biosynthetic process	GO:0008652	ORF
+b0241	eco_0241	b0241	F	catalytic activity	GO:0003824	ORF
+b0241	eco_0241	b0241	C	plasma membrane	GO:0005886	ORF
+b0242	eco_0242	b0242	P	translation	GO:0006412	ORF
+b0242	eco_0242	b0242	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0242	eco_0242	b0242	C	ribosome	GO:0005840	ORF
+b0243	eco_0243	b0243	P	transcription regulation	GO:0006355	ORF
+b0243	eco_0243	b0243	F	oxidoreductase activity	GO:0016491	ORF
+b0243	eco_0243	b0243	C	cytoplasm	GO:0005737	ORF
+b0244	eco_0244	b0244	P	transmembrane transport	GO:0055085	ORF
+b0244	eco_0244	b0244	F	transporter activity	GO:0005215	ORF
+b0244	eco_0244	b0244	C	plasma membrane	GO:0005886	ORF
+b0245	eco_0245	b0245	P	aerobic respiration	GO:0009060	ORF
+b0245	eco_0245	b0245	F	ATP binding	GO:0005524	ORF
+b0245	eco_0245	b0245	C	ribosome	GO:0005840	ORF
+b0246	eco_0246	b0246	P	lipid metabolic process	GO:0006629	ORF
+b0246	eco_0246	b0246	F	catalytic activity	GO:0003824	ORF
+b0246	eco_0246	b0246	C	cytoplasm	GO:0005737	ORF
+b0247	eco_0247	b0247	P	cellular response to stress	GO:0033554	ORF
+b0247	eco_0247	b0247	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0247	eco_0247	b0247	C	plasma membrane	GO:0005886	ORF
+b0248	eco_0248	b0248	P	carbohydrate metabolic process	GO:0005975	ORF
+b0248	eco_0248	b0248	F	oxidoreductase activity	GO:0016491	ORF
+b0248	eco_0248	b0248	C	ribosome	GO:0005840	ORF
+b0249	eco_0249	b0249	P	amino acid biosynthetic process	GO:0008652	ORF
+b0249	eco_0249	b0249	F	transporter activity	GO:0005215	ORF
+b0249	eco_0249	b0249	C	cytoplasm	GO:0005737	ORF
+b0250	eco_0250	b0250	P	translation	GO:0006412	ORF
+b0250	eco_0250	b0250	F	ATP binding	GO:0005524	ORF
+b0250	eco_0250	b0250	C	plasma membrane	GO:0005886	ORF
+b0251	eco_0251	b0251	P	transcription regulation	GO:0006355	ORF
+b0251	eco_0251	b0251	F	catalytic activity	GO:0003824	ORF
+b0251	eco_0251	b0251	C	ribosome	GO:0005840	ORF
+b0252	eco_0252	b0252	P	transmembrane transport	GO:0055085	ORF
+b0252	eco_0252	b0252	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0252	eco_0252	b0252	C	cytoplasm	GO:0005737	ORF
+b0253	eco_0253	b0253	P	aerobic respiration	GO:0009060	ORF
+b0253	eco_0253	b0253	F	oxidoreductase activity	GO:0016491	ORF
+b0253	eco_0253	b0253	C	plasma membrane	GO:0005886	ORF
+b0254	eco_0254	b0254	P	lipid metabolic process	GO:0006629	ORF
+b0254	eco_0254	b0254	F	transporter activity	GO:0005215	ORF
+b0254	eco_0254	b0254	C	ribosome	GO:0005840	ORF
+b0255	eco_0255	b0255	P	cellular response to stress	GO:0033554	ORF
+b0255	eco_0255	b0255	F	ATP binding	GO:0005524	ORF
+b0255	eco_0255	b0255	C	cytoplasm	GO:0005737	ORF
+b0256	eco_0256	b0256	P	carbohydrate metabolic process	GO:0005975	ORF
+b0256	eco_0256	b0256	F	catalytic activity	GO:0003824	ORF
+b0256	eco_0256	b0256	C	plasma membrane	GO:0005886	ORF
+b0257	eco_0257	b0257	P	amino acid biosynthetic process	GO:0008652	ORF
+b0257	eco_0257	b0257	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0257	eco_0257	b0257	C	ribosome	GO:0005840	ORF
+b0258	eco_0258	b0258	P	translation	GO:0006412	ORF
+b0258	eco_0258	b0258	F	oxidoreductase activity	GO:0016491	ORF
+b0258	eco_0258	b0258	C	cytoplasm	GO:0005737	ORF
+b0259	eco_0259	b0259	P	transcription regulation	GO:0006355	ORF
+b0259	eco_0259	b0259	F	transporter activity	GO:0005215	ORF
+b0259	eco_0259	b0259	C	plasma membrane	GO:0005886	ORF
+b0260	eco_0260	b0260	P	transmembrane transport	GO:0055085	ORF
+b0260	eco_0260	b0260	F	ATP binding	GO:0005524	ORF
+b0260	eco_0260	b0260	C	ribosome	GO:0005840	ORF
+b0261	eco_0261	b0261	P	aerobic respiration	GO:0009060	ORF
+b0261	eco_0261	b0261	F	catalytic activity	GO:0003824	ORF
+b0261	eco_0261	b0261	C	cytoplasm	GO:0005737	ORF
+b0262	eco_0262	b0262	P	lipid metabolic process	GO:0006629	ORF
+b0262	eco_0262	b0262	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0262	eco_0262	b0262	C	plasma membrane	GO:0005886	ORF
+b0263	eco_0263	b0263	P	cellular response to stress	GO:0033554	ORF
+b0263	eco_0263	b0263	F	oxidoreductase activity	GO:0016491	ORF
+b0263	eco_0263	b0263	C	ribosome	GO:0005840	ORF
+b0264	eco_0264	b0264	P	carbohydrate metabolic process	GO:0005975	ORF
+b0264	eco_0264	b0264	F	transporter activity	GO:0005215	ORF
+b0264	eco_0264	b0264	C	cytoplasm	GO:0005737	ORF
+b0265	eco_0265	b0265	P	amino acid biosynthetic process	GO:0008652	ORF
+b0265	eco_0265	b0265	F	ATP binding	GO:0005524	ORF
+b0265	eco_0265	b0265	C	plasma membrane	GO:0005886	ORF
+b0266	eco_0266	b0266	P	translation	GO:0006412	ORF
+b0266	eco_0266	b0266	F	catalytic activity	GO:0003824	ORF
+b0266	eco_0266	b0266	C	ribosome	GO:0005840	ORF
+b0267	eco_0267	b0267	P	transcription regulation	GO:0006355	ORF
+b0267	eco_0267	b0267	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0267	eco_0267	b0267	C	cytoplasm	GO:0005737	ORF
+b0268	eco_0268	b0268	P	transmembrane transport	GO:0055085	ORF
+b0268	eco_0268	b0268	F	oxidoreductase activity	GO:0016491	ORF
+b0268	eco_0268	b0268	C	plasma membrane	GO:0005886	ORF
+b0269	eco_0269	b0269	P	aerobic respiration	GO:0009060	ORF
+b0269	eco_0269	b0269	F	transporter activity	GO:0005215	ORF
+b0269	eco_0269	b0269	C	ribosome	GO:0005840	ORF
+b0270	eco_0270	b0270	P	lipid metabolic process	GO:0006629	ORF
+b0270	eco_0270	b0270	F	ATP binding	GO:0005524	ORF
+b0270	eco_0270	b0270	C	cytoplasm	GO:0005737	ORF
+b0271	eco_0271	b0271	P	cellular response to stress	GO:0033554	ORF
+b0271	eco_0271	b0271	F	catalytic activity	GO:0003824	ORF
+b0271	eco_0271	b0271	C	plasma membrane	GO:0005886	ORF
+b0272	eco_0272	b0272	P	carbohydrate metabolic process	GO:0005975	ORF
+b0272	eco_0272	b0272	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0272	eco_0272	b0272	C	ribosome	GO:0005840	ORF
+b0273	eco_0273	b0273	P	amino acid biosynthetic process	GO:0008652	ORF
+b0273	eco_0273	b0273	F	oxidoreductase activity	GO:0016491	ORF
+b0273	eco_0273	b0273	C	cytoplasm	GO:0005737	ORF
+b0274	eco_0274	b0274	P	translation	GO:0006412	ORF
+b0274	eco_0274	b0274	F	transporter activity	GO:0005215	ORF
+b0274	eco_0274	b0274	C	plasma membrane	GO:0005886	ORF
+b0275	eco_0275	b0275	P	transcription regulation	GO:0006355	ORF
+b0275	eco_0275	b0275	F	ATP binding	GO:0005524	ORF
+b0275	eco_0275	b0275	C	ribosome	GO:0005840	ORF
+b0276	eco_0276	b0276	P	transmembrane transport	GO:0055085	ORF
+b0276	eco_0276	b0276	F	catalytic activity	GO:0003824	ORF
+b0276	eco_0276	b0276	C	cytoplasm	GO:0005737	ORF
+b0277	eco_0277	b0277	P	aerobic respiration	GO:0009060	ORF
+b0277	eco_0277	b0277	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0277	eco_0277	b0277	C	plasma membrane	GO:0005886	ORF
+b0278	eco_0278	b0278	P	lipid metabolic process	GO:0006629	ORF
+b0278	eco_0278	b0278	F	oxidoreductase activity	GO:0016491	ORF
+b0278	eco_0278	b0278	C	ribosome	GO:0005840	ORF
+b0279	eco_0279	b0279	P	cellular response to stress	GO:0033554	ORF
+b0279	eco_0279	b0279	F	transporter activity	GO:0005215	ORF
+b0279	eco_0279	b0279	C	cytoplasm	GO:0005737	ORF
+b0280	eco_0280	b0280	P	carbohydrate metabolic process	GO:0005975	ORF
+b0280	eco_0280	b0280	F	ATP binding	GO:0005524	ORF
+b0280	eco_0280	b0280	C	plasma membrane	GO:0005886	ORF
+b0281	eco_0281	b0281	P	amino acid biosynthetic process	GO:0008652	ORF
+b0281	eco_0281	b0281	F	catalytic activity	GO:0003824	ORF
+b0281	eco_0281	b0281	C	ribosome	GO:0005840	ORF
+b0282	eco_0282	b0282	P	translation	GO:0006412	ORF
+b0282	eco_0282	b0282	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0282	eco_0282	b0282	C	cytoplasm	GO:0005737	ORF
+b0283	eco_0283	b0283	P	transcription regulation	GO:0006355	ORF
+b0283	eco_0283	b0283	F	oxidoreductase activity	GO:0016491	ORF
+b0283	eco_0283	b0283	C	plasma membrane	GO:0005886	ORF
+b0284	eco_0284	b0284	P	transmembrane transport	GO:0055085	ORF
+b0284	eco_0284	b0284	F	transporter activity	GO:0005215	ORF
+b0284	eco_0284	b0284	C	ribosome	GO:0005840	ORF
+b0285	eco_0285	b0285	P	aerobic respiration	GO:0009060	ORF
+b0285	eco_0285	b0285	F	ATP binding	GO:0005524	ORF
+b0285	eco_0285	b0285	C	cytoplasm	GO:0005737	ORF
+b0286	eco_0286	b0286	P	lipid metabolic process	GO:0006629	ORF
+b0286	eco_0286	b0286	F	catalytic activity	GO:0003824	ORF
+b0286	eco_0286	b0286	C	plasma membrane	GO:0005886	ORF
+b0287	eco_0287	b0287	P	cellular response to stress	GO:0033554	ORF
+b0287	eco_0287	b0287	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0287	eco_0287	b0287	C	ribosome	GO:0005840	ORF
+b0288	eco_0288	b0288	P	carbohydrate metabolic process	GO:0005975	ORF
+b0288	eco_0288	b0288	F	oxidoreductase activity	GO:0016491	ORF
+b0288	eco_0288	b0288	C	cytoplasm	GO:0005737	ORF
+b0289	eco_0289	b0289	P	amino acid biosynthetic process	GO:0008652	ORF
+b0289	eco_0289	b0289	F	transporter activity	GO:0005215	ORF
+b0289	eco_0289	b0289	C	plasma membrane	GO:0005886	ORF
+b0290	eco_0290	b0290	P	translation	GO:0006412	ORF
+b0290	eco_0290	b0290	F	ATP binding	GO:0005524	ORF
+b0290	eco_0290	b0290	C	ribosome	GO:0005840	ORF
+b0291	eco_0291	b0291	P	transcription regulation	GO:0006355	ORF
+b0291	eco_0291	b0291	F	catalytic activity	GO:0003824	ORF
+b0291	eco_0291	b0291	C	cytoplasm	GO:0005737	ORF
+b0292	eco_0292	b0292	P	transmembrane transport	GO:0055085	ORF
+b0292	eco_0292	b0292	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0292	eco_0292	b0292	C	plasma membrane	GO:0005886	ORF
+b0293	eco_0293	b0293	P	aerobic respiration	GO:0009060	ORF
+b0293	eco_0293	b0293	F	oxidoreductase activity	GO:0016491	ORF
+b0293	eco_0293	b0293	C	ribosome	GO:0005840	ORF
+b0294	eco_0294	b0294	P	lipid metabolic process	GO:0006629	ORF
+b0294	eco_0294	b0294	F	transporter activity	GO:0005215	ORF
+b0294	eco_0294	b0294	C	cytoplasm	GO:0005737	ORF
+b0295	eco_0295	b0295	P	cellular response to stress	GO:0033554	ORF
+b0295	eco_0295	b0295	F	ATP binding	GO:0005524	ORF
+b0295	eco_0295	b0295	C	plasma membrane	GO:0005886	ORF
+b0296	eco_0296	b0296	P	carbohydrate metabolic process	GO:0005975	ORF
+b0296	eco_0296	b0296	F	catalytic activity	GO:0003824	ORF
+b0296	eco_0296	b0296	C	ribosome	GO:0005840	ORF
+b0297	eco_0297	b0297	P	amino acid biosynthetic process	GO:0008652	ORF
+b0297	eco_0297	b0297	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0297	eco_0297	b0297	C	cytoplasm	GO:0005737	ORF
+b0298	eco_0298	b0298	P	translation	GO:0006412	ORF
+b0298	eco_0298	b0298	F	oxidoreductase activity	GO:0016491	ORF
+b0298	eco_0298	b0298	C	plasma membrane	GO:0005886	ORF
+b0299	eco_0299	b0299	P	transcription regulation	GO:0006355	ORF
+b0299	eco_0299	b0299	F	transporter activity	GO:0005215	ORF
+b0299	eco_0299	b0299	C	ribosome	GO:0005840	ORF
+b0300	eco_0300	b0300	P	transmembrane transport	GO:0055085	ORF
+b0300	eco_0300	b0300	F	ATP binding	GO:0005524	ORF
+b0300	eco_0300	b0300	C	cytoplasm	GO:0005737	ORF
+b0301	eco_0301	b0301	P	aerobic respiration	GO:0009060	ORF
+b0301	eco_0301	b0301	F	catalytic activity	GO:0003824	ORF
+b0301	eco_0301	b0301	C	plasma membrane	GO:0005886	ORF
+b0302	eco_0302	b0302	P	lipid metabolic process	GO:0006629	ORF
+b0302	eco_0302	b0302	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0302	eco_0302	b0302	C	ribosome	GO:0005840	ORF
+b0303	eco_0303	b0303	P	cellular response to stress	GO:0033554	ORF
+b0303	eco_0303	b0303	F	oxidoreductase activity	GO:0016491	ORF
+b0303	eco_0303	b0303	C	cytoplasm	GO:0005737	ORF
+b0304	eco_0304	b0304	P	carbohydrate metabolic process	GO:0005975	ORF
+b0304	eco_0304	b0304	F	transporter activity	GO:0005215	ORF
+b0304	eco_0304	b0304	C	plasma membrane	GO:0005886	ORF
+b0305	eco_0305	b0305	P	amino acid biosynthetic process	GO:0008652	ORF
+b0305	eco_0305	b0305	F	ATP binding	GO:0005524	ORF
+b0305	eco_0305	b0305	C	ribosome	GO:0005840	ORF
+b0306	eco_0306	b0306	P	translation	GO:0006412	ORF
+b0306	eco_0306	b0306	F	catalytic activity	GO:0003824	ORF
+b0306	eco_0306	b0306	C	cytoplasm	GO:0005737	ORF
+b0307	eco_0307	b0307	P	transcription regulation	GO:0006355	ORF
+b0307	eco_0307	b0307	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0307	eco_0307	b0307	C	plasma membrane	GO:0005886	ORF
+b0308	eco_0308	b0308	P	transmembrane transport	GO:0055085	ORF
+b0308	eco_0308	b0308	F	oxidoreductase activity	GO:0016491	ORF
+b0308	eco_0308	b0308	C	ribosome	GO:0005840	ORF
+b0309	eco_0309	b0309	P	aerobic respiration	GO:0009060	ORF
+b0309	eco_0309	b0309	F	transporter activity	GO:0005215	ORF
+b0309	eco_0309	b0309	C	cytoplasm	GO:0005737	ORF
+b0310	eco_0310	b0310	P	lipid metabolic process	GO:0006629	ORF
+b0310	eco_0310	b0310	F	ATP binding	GO:0005524	ORF
+b0310	eco_0310	b0310	C	plasma membrane	GO:0005886	ORF
+b0311	eco_0311	b0311	P	cellular response to stress	GO:0033554	ORF
+b0311	eco_0311	b0311	F	catalytic activity	GO:0003824	ORF
+b0311	eco_0311	b0311	C	ribosome	GO:0005840	ORF
+b0312	eco_0312	b0312	P	carbohydrate metabolic process	GO:0005975	ORF
+b0312	eco_0312	b0312	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0312	eco_0312	b0312	C	cytoplasm	GO:0005737	ORF
+b0313	eco_0313	b0313	P	amino acid biosynthetic process	GO:0008652	ORF
+b0313	eco_0313	b0313	F	oxidoreductase activity	GO:0016491	ORF
+b0313	eco_0313	b0313	C	plasma membrane	GO:0005886	ORF
+b0314	eco_0314	b0314	P	translation	GO:0006412	ORF
+b0314	eco_0314	b0314	F	transporter activity	GO:0005215	ORF
+b0314	eco_0314	b0314	C	ribosome	GO:0005840	ORF
+b0315	eco_0315	b0315	P	transcription regulation	GO:0006355	ORF
+b0315	eco_0315	b0315	F	ATP binding	GO:0005524	ORF
+b0315	eco_0315	b0315	C	cytoplasm	GO:0005737	ORF
+b0316	eco_0316	b0316	P	transmembrane transport	GO:0055085	ORF
+b0316	eco_0316	b0316	F	catalytic activity	GO:0003824	ORF
+b0316	eco_0316	b0316	C	plasma membrane	GO:0005886	ORF
+b0317	eco_0317	b0317	P	aerobic respiration	GO:0009060	ORF
+b0317	eco_0317	b0317	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0317	eco_0317	b0317	C	ribosome	GO:0005840	ORF
+b0318	eco_0318	b0318	P	lipid metabolic process	GO:0006629	ORF
+b0318	eco_0318	b0318	F	oxidoreductase activity	GO:0016491	ORF
+b0318	eco_0318	b0318	C	cytoplasm	GO:0005737	ORF
+b0319	eco_0319	b0319	P	cellular response to stress	GO:0033554	ORF
+b0319	eco_0319	b0319	F	transporter activity	GO:0005215	ORF
+b0319	eco_0319	b0319	C	plasma membrane	GO:0005886	ORF
+b0320	eco_0320	b0320	P	carbohydrate metabolic process	GO:0005975	ORF
+b0320	eco_0320	b0320	F	ATP binding	GO:0005524	ORF
+b0320	eco_0320	b0320	C	ribosome	GO:0005840	ORF
+b0321	eco_0321	b0321	P	amino acid biosynthetic process	GO:0008652	ORF
+b0321	eco_0321	b0321	F	catalytic activity	GO:0003824	ORF
+b0321	eco_0321	b0321	C	cytoplasm	GO:0005737	ORF
+b0322	eco_0322	b0322	P	translation	GO:0006412	ORF
+b0322	eco_0322	b0322	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0322	eco_0322	b0322	C	plasma membrane	GO:0005886	ORF
+b0323	eco_0323	b0323	P	transcription regulation	GO:0006355	ORF
+b0323	eco_0323	b0323	F	oxidoreductase activity	GO:0016491	ORF
+b0323	eco_0323	b0323	C	ribosome	GO:0005840	ORF
+b0324	eco_0324	b0324	P	transmembrane transport	GO:0055085	ORF
+b0324	eco_0324	b0324	F	transporter activity	GO:0005215	ORF
+b0324	eco_0324	b0324	C	cytoplasm	GO:0005737	ORF
+b0325	eco_0325	b0325	P	aerobic respiration	GO:0009060	ORF
+b0325	eco_0325	b0325	F	ATP binding	GO:0005524	ORF
+b0325	eco_0325	b0325	C	plasma membrane	GO:0005886	ORF
+b0326	eco_0326	b0326	P	lipid metabolic process	GO:0006629	ORF
+b0326	eco_0326	b0326	F	catalytic activity	GO:0003824	ORF
+b0326	eco_0326	b0326	C	ribosome	GO:0005840	ORF
+b0327	eco_0327	b0327	P	cellular response to stress	GO:0033554	ORF
+b0327	eco_0327	b0327	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0327	eco_0327	b0327	C	cytoplasm	GO:0005737	ORF
+b0328	eco_0328	b0328	P	carbohydrate metabolic process	GO:0005975	ORF
+b0328	eco_0328	b0328	F	oxidoreductase activity	GO:0016491	ORF
+b0328	eco_0328	b0328	C	plasma membrane	GO:0005886	ORF
+b0329	eco_0329	b0329	P	amino acid biosynthetic process	GO:0008652	ORF
+b0329	eco_0329	b0329	F	transporter activity	GO:0005215	ORF
+b0329	eco_0329	b0329	C	ribosome	GO:0005840	ORF
+b0330	eco_0330	b0330	P	translation	GO:0006412	ORF
+b0330	eco_0330	b0330	F	ATP binding	GO:0005524	ORF
+b0330	eco_0330	b0330	C	cytoplasm	GO:0005737	ORF
+b0331	eco_0331	b0331	P	transcription regulation	GO:0006355	ORF
+b0331	eco_0331	b0331	F	catalytic activity	GO:0003824	ORF
+b0331	eco_0331	b0331	C	plasma membrane	GO:0005886	ORF
+b0332	eco_0332	b0332	P	transmembrane transport	GO:0055085	ORF
+b0332	eco_0332	b0332	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0332	eco_0332	b0332	C	ribosome	GO:0005840	ORF
+b0333	eco_0333	b0333	P	aerobic respiration	GO:0009060	ORF
+b0333	eco_0333	b0333	F	oxidoreductase activity	GO:0016491	ORF
+b0333	eco_0333	b0333	C	cytoplasm	GO:0005737	ORF
+b0334	eco_0334	b0334	P	lipid metabolic process	GO:0006629	ORF
+b0334	eco_0334	b0334	F	transporter activity	GO:0005215	ORF
+b0334	eco_0334	b0334	C	plasma membrane	GO:0005886	ORF
+b0335	eco_0335	b0335	P	cellular response to stress	GO:0033554	ORF
+b0335	eco_0335	b0335	F	ATP binding	GO:0005524	ORF
+b0335	eco_0335	b0335	C	ribosome	GO:0005840	ORF
+b0336	eco_0336	b0336	P	carbohydrate metabolic process	GO:0005975	ORF
+b0336	eco_0336	b0336	F	catalytic activity	GO:0003824	ORF
+b0336	eco_0336	b0336	C	cytoplasm	GO:0005737	ORF
+b0337	eco_0337	b0337	P	amino acid biosynthetic process	GO:0008652	ORF
+b0337	eco_0337	b0337	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0337	eco_0337	b0337	C	plasma membrane	GO:0005886	ORF
+b0338	eco_0338	b0338	P	translation	GO:0006412	ORF
+b0338	eco_0338	b0338	F	oxidoreductase activity	GO:0016491	ORF
+b0338	eco_0338	b0338	C	ribosome	GO:0005840	ORF
+b0339	eco_0339	b0339	P	transcription regulation	GO:0006355	ORF
+b0339	eco_0339	b0339	F	transporter activity	GO:0005215	ORF
+b0339	eco_0339	b0339	C	cytoplasm	GO:0005737	ORF
+b0340	eco_0340	b0340	P	transmembrane transport	GO:0055085	ORF
+b0340	eco_0340	b0340	F	ATP binding	GO:0005524	ORF
+b0340	eco_0340	b0340	C	plasma membrane	GO:0005886	ORF
+b0341	eco_0341	b0341	P	aerobic respiration	GO:0009060	ORF
+b0341	eco_0341	b0341	F	catalytic activity	GO:0003824	ORF
+b0341	eco_0341	b0341	C	ribosome	GO:0005840	ORF
+b0342	eco_0342	b0342	P	lipid metabolic process	GO:0006629	ORF
+b0342	eco_0342	b0342	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0342	eco_0342	b0342	C	cytoplasm	GO:0005737	ORF
+b0343	eco_0343	b0343	P	cellular response to stress	GO:0033554	ORF
+b0343	eco_0343	b0343	F	oxidoreductase activity	GO:0016491	ORF
+b0343	eco_0343	b0343	C	plasma membrane	GO:0005886	ORF
+b0344	eco_0344	b0344	P	carbohydrate metabolic process	GO:0005975	ORF
+b0344	eco_0344	b0344	F	transporter activity	GO:0005215	ORF
+b0344	eco_0344	b0344	C	ribosome	GO:0005840	ORF
+b0345	eco_0345	b0345	P	amino acid biosynthetic process	GO:0008652	ORF
+b0345	eco_0345	b0345	F	ATP binding	GO:0005524	ORF
+b0345	eco_0345	b0345	C	cytoplasm	GO:0005737	ORF
+b0346	eco_0346	b0346	P	translation	GO:0006412	ORF
+b0346	eco_0346	b0346	F	catalytic activity	GO:0003824	ORF
+b0346	eco_0346	b0346	C	plasma membrane	GO:0005886	ORF
+b0347	eco_0347	b0347	P	transcription regulation	GO:0006355	ORF
+b0347	eco_0347	b0347	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0347	eco_0347	b0347	C	ribosome	GO:0005840	ORF
+b0348	eco_0348	b0348	P	transmembrane transport	GO:0055085	ORF
+b0348	eco_0348	b0348	F	oxidoreductase activity	GO:0016491	ORF
+b0348	eco_0348	b0348	C	cytoplasm	GO:0005737	ORF
+b0349	eco_0349	b0349	P	aerobic respiration	GO:0009060	ORF
+b0349	eco_0349	b0349	F	transporter activity	GO:0005215	ORF
+b0349	eco_0349	b0349	C	plasma membrane	GO:0005886	ORF
+b0350	eco_0350	b0350	P	lipid metabolic process	GO:0006629	ORF
+b0350	eco_0350	b0350	F	ATP binding	GO:0005524	ORF
+b0350	eco_0350	b0350	C	ribosome	GO:0005840	ORF
+b0351	eco_0351	b0351	P	cellular response to stress	GO:0033554	ORF
+b0351	eco_0351	b0351	F	catalytic activity	GO:0003824	ORF
+b0351	eco_0351	b0351	C	cytoplasm	GO:0005737	ORF
+b0352	eco_0352	b0352	P	carbohydrate metabolic process	GO:0005975	ORF
+b0352	eco_0352	b0352	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0352	eco_0352	b0352	C	plasma membrane	GO:0005886	ORF
+b0353	eco_0353	b0353	P	amino acid biosynthetic process	GO:0008652	ORF
+b0353	eco_0353	b0353	F	oxidoreductase activity	GO:0016491	ORF
+b0353	eco_0353	b0353	C	ribosome	GO:0005840	ORF
+b0354	eco_0354	b0354	P	translation	GO:0006412	ORF
+b0354	eco_0354	b0354	F	transporter activity	GO:0005215	ORF
+b0354	eco_0354	b0354	C	cytoplasm	GO:0005737	ORF
+b0355	eco_0355	b0355	P	transcription regulation	GO:0006355	ORF
+b0355	eco_0355	b0355	F	ATP binding	GO:0005524	ORF
+b0355	eco_0355	b0355	C	plasma membrane	GO:0005886	ORF
+b0356	eco_0356	b0356	P	transmembrane transport	GO:0055085	ORF
+b0356	eco_0356	b0356	F	catalytic activity	GO:0003824	ORF
+b0356	eco_0356	b0356	C	ribosome	GO:0005840	ORF
+b0357	eco_0357	b0357	P	aerobic respiration	GO:0009060	ORF
+b0357	eco_0357	b0357	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0357	eco_0357	b0357	C	cytoplasm	GO:0005737	ORF
+b0358	eco_0358	b0358	P	lipid metabolic process	GO:0006629	ORF
+b0358	eco_0358	b0358	F	oxidoreductase activity	GO:0016491	ORF
+b0358	eco_0358	b0358	C	plasma membrane	GO:0005886	ORF
+b0359	eco_0359	b0359	P	cellular response to stress	GO:0033554	ORF
+b0359	eco_0359	b0359	F	transporter activity	GO:0005215	ORF
+b0359	eco_0359	b0359	C	ribosome	GO:0005840	ORF
+b0360	eco_0360	b0360	P	carbohydrate metabolic process	GO:0005975	ORF
+b0360	eco_0360	b0360	F	ATP binding	GO:0005524	ORF
+b0360	eco_0360	b0360	C	cytoplasm	GO:0005737	ORF
+b0361	eco_0361	b0361	P	amino acid biosynthetic process	GO:0008652	ORF
+b0361	eco_0361	b0361	F	catalytic activity	GO:0003824	ORF
+b0361	eco_0361	b0361	C	plasma membrane	GO:0005886	ORF
+b0362	eco_0362	b0362	P	translation	GO:0006412	ORF
+b0362	eco_0362	b0362	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0362	eco_0362	b0362	C	ribosome	GO:0005840	ORF
+b0363	eco_0363	b0363	P	transcription regulation	GO:0006355	ORF
+b0363	eco_0363	b0363	F	oxidoreductase activity	GO:0016491	ORF
+b0363	eco_0363	b0363	C	cytoplasm	GO:0005737	ORF
+b0364	eco_0364	b0364	P	transmembrane transport	GO:0055085	ORF
+b0364	eco_0364	b0364	F	transporter activity	GO:0005215	ORF
+b0364	eco_0364	b0364	C	plasma membrane	GO:0005886	ORF
+b0365	eco_0365	b0365	P	aerobic respiration	GO:0009060	ORF
+b0365	eco_0365	b0365	F	ATP binding	GO:0005524	ORF
+b0365	eco_0365	b0365	C	ribosome	GO:0005840	ORF
+b0366	eco_0366	b0366	P	lipid metabolic process	GO:0006629	ORF
+b0366	eco_0366	b0366	F	catalytic activity	GO:0003824	ORF
+b0366	eco_0366	b0366	C	cytoplasm	GO:0005737	ORF
+b0367	eco_0367	b0367	P	cellular response to stress	GO:0033554	ORF
+b0367	eco_0367	b0367	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0367	eco_0367	b0367	C	plasma membrane	GO:0005886	ORF
+b0368	eco_0368	b0368	P	carbohydrate metabolic process	GO:0005975	ORF
+b0368	eco_0368	b0368	F	oxidoreductase activity	GO:0016491	ORF
+b0368	eco_0368	b0368	C	ribosome	GO:0005840	ORF
+b0369	eco_0369	b0369	P	amino acid biosynthetic process	GO:0008652	ORF
+b0369	eco_0369	b0369	F	transporter activity	GO:0005215	ORF
+b0369	eco_0369	b0369	C	cytoplasm	GO:0005737	ORF
+b0370	eco_0370	b0370	P	translation	GO:0006412	ORF
+b0370	eco_0370	b0370	F	ATP binding	GO:0005524	ORF
+b0370	eco_0370	b0370	C	plasma membrane	GO:0005886	ORF
+b0371	eco_0371	b0371	P	transcription regulation	GO:0006355	ORF
+b0371	eco_0371	b0371	F	catalytic activity	GO:0003824	ORF
+b0371	eco_0371	b0371	C	ribosome	GO:0005840	ORF
+b0372	eco_0372	b0372	P	transmembrane transport	GO:0055085	ORF
+b0372	eco_0372	b0372	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0372	eco_0372	b0372	C	cytoplasm	GO:0005737	ORF
+b0373	eco_0373	b0373	P	aerobic respiration	GO:0009060	ORF
+b0373	eco_0373	b0373	F	oxidoreductase activity	GO:0016491	ORF
+b0373	eco_0373	b0373	C	plasma membrane	GO:0005886	ORF
+b0374	eco_0374	b0374	P	lipid metabolic process	GO:0006629	ORF
+b0374	eco_0374	b0374	F	transporter activity	GO:0005215	ORF
+b0374	eco_0374	b0374	C	ribosome	GO:0005840	ORF
+b0375	eco_0375	b0375	P	cellular response to stress	GO:0033554	ORF
+b0375	eco_0375	b0375	F	ATP binding	GO:0005524	ORF
+b0375	eco_0375	b0375	C	cytoplasm	GO:0005737	ORF
+b0376	eco_0376	b0376	P	carbohydrate metabolic process	GO:0005975	ORF
+b0376	eco_0376	b0376	F	catalytic activity	GO:0003824	ORF
+b0376	eco_0376	b0376	C	plasma membrane	GO:0005886	ORF
+b0377	eco_0377	b0377	P	amino acid biosynthetic process	GO:0008652	ORF
+b0377	eco_0377	b0377	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0377	eco_0377	b0377	C	ribosome	GO:0005840	ORF
+b0378	eco_0378	b0378	P	translation	GO:0006412	ORF
+b0378	eco_0378	b0378	F	oxidoreductase activity	GO:0016491	ORF
+b0378	eco_0378	b0378	C	cytoplasm	GO:0005737	ORF
+b0379	eco_0379	b0379	P	transcription regulation	GO:0006355	ORF
+b0379	eco_0379	b0379	F	transporter activity	GO:0005215	ORF
+b0379	eco_0379	b0379	C	plasma membrane	GO:0005886	ORF
+b0380	eco_0380	b0380	P	transmembrane transport	GO:0055085	ORF
+b0380	eco_0380	b0380	F	ATP binding	GO:0005524	ORF
+b0380	eco_0380	b0380	C	ribosome	GO:0005840	ORF
+b0381	eco_0381	b0381	P	aerobic respiration	GO:0009060	ORF
+b0381	eco_0381	b0381	F	catalytic activity	GO:0003824	ORF
+b0381	eco_0381	b0381	C	cytoplasm	GO:0005737	ORF
+b0382	eco_0382	b0382	P	lipid metabolic process	GO:0006629	ORF
+b0382	eco_0382	b0382	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0382	eco_0382	b0382	C	plasma membrane	GO:0005886	ORF
+b0383	eco_0383	b0383	P	cellular response to stress	GO:0033554	ORF
+b0383	eco_0383	b0383	F	oxidoreductase activity	GO:0016491	ORF
+b0383	eco_0383	b0383	C	ribosome	GO:0005840	ORF
+b0384	eco_0384	b0384	P	carbohydrate metabolic process	GO:0005975	ORF
+b0384	eco_0384	b0384	F	transporter activity	GO:0005215	ORF
+b0384	eco_0384	b0384	C	cytoplasm	GO:0005737	ORF
+b0385	eco_0385	b0385	P	amino acid biosynthetic process	GO:0008652	ORF
+b0385	eco_0385	b0385	F	ATP binding	GO:0005524	ORF
+b0385	eco_0385	b0385	C	plasma membrane	GO:0005886	ORF
+b0386	eco_0386	b0386	P	translation	GO:0006412	ORF
+b0386	eco_0386	b0386	F	catalytic activity	GO:0003824	ORF
+b0386	eco_0386	b0386	C	ribosome	GO:0005840	ORF
+b0387	eco_0387	b0387	P	transcription regulation	GO:0006355	ORF
+b0387	eco_0387	b0387	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0387	eco_0387	b0387	C	cytoplasm	GO:0005737	ORF
+b0388	eco_0388	b0388	P	transmembrane transport	GO:0055085	ORF
+b0388	eco_0388	b0388	F	oxidoreductase activity	GO:0016491	ORF
+b0388	eco_0388	b0388	C	plasma membrane	GO:0005886	ORF
+b0389	eco_0389	b0389	P	aerobic respiration	GO:0009060	ORF
+b0389	eco_0389	b0389	F	transporter activity	GO:0005215	ORF
+b0389	eco_0389	b0389	C	ribosome	GO:0005840	ORF
+b0390	eco_0390	b0390	P	lipid metabolic process	GO:0006629	ORF
+b0390	eco_0390	b0390	F	ATP binding	GO:0005524	ORF
+b0390	eco_0390	b0390	C	cytoplasm	GO:0005737	ORF
+b0391	eco_0391	b0391	P	cellular response to stress	GO:0033554	ORF
+b0391	eco_0391	b0391	F	catalytic activity	GO:0003824	ORF
+b0391	eco_0391	b0391	C	plasma membrane	GO:0005886	ORF
+b0392	eco_0392	b0392	P	carbohydrate metabolic process	GO:0005975	ORF
+b0392	eco_0392	b0392	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0392	eco_0392	b0392	C	ribosome	GO:0005840	ORF
+b0393	eco_0393	b0393	P	amino acid biosynthetic process	GO:0008652	ORF
+b0393	eco_0393	b0393	F	oxidoreductase activity	GO:0016491	ORF
+b0393	eco_0393	b0393	C	cytoplasm	GO:0005737	ORF
+b0394	eco_0394	b0394	P	translation	GO:0006412	ORF
+b0394	eco_0394	b0394	F	transporter activity	GO:0005215	ORF
+b0394	eco_0394	b0394	C	plasma membrane	GO:0005886	ORF
+b0395	eco_0395	b0395	P	transcription regulation	GO:0006355	ORF
+b0395	eco_0395	b0395	F	ATP binding	GO:0005524	ORF
+b0395	eco_0395	b0395	C	ribosome	GO:0005840	ORF
+b0396	eco_0396	b0396	P	transmembrane transport	GO:0055085	ORF
+b0396	eco_0396	b0396	F	catalytic activity	GO:0003824	ORF
+b0396	eco_0396	b0396	C	cytoplasm	GO:0005737	ORF
+b0397	eco_0397	b0397	P	aerobic respiration	GO:0009060	ORF
+b0397	eco_0397	b0397	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0397	eco_0397	b0397	C	plasma membrane	GO:0005886	ORF
+b0398	eco_0398	b0398	P	lipid metabolic process	GO:0006629	ORF
+b0398	eco_0398	b0398	F	oxidoreductase activity	GO:0016491	ORF
+b0398	eco_0398	b0398	C	ribosome	GO:0005840	ORF
+b0399	eco_0399	b0399	P	cellular response to stress	GO:0033554	ORF
+b0399	eco_0399	b0399	F	transporter activity	GO:0005215	ORF
+b0399	eco_0399	b0399	C	cytoplasm	GO:0005737	ORF
+b0400	eco_0400	b0400	P	carbohydrate metabolic process	GO:0005975	ORF
+b0400	eco_0400	b0400	F	ATP binding	GO:0005524	ORF
+b0400	eco_0400	b0400	C	plasma membrane	GO:0005886	ORF
+b0401	eco_0401	b0401	P	amino acid biosynthetic process	GO:0008652	ORF
+b0401	eco_0401	b0401	F	catalytic activity	GO:0003824	ORF
+b0401	eco_0401	b0401	C	ribosome	GO:0005840	ORF
+b0402	eco_0402	b0402	P	translation	GO:0006412	ORF
+b0402	eco_0402	b0402	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0402	eco_0402	b0402	C	cytoplasm	GO:0005737	ORF
+b0403	eco_0403	b0403	P	transcription regulation	GO:0006355	ORF
+b0403	eco_0403	b0403	F	oxidoreductase activity	GO:0016491	ORF
+b0403	eco_0403	b0403	C	plasma membrane	GO:0005886	ORF
+b0404	eco_0404	b0404	P	transmembrane transport	GO:0055085	ORF
+b0404	eco_0404	b0404	F	transporter activity	GO:0005215	ORF
+b0404	eco_0404	b0404	C	ribosome	GO:0005840	ORF
+b0405	eco_0405	b0405	P	aerobic respiration	GO:0009060	ORF
+b0405	eco_0405	b0405	F	ATP binding	GO:0005524	ORF
+b0405	eco_0405	b0405	C	cytoplasm	GO:0005737	ORF
+b0406	eco_0406	b0406	P	lipid metabolic process	GO:0006629	ORF
+b0406	eco_0406	b0406	F	catalytic activity	GO:0003824	ORF
+b0406	eco_0406	b0406	C	plasma membrane	GO:0005886	ORF
+b0407	eco_0407	b0407	P	cellular response to stress	GO:0033554	ORF
+b0407	eco_0407	b0407	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0407	eco_0407	b0407	C	ribosome	GO:0005840	ORF
+b0408	eco_0408	b0408	P	carbohydrate metabolic process	GO:0005975	ORF
+b0408	eco_0408	b0408	F	oxidoreductase activity	GO:0016491	ORF
+b0408	eco_0408	b0408	C	cytoplasm	GO:0005737	ORF
+b0409	eco_0409	b0409	P	amino acid biosynthetic process	GO:0008652	ORF
+b0409	eco_0409	b0409	F	transporter activity	GO:0005215	ORF
+b0409	eco_0409	b0409	C	plasma membrane	GO:0005886	ORF
+b0410	eco_0410	b0410	P	translation	GO:0006412	ORF
+b0410	eco_0410	b0410	F	ATP binding	GO:0005524	ORF
+b0410	eco_0410	b0410	C	ribosome	GO:0005840	ORF
+b0411	eco_0411	b0411	P	transcription regulation	GO:0006355	ORF
+b0411	eco_0411	b0411	F	catalytic activity	GO:0003824	ORF
+b0411	eco_0411	b0411	C	cytoplasm	GO:0005737	ORF
+b0412	eco_0412	b0412	P	transmembrane transport	GO:0055085	ORF
+b0412	eco_0412	b0412	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0412	eco_0412	b0412	C	plasma membrane	GO:0005886	ORF
+b0413	eco_0413	b0413	P	aerobic respiration	GO:0009060	ORF
+b0413	eco_0413	b0413	F	oxidoreductase activity	GO:0016491	ORF
+b0413	eco_0413	b0413	C	ribosome	GO:0005840	ORF
+b0414	eco_0414	b0414	P	lipid metabolic process	GO:0006629	ORF
+b0414	eco_0414	b0414	F	transporter activity	GO:0005215	ORF
+b0414	eco_0414	b0414	C	cytoplasm	GO:0005737	ORF
+b0415	eco_0415	b0415	P	cellular response to stress	GO:0033554	ORF
+b0415	eco_0415	b0415	F	ATP binding	GO:0005524	ORF
+b0415	eco_0415	b0415	C	plasma membrane	GO:0005886	ORF
+b0416	eco_0416	b0416	P	carbohydrate metabolic process	GO:0005975	ORF
+b0416	eco_0416	b0416	F	catalytic activity	GO:0003824	ORF
+b0416	eco_0416	b0416	C	ribosome	GO:0005840	ORF
+b0417	eco_0417	b0417	P	amino acid biosynthetic process	GO:0008652	ORF
+b0417	eco_0417	b0417	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0417	eco_0417	b0417	C	cytoplasm	GO:0005737	ORF
+b0418	eco_0418	b0418	P	translation	GO:0006412	ORF
+b0418	eco_0418	b0418	F	oxidoreductase activity	GO:0016491	ORF
+b0418	eco_0418	b0418	C	plasma membrane	GO:0005886	ORF
+b0419	eco_0419	b0419	P	transcription regulation	GO:0006355	ORF
+b0419	eco_0419	b0419	F	transporter activity	GO:0005215	ORF
+b0419	eco_0419	b0419	C	ribosome	GO:0005840	ORF
+b0420	eco_0420	b0420	P	transmembrane transport	GO:0055085	ORF
+b0420	eco_0420	b0420	F	ATP binding	GO:0005524	ORF
+b0420	eco_0420	b0420	C	cytoplasm	GO:0005737	ORF
+b0421	eco_0421	b0421	P	aerobic respiration	GO:0009060	ORF
+b0421	eco_0421	b0421	F	catalytic activity	GO:0003824	ORF
+b0421	eco_0421	b0421	C	plasma membrane	GO:0005886	ORF
+b0422	eco_0422	b0422	P	lipid metabolic process	GO:0006629	ORF
+b0422	eco_0422	b0422	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0422	eco_0422	b0422	C	ribosome	GO:0005840	ORF
+b0423	eco_0423	b0423	P	cellular response to stress	GO:0033554	ORF
+b0423	eco_0423	b0423	F	oxidoreductase activity	GO:0016491	ORF
+b0423	eco_0423	b0423	C	cytoplasm	GO:0005737	ORF
+b0424	eco_0424	b0424	P	carbohydrate metabolic process	GO:0005975	ORF
+b0424	eco_0424	b0424	F	transporter activity	GO:0005215	ORF
+b0424	eco_0424	b0424	C	plasma membrane	GO:0005886	ORF
+b0425	eco_0425	b0425	P	amino acid biosynthetic process	GO:0008652	ORF
+b0425	eco_0425	b0425	F	ATP binding	GO:0005524	ORF
+b0425	eco_0425	b0425	C	ribosome	GO:0005840	ORF
+b0426	eco_0426	b0426	P	translation	GO:0006412	ORF
+b0426	eco_0426	b0426	F	catalytic activity	GO:0003824	ORF
+b0426	eco_0426	b0426	C	cytoplasm	GO:0005737	ORF
+b0427	eco_0427	b0427	P	transcription regulation	GO:0006355	ORF
+b0427	eco_0427	b0427	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0427	eco_0427	b0427	C	plasma membrane	GO:0005886	ORF
+b0428	eco_0428	b0428	P	transmembrane transport	GO:0055085	ORF
+b0428	eco_0428	b0428	F	oxidoreductase activity	GO:0016491	ORF
+b0428	eco_0428	b0428	C	ribosome	GO:0005840	ORF
+b0429	eco_0429	b0429	P	aerobic respiration	GO:0009060	ORF
+b0429	eco_0429	b0429	F	transporter activity	GO:0005215	ORF
+b0429	eco_0429	b0429	C	cytoplasm	GO:0005737	ORF
+b0430	eco_0430	b0430	P	lipid metabolic process	GO:0006629	ORF
+b0430	eco_0430	b0430	F	ATP binding	GO:0005524	ORF
+b0430	eco_0430	b0430	C	plasma membrane	GO:0005886	ORF
+b0431	eco_0431	b0431	P	cellular response to stress	GO:0033554	ORF
+b0431	eco_0431	b0431	F	catalytic activity	GO:0003824	ORF
+b0431	eco_0431	b0431	C	ribosome	GO:0005840	ORF
+b0432	eco_0432	b0432	P	carbohydrate metabolic process	GO:0005975	ORF
+b0432	eco_0432	b0432	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0432	eco_0432	b0432	C	cytoplasm	GO:0005737	ORF
+b0433	eco_0433	b0433	P	amino acid biosynthetic process	GO:0008652	ORF
+b0433	eco_0433	b0433	F	oxidoreductase activity	GO:0016491	ORF
+b0433	eco_0433	b0433	C	plasma membrane	GO:0005886	ORF
+b0434	eco_0434	b0434	P	translation	GO:0006412	ORF
+b0434	eco_0434	b0434	F	transporter activity	GO:0005215	ORF
+b0434	eco_0434	b0434	C	ribosome	GO:0005840	ORF
+b0435	eco_0435	b0435	P	transcription regulation	GO:0006355	ORF
+b0435	eco_0435	b0435	F	ATP binding	GO:0005524	ORF
+b0435	eco_0435	b0435	C	cytoplasm	GO:0005737	ORF
+b0436	eco_0436	b0436	P	transmembrane transport	GO:0055085	ORF
+b0436	eco_0436	b0436	F	catalytic activity	GO:0003824	ORF
+b0436	eco_0436	b0436	C	plasma membrane	GO:0005886	ORF
+b0437	eco_0437	b0437	P	aerobic respiration	GO:0009060	ORF
+b0437	eco_0437	b0437	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0437	eco_0437	b0437	C	ribosome	GO:0005840	ORF
+b0438	eco_0438	b0438	P	lipid metabolic process	GO:0006629	ORF
+b0438	eco_0438	b0438	F	oxidoreductase activity	GO:0016491	ORF
+b0438	eco_0438	b0438	C	cytoplasm	GO:0005737	ORF
+b0439	eco_0439	b0439	P	cellular response to stress	GO:0033554	ORF
+b0439	eco_0439	b0439	F	transporter activity	GO:0005215	ORF
+b0439	eco_0439	b0439	C	plasma membrane	GO:0005886	ORF
+b0440	eco_0440	b0440	P	carbohydrate metabolic process	GO:0005975	ORF
+b0440	eco_0440	b0440	F	ATP binding	GO:0005524	ORF
+b0440	eco_0440	b0440	C	ribosome	GO:0005840	ORF
+b0441	eco_0441	b0441	P	amino acid biosynthetic process	GO:0008652	ORF
+b0441	eco_0441	b0441	F	catalytic activity	GO:0003824	ORF
+b0441	eco_0441	b0441	C	cytoplasm	GO:0005737	ORF
+b0442	eco_0442	b0442	P	translation	GO:0006412	ORF
+b0442	eco_0442	b0442	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0442	eco_0442	b0442	C	plasma membrane	GO:0005886	ORF
+b0443	eco_0443	b0443	P	transcription regulation	GO:0006355	ORF
+b0443	eco_0443	b0443	F	oxidoreductase activity	GO:0016491	ORF
+b0443	eco_0443	b0443	C	ribosome	GO:0005840	ORF
+b0444	eco_0444	b0444	P	transmembrane transport	GO:0055085	ORF
+b0444	eco_0444	b0444	F	transporter activity	GO:0005215	ORF
+b0444	eco_0444	b0444	C	cytoplasm	GO:0005737	ORF
+b0445	eco_0445	b0445	P	aerobic respiration	GO:0009060	ORF
+b0445	eco_0445	b0445	F	ATP binding	GO:0005524	ORF
+b0445	eco_0445	b0445	C	plasma membrane	GO:0005886	ORF
+b0446	eco_0446	b0446	P	lipid metabolic process	GO:0006629	ORF
+b0446	eco_0446	b0446	F	catalytic activity	GO:0003824	ORF
+b0446	eco_0446	b0446	C	ribosome	GO:0005840	ORF
+b0447	eco_0447	b0447	P	cellular response to stress	GO:0033554	ORF
+b0447	eco_0447	b0447	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0447	eco_0447	b0447	C	cytoplasm	GO:0005737	ORF
+b0448	eco_0448	b0448	P	carbohydrate metabolic process	GO:0005975	ORF
+b0448	eco_0448	b0448	F	oxidoreductase activity	GO:0016491	ORF
+b0448	eco_0448	b0448	C	plasma membrane	GO:0005886	ORF
+b0449	eco_0449	b0449	P	amino acid biosynthetic process	GO:0008652	ORF
+b0449	eco_0449	b0449	F	transporter activity	GO:0005215	ORF
+b0449	eco_0449	b0449	C	ribosome	GO:0005840	ORF
+b0450	eco_0450	b0450	P	translation	GO:0006412	ORF
+b0450	eco_0450	b0450	F	ATP binding	GO:0005524	ORF
+b0450	eco_0450	b0450	C	cytoplasm	GO:0005737	ORF
+b0451	eco_0451	b0451	P	transcription regulation	GO:0006355	ORF
+b0451	eco_0451	b0451	F	catalytic activity	GO:0003824	ORF
+b0451	eco_0451	b0451	C	plasma membrane	GO:0005886	ORF
+b0452	eco_0452	b0452	P	transmembrane transport	GO:0055085	ORF
+b0452	eco_0452	b0452	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0452	eco_0452	b0452	C	ribosome	GO:0005840	ORF
+b0453	eco_0453	b0453	P	aerobic respiration	GO:0009060	ORF
+b0453	eco_0453	b0453	F	oxidoreductase activity	GO:0016491	ORF
+b0453	eco_0453	b0453	C	cytoplasm	GO:0005737	ORF
+b0454	eco_0454	b0454	P	lipid metabolic process	GO:0006629	ORF
+b0454	eco_0454	b0454	F	transporter activity	GO:0005215	ORF
+b0454	eco_0454	b0454	C	plasma membrane	GO:0005886	ORF
+b0455	eco_0455	b0455	P	cellular response to stress	GO:0033554	ORF
+b0455	eco_0455	b0455	F	ATP binding	GO:0005524	ORF
+b0455	eco_0455	b0455	C	ribosome	GO:0005840	ORF
+b0456	eco_0456	b0456	P	carbohydrate metabolic process	GO:0005975	ORF
+b0456	eco_0456	b0456	F	catalytic activity	GO:0003824	ORF
+b0456	eco_0456	b0456	C	cytoplasm	GO:0005737	ORF
+b0457	eco_0457	b0457	P	amino acid biosynthetic process	GO:0008652	ORF
+b0457	eco_0457	b0457	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0457	eco_0457	b0457	C	plasma membrane	GO:0005886	ORF
+b0458	eco_0458	b0458	P	translation	GO:0006412	ORF
+b0458	eco_0458	b0458	F	oxidoreductase activity	GO:0016491	ORF
+b0458	eco_0458	b0458	C	ribosome	GO:0005840	ORF
+b0459	eco_0459	b0459	P	transcription regulation	GO:0006355	ORF
+b0459	eco_0459	b0459	F	transporter activity	GO:0005215	ORF
+b0459	eco_0459	b0459	C	cytoplasm	GO:0005737	ORF
+b0460	eco_0460	b0460	P	transmembrane transport	GO:0055085	ORF
+b0460	eco_0460	b0460	F	ATP binding	GO:0005524	ORF
+b0460	eco_0460	b0460	C	plasma membrane	GO:0005886	ORF
+b0461	eco_0461	b0461	P	aerobic respiration	GO:0009060	ORF
+b0461	eco_0461	b0461	F	catalytic activity	GO:0003824	ORF
+b0461	eco_0461	b0461	C	ribosome	GO:0005840	ORF
+b0462	eco_0462	b0462	P	lipid metabolic process	GO:0006629	ORF
+b0462	eco_0462	b0462	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0462	eco_0462	b0462	C	cytoplasm	GO:0005737	ORF
+b0463	eco_0463	b0463	P	cellular response to stress	GO:0033554	ORF
+b0463	eco_0463	b0463	F	oxidoreductase activity	GO:0016491	ORF
+b0463	eco_0463	b0463	C	plasma membrane	GO:0005886	ORF
+b0464	eco_0464	b0464	P	carbohydrate metabolic process	GO:0005975	ORF
+b0464	eco_0464	b0464	F	transporter activity	GO:0005215	ORF
+b0464	eco_0464	b0464	C	ribosome	GO:0005840	ORF
+b0465	eco_0465	b0465	P	amino acid biosynthetic process	GO:0008652	ORF
+b0465	eco_0465	b0465	F	ATP binding	GO:0005524	ORF
+b0465	eco_0465	b0465	C	cytoplasm	GO:0005737	ORF
+b0466	eco_0466	b0466	P	translation	GO:0006412	ORF
+b0466	eco_0466	b0466	F	catalytic activity	GO:0003824	ORF
+b0466	eco_0466	b0466	C	plasma membrane	GO:0005886	ORF
+b0467	eco_0467	b0467	P	transcription regulation	GO:0006355	ORF
+b0467	eco_0467	b0467	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0467	eco_0467	b0467	C	ribosome	GO:0005840	ORF
+b0468	eco_0468	b0468	P	transmembrane transport	GO:0055085	ORF
+b0468	eco_0468	b0468	F	oxidoreductase activity	GO:0016491	ORF
+b0468	eco_0468	b0468	C	cytoplasm	GO:0005737	ORF
+b0469	eco_0469	b0469	P	aerobic respiration	GO:0009060	ORF
+b0469	eco_0469	b0469	F	transporter activity	GO:0005215	ORF
+b0469	eco_0469	b0469	C	plasma membrane	GO:0005886	ORF
+b0470	eco_0470	b0470	P	lipid metabolic process	GO:0006629	ORF
+b0470	eco_0470	b0470	F	ATP binding	GO:0005524	ORF
+b0470	eco_0470	b0470	C	ribosome	GO:0005840	ORF
+b0471	eco_0471	b0471	P	cellular response to stress	GO:0033554	ORF
+b0471	eco_0471	b0471	F	catalytic activity	GO:0003824	ORF
+b0471	eco_0471	b0471	C	cytoplasm	GO:0005737	ORF
+b0472	eco_0472	b0472	P	carbohydrate metabolic process	GO:0005975	ORF
+b0472	eco_0472	b0472	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0472	eco_0472	b0472	C	plasma membrane	GO:0005886	ORF
+b0473	eco_0473	b0473	P	amino acid biosynthetic process	GO:0008652	ORF
+b0473	eco_0473	b0473	F	oxidoreductase activity	GO:0016491	ORF
+b0473	eco_0473	b0473	C	ribosome	GO:0005840	ORF
+b0474	eco_0474	b0474	P	translation	GO:0006412	ORF
+b0474	eco_0474	b0474	F	transporter activity	GO:0005215	ORF
+b0474	eco_0474	b0474	C	cytoplasm	GO:0005737	ORF
+b0475	eco_0475	b0475	P	transcription regulation	GO:0006355	ORF
+b0475	eco_0475	b0475	F	ATP binding	GO:0005524	ORF
+b0475	eco_0475	b0475	C	plasma membrane	GO:0005886	ORF
+b0476	eco_0476	b0476	P	transmembrane transport	GO:0055085	ORF
+b0476	eco_0476	b0476	F	catalytic activity	GO:0003824	ORF
+b0476	eco_0476	b0476	C	ribosome	GO:0005840	ORF
+b0477	eco_0477	b0477	P	aerobic respiration	GO:0009060	ORF
+b0477	eco_0477	b0477	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0477	eco_0477	b0477	C	cytoplasm	GO:0005737	ORF
+b0478	eco_0478	b0478	P	lipid metabolic process	GO:0006629	ORF
+b0478	eco_0478	b0478	F	oxidoreductase activity	GO:0016491	ORF
+b0478	eco_0478	b0478	C	plasma membrane	GO:0005886	ORF
+b0479	eco_0479	b0479	P	cellular response to stress	GO:0033554	ORF
+b0479	eco_0479	b0479	F	transporter activity	GO:0005215	ORF
+b0479	eco_0479	b0479	C	ribosome	GO:0005840	ORF
+b0480	eco_0480	b0480	P	carbohydrate metabolic process	GO:0005975	ORF
+b0480	eco_0480	b0480	F	ATP binding	GO:0005524	ORF
+b0480	eco_0480	b0480	C	cytoplasm	GO:0005737	ORF
+b0481	eco_0481	b0481	P	amino acid biosynthetic process	GO:0008652	ORF
+b0481	eco_0481	b0481	F	catalytic activity	GO:0003824	ORF
+b0481	eco_0481	b0481	C	plasma membrane	GO:0005886	ORF
+b0482	eco_0482	b0482	P	translation	GO:0006412	ORF
+b0482	eco_0482	b0482	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0482	eco_0482	b0482	C	ribosome	GO:0005840	ORF
+b0483	eco_0483	b0483	P	transcription regulation	GO:0006355	ORF
+b0483	eco_0483	b0483	F	oxidoreductase activity	GO:0016491	ORF
+b0483	eco_0483	b0483	C	cytoplasm	GO:0005737	ORF
+b0484	eco_0484	b0484	P	transmembrane transport	GO:0055085	ORF
+b0484	eco_0484	b0484	F	transporter activity	GO:0005215	ORF
+b0484	eco_0484	b0484	C	plasma membrane	GO:0005886	ORF
+b0485	eco_0485	b0485	P	aerobic respiration	GO:0009060	ORF
+b0485	eco_0485	b0485	F	ATP binding	GO:0005524	ORF
+b0485	eco_0485	b0485	C	ribosome	GO:0005840	ORF
+b0486	eco_0486	b0486	P	lipid metabolic process	GO:0006629	ORF
+b0486	eco_0486	b0486	F	catalytic activity	GO:0003824	ORF
+b0486	eco_0486	b0486	C	cytoplasm	GO:0005737	ORF
+b0487	eco_0487	b0487	P	cellular response to stress	GO:0033554	ORF
+b0487	eco_0487	b0487	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0487	eco_0487	b0487	C	plasma membrane	GO:0005886	ORF
+b0488	eco_0488	b0488	P	carbohydrate metabolic process	GO:0005975	ORF
+b0488	eco_0488	b0488	F	oxidoreductase activity	GO:0016491	ORF
+b0488	eco_0488	b0488	C	ribosome	GO:0005840	ORF
+b0489	eco_0489	b0489	P	amino acid biosynthetic process	GO:0008652	ORF
+b0489	eco_0489	b0489	F	transporter activity	GO:0005215	ORF
+b0489	eco_0489	b0489	C	cytoplasm	GO:0005737	ORF
+b0490	eco_0490	b0490	P	translation	GO:0006412	ORF
+b0490	eco_0490	b0490	F	ATP binding	GO:0005524	ORF
+b0490	eco_0490	b0490	C	plasma membrane	GO:0005886	ORF
+b0491	eco_0491	b0491	P	transcription regulation	GO:0006355	ORF
+b0491	eco_0491	b0491	F	catalytic activity	GO:0003824	ORF
+b0491	eco_0491	b0491	C	ribosome	GO:0005840	ORF
+b0492	eco_0492	b0492	P	transmembrane transport	GO:0055085	ORF
+b0492	eco_0492	b0492	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0492	eco_0492	b0492	C	cytoplasm	GO:0005737	ORF
+b0493	eco_0493	b0493	P	aerobic respiration	GO:0009060	ORF
+b0493	eco_0493	b0493	F	oxidoreductase activity	GO:0016491	ORF
+b0493	eco_0493	b0493	C	plasma membrane	GO:0005886	ORF
+b0494	eco_0494	b0494	P	lipid metabolic process	GO:0006629	ORF
+b0494	eco_0494	b0494	F	transporter activity	GO:0005215	ORF
+b0494	eco_0494	b0494	C	ribosome	GO:0005840	ORF
+b0495	eco_0495	b0495	P	cellular response to stress	GO:0033554	ORF
+b0495	eco_0495	b0495	F	ATP binding	GO:0005524	ORF
+b0495	eco_0495	b0495	C	cytoplasm	GO:0005737	ORF
+b0496	eco_0496	b0496	P	carbohydrate metabolic process	GO:0005975	ORF
+b0496	eco_0496	b0496	F	catalytic activity	GO:0003824	ORF
+b0496	eco_0496	b0496	C	plasma membrane	GO:0005886	ORF
+b0497	eco_0497	b0497	P	amino acid biosynthetic process	GO:0008652	ORF
+b0497	eco_0497	b0497	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0497	eco_0497	b0497	C	ribosome	GO:0005840	ORF
+b0498	eco_0498	b0498	P	translation	GO:0006412	ORF
+b0498	eco_0498	b0498	F	oxidoreductase activity	GO:0016491	ORF
+b0498	eco_0498	b0498	C	cytoplasm	GO:0005737	ORF
+b0499	eco_0499	b0499	P	transcription regulation	GO:0006355	ORF
+b0499	eco_0499	b0499	F	transporter activity	GO:0005215	ORF
+b0499	eco_0499	b0499	C	plasma membrane	GO:0005886	ORF
+b0500	eco_0500	b0500	P	transmembrane transport	GO:0055085	ORF
+b0500	eco_0500	b0500	F	ATP binding	GO:0005524	ORF
+b0500	eco_0500	b0500	C	ribosome	GO:0005840	ORF
+b0501	eco_0501	b0501	P	aerobic respiration	GO:0009060	ORF
+b0501	eco_0501	b0501	F	catalytic activity	GO:0003824	ORF
+b0501	eco_0501	b0501	C	cytoplasm	GO:0005737	ORF
+b0502	eco_0502	b0502	P	lipid metabolic process	GO:0006629	ORF
+b0502	eco_0502	b0502	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0502	eco_0502	b0502	C	plasma membrane	GO:0005886	ORF
+b0503	eco_0503	b0503	P	cellular response to stress	GO:0033554	ORF
+b0503	eco_0503	b0503	F	oxidoreductase activity	GO:0016491	ORF
+b0503	eco_0503	b0503	C	ribosome	GO:0005840	ORF
+b0504	eco_0504	b0504	P	carbohydrate metabolic process	GO:0005975	ORF
+b0504	eco_0504	b0504	F	transporter activity	GO:0005215	ORF
+b0504	eco_0504	b0504	C	cytoplasm	GO:0005737	ORF
+b0505	eco_0505	b0505	P	amino acid biosynthetic process	GO:0008652	ORF
+b0505	eco_0505	b0505	F	ATP binding	GO:0005524	ORF
+b0505	eco_0505	b0505	C	plasma membrane	GO:0005886	ORF
+b0506	eco_0506	b0506	P	translation	GO:0006412	ORF
+b0506	eco_0506	b0506	F	catalytic activity	GO:0003824	ORF
+b0506	eco_0506	b0506	C	ribosome	GO:0005840	ORF
+b0507	eco_0507	b0507	P	transcription regulation	GO:0006355	ORF
+b0507	eco_0507	b0507	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0507	eco_0507	b0507	C	cytoplasm	GO:0005737	ORF
+b0508	eco_0508	b0508	P	transmembrane transport	GO:0055085	ORF
+b0508	eco_0508	b0508	F	oxidoreductase activity	GO:0016491	ORF
+b0508	eco_0508	b0508	C	plasma membrane	GO:0005886	ORF
+b0509	eco_0509	b0509	P	aerobic respiration	GO:0009060	ORF
+b0509	eco_0509	b0509	F	transporter activity	GO:0005215	ORF
+b0509	eco_0509	b0509	C	ribosome	GO:0005840	ORF
+b0510	eco_0510	b0510	P	lipid metabolic process	GO:0006629	ORF
+b0510	eco_0510	b0510	F	ATP binding	GO:0005524	ORF
+b0510	eco_0510	b0510	C	cytoplasm	GO:0005737	ORF
+b0511	eco_0511	b0511	P	cellular response to stress	GO:0033554	ORF
+b0511	eco_0511	b0511	F	catalytic activity	GO:0003824	ORF
+b0511	eco_0511	b0511	C	plasma membrane	GO:0005886	ORF
+b0512	eco_0512	b0512	P	carbohydrate metabolic process	GO:0005975	ORF
+b0512	eco_0512	b0512	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0512	eco_0512	b0512	C	ribosome	GO:0005840	ORF
+b0513	eco_0513	b0513	P	amino acid biosynthetic process	GO:0008652	ORF
+b0513	eco_0513	b0513	F	oxidoreductase activity	GO:0016491	ORF
+b0513	eco_0513	b0513	C	cytoplasm	GO:0005737	ORF
+b0514	eco_0514	b0514	P	translation	GO:0006412	ORF
+b0514	eco_0514	b0514	F	transporter activity	GO:0005215	ORF
+b0514	eco_0514	b0514	C	plasma membrane	GO:0005886	ORF
+b0515	eco_0515	b0515	P	transcription regulation	GO:0006355	ORF
+b0515	eco_0515	b0515	F	ATP binding	GO:0005524	ORF
+b0515	eco_0515	b0515	C	ribosome	GO:0005840	ORF
+b0516	eco_0516	b0516	P	transmembrane transport	GO:0055085	ORF
+b0516	eco_0516	b0516	F	catalytic activity	GO:0003824	ORF
+b0516	eco_0516	b0516	C	cytoplasm	GO:0005737	ORF
+b0517	eco_0517	b0517	P	aerobic respiration	GO:0009060	ORF
+b0517	eco_0517	b0517	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0517	eco_0517	b0517	C	plasma membrane	GO:0005886	ORF
+b0518	eco_0518	b0518	P	lipid metabolic process	GO:0006629	ORF
+b0518	eco_0518	b0518	F	oxidoreductase activity	GO:0016491	ORF
+b0518	eco_0518	b0518	C	ribosome	GO:0005840	ORF
+b0519	eco_0519	b0519	P	cellular response to stress	GO:0033554	ORF
+b0519	eco_0519	b0519	F	transporter activity	GO:0005215	ORF
+b0519	eco_0519	b0519	C	cytoplasm	GO:0005737	ORF
+b0520	eco_0520	b0520	P	carbohydrate metabolic process	GO:0005975	ORF
+b0520	eco_0520	b0520	F	ATP binding	GO:0005524	ORF
+b0520	eco_0520	b0520	C	plasma membrane	GO:0005886	ORF
+b0521	eco_0521	b0521	P	amino acid biosynthetic process	GO:0008652	ORF
+b0521	eco_0521	b0521	F	catalytic activity	GO:0003824	ORF
+b0521	eco_0521	b0521	C	ribosome	GO:0005840	ORF
+b0522	eco_0522	b0522	P	translation	GO:0006412	ORF
+b0522	eco_0522	b0522	F	DNA-binding transcription factor activity	GO:0003700	ORF
+b0522	eco_0522	b0522	C	cytoplasm	GO:0005737	ORF
+b0523	eco_0523	b0523	P	transcription regulation	GO:0006355	ORF
+b0523	eco_0523	b0523	F	oxidoreductase activity	GO:0016491	ORF
+b0523	eco_0523	b0523	C	plasma membrane	GO:0005886	ORF
+b0524	eco_0524	b0524	P	transmembrane transport	GO:0055085	ORF
+b0524	eco_0524	b0524	F	transporter activity	GO:0005215	ORF
+b0524	eco_0524	b0524	C	ribosome	GO:0005840	ORF
+b0525	eco_0525	b0525	P	aerobic respiration	GO:0009060	ORF
+b0525	eco_0525	b0525	F	ATP binding	GO:0005524	ORF
+b0525	eco_0525	b0525	C	cytoplasm	GO:0005737	ORF
