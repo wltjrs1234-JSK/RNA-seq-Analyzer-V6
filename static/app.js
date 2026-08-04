@@ -7572,6 +7572,10 @@ function renderPCAPlot() {
         }
     })
     .catch(err => {
+        if (chartDiv) chartDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 150px;">PCA 연산 중 오류 발생: ${err.message}</div>`;
+        if (loadingDiv) loadingDiv.innerHTML = "";
+    });
+}
 
 // ==========================================
 // One-Click Publication Report Generator Handler
@@ -7580,8 +7584,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnGenReport = document.getElementById("btn-generate-report");
     if (btnGenReport) {
         btnGenReport.addEventListener("click", async () => {
-            const curSpecies = typeof currentSpecies !== 'undefined' ? currentSpecies : "sce";
-            const curSession = typeof currentSessionId !== 'undefined' ? currentSessionId : "default";
+            const curSpecies = (typeof gCurrentSpecies !== 'undefined') ? gCurrentSpecies : "sce";
+            const curSession = (typeof gActiveSessionId !== 'undefined' && gActiveSessionId) ? gActiveSessionId : "default";
             const fcEl = document.getElementById("fc-cutoff");
             const fdrEl = document.getElementById("fdr-cutoff");
             const log2fcVal = fcEl ? parseFloat(fcEl.value || 1.0) : 1.0;
