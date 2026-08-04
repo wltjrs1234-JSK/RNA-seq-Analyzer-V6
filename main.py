@@ -278,7 +278,21 @@ def load_sessions_index() -> dict:
     if os.path.exists(SESSIONS_INDEX_PATH):
         try:
             with open(SESSIONS_INDEX_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
+                idx_data = json.load(f)
+            changed = False
+            for s in idx_data.get("sessions", []):
+                name = s.get("name", "")
+                cnt = s.get("gene_count", 0)
+                if "mock_coryne" in name or "mock_cgl" in name:
+                    s["name"] = f"코리네박테리움 기본 예제 데이터 ({cnt}개 유전자)"
+                    changed = True
+                elif "mock_ecoli" in name or "mock_eco" in name:
+                    s["name"] = f"대장균 기본 예제 데이터 ({cnt}개 유전자)"
+                elif "mock_yeast" in name or "mock_sce" in name:
+                    s["name"] = f"효모 기본 예제 데이터 ({cnt}개 유전자)"
+            if changed:
+                save_sessions_index(idx_data)
+            return idx_data
         except Exception as e:
             print(f"Error reading sessions index: {e}")
             
@@ -364,8 +378,14 @@ def save_new_session(genes_list: list, source_name: str, is_replicate_mode: bool
     now_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     session_id = f"session_{now_str}"
     
-    if not custom_name:
-        clean_name = source_name.replace(".xlsx", "").replace(".xls", "").replace(".csv", "")
+    clean_name = (custom_name or source_name).replace(".xlsx", "").replace(".xls", "").replace(".csv", "").strip()
+    if "mock_coryne" in clean_name or "mock_cgl" in clean_name or "coryne" in clean_name.lower():
+        custom_name = f"코리네박테리움 기본 예제 데이터 ({len(genes_list)}개 유전자)"
+    elif "mock_ecoli" in clean_name or "mock_eco" in clean_name or "ecoli" in clean_name.lower():
+        custom_name = f"대장균 기본 예제 데이터 ({len(genes_list)}개 유전자)"
+    elif "mock_yeast" in clean_name or "mock_sce" in clean_name or "yeast" in clean_name.lower():
+        custom_name = f"효모 기본 예제 데이터 ({len(genes_list)}개 유전자)"
+    elif not custom_name:
         custom_name = clean_name[:30] if len(clean_name) > 30 else clean_name
         if not custom_name:
             custom_name = f"분석_{now_str}"

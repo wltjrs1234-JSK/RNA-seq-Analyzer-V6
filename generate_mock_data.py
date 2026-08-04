@@ -89,16 +89,33 @@ coryne_core_genes = [
 coryne_genes_data = list(coryne_core_genes)
 existing_coryne_tags = set(g["locus_tag"] for g in coryne_genes_data)
 
+import json
+
+cgl_map = {}
+if os.path.exists("data/cgl_gene_map.json"):
+    with open("data/cgl_gene_map.json", "r", encoding="utf-8") as f:
+        cgl_map = json.load(f)
+
+eco_map = {}
+if os.path.exists("data/eco_gene_map.json"):
+    with open("data/eco_gene_map.json", "r", encoding="utf-8") as f:
+        eco_map = json.load(f)
+
 cg_num = 1
 while len(coryne_genes_data) < 3100:
     tag = f"NCgl{cg_num:04d}"
     if tag not in existing_coryne_tags:
         existing_coryne_tags.add(tag)
         dir_choice = np.random.choice(["up", "down", "unchanged"], p=[0.25, 0.25, 0.50])
+        
+        info = cgl_map.get(tag, cgl_map.get(f"CGL{cg_num:04d}", {}))
+        sym = info.get("gene_symbol") or f"cg{cg_num:04d}"
+        desc = info.get("description") or f"Corynebacterium glutamicum ORF {tag}"
+        
         coryne_genes_data.append({
             "Gene_ID": 1020000 + cg_num,
-            "Gene_Symbol": f"cg{cg_num:04d}",
-            "Description": f"Corynebacterium glutamicum ORF NCgl{cg_num:04d}",
+            "Gene_Symbol": sym,
+            "Description": desc,
             "locus_tag": tag,
             "direction": dir_choice
         })
@@ -185,10 +202,15 @@ while len(ecoli_genes_data) < 4400:
     if tag not in existing_ecoli_tags:
         existing_ecoli_tags.add(tag)
         dir_choice = np.random.choice(["up", "down", "unchanged"], p=[0.25, 0.25, 0.50])
+        
+        info = eco_map.get(tag, {})
+        sym = info.get("gene_symbol") or f"b{b_num:04d}"
+        desc = info.get("description") or f"Escherichia coli ORF {tag}"
+        
         ecoli_genes_data.append({
             "Gene_ID": 944000 + b_num,
-            "Gene_Symbol": f"eco_{b_num:04d}",
-            "Description": f"Escherichia coli K-12 ORF {tag}",
+            "Gene_Symbol": sym,
+            "Description": desc,
             "locus_tag": tag,
             "direction": dir_choice
         })

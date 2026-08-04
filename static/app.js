@@ -1012,7 +1012,7 @@ function uploadText(text) {
 }
 
 function loadMockData() {
-    updateStatus("analyzing", "Mock 데이터 생성 및 로드 중...");
+    updateStatus("analyzing", "기본 예제 분석 데이터 로드 중...");
     let mockFileUrl = "/mock_yeast_rnaseq.xlsx";
     let fileName = "mock_yeast_rnaseq.xlsx";
     if (gCurrentSpecies === "cgl") {
@@ -1025,7 +1025,7 @@ function loadMockData() {
     
     fetch(mockFileUrl)
         .then(res => {
-            if (!res.ok) throw new Error("Mock file not found on server.");
+            if (!res.ok) throw new Error("Sample file not found on server.");
             return res.blob();
         })
         .then(blob => {
@@ -1033,7 +1033,7 @@ function loadMockData() {
             uploadFile(file);
         })
         .catch(err => {
-            alert("Mock 엑셀 파일을 가져오지 못했습니다. 서버 터미널에서 `python generate_mock_data.py`가 성공했는지 확인해주세요.");
+            alert("기본 예제 엑셀 파일을 가져오지 못했습니다. 서버에서 예제 데이터 파일 존재 여부를 확인해주세요.");
             updateStatus("ready", "대기 중");
         });
 }
