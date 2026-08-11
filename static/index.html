@@ -335,8 +335,8 @@
                                         <tr>
                                             <th data-sort-key="locus_tag" class="sortable-header">Locus Tag <i class="fa-solid fa-sort sort-icon"></i></th>
                                             <th data-sort-key="gene_symbol" class="sortable-header">Symbol <i class="fa-solid fa-sort sort-icon"></i></th>
-                                            <th data-sort-key="wt_val" class="sortable-header">WT 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i></th>
-                                            <th data-sort-key="mutant_val" class="sortable-header">Mutant 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="wt_val" class="sortable-header" id="deg-th-wt">WT 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i></th>
+                                            <th data-sort-key="mutant_val" class="sortable-header" id="deg-th-mutant">Mutant 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i></th>
                                             <th data-sort-key="log2fc" class="sortable-header">Log2 Fold Change <i class="fa-solid fa-sort sort-icon"></i></th>
                                             <th data-sort-key="pvalue" class="sortable-header stat-header">p-value <i class="fa-solid fa-sort sort-icon"></i></th>
                                             <th data-sort-key="fdr" class="sortable-header stat-header">FDR <i class="fa-solid fa-sort sort-icon"></i></th>
@@ -1346,10 +1346,50 @@
         </div>
     </div>
 
+    <!-- Sample Group Mapping & Naming Modal -->
+    <div id="sample-mapping-modal" class="modal" style="display: none; z-index: 1050;">
+        <div class="modal-content glass-card" style="max-width: 680px; width: 95%;">
+            <span class="close-btn" id="close-sample-mapping-modal">&times;</span>
+            <h2 style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+                <i class="fa-solid fa-tags icon-margin" style="color: #6366f1;"></i>샘플 그룹 및 이름 지정
+            </h2>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;">
+                업로드된 데이터에서 감지된 샘플 열들을 대조군(Control)과 실험군(Treated)으로 확인하거나 변경할 수 있습니다.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                    <label style="font-size: 13px; font-weight: 600; color: #3b82f6; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                        <i class="fa-solid fa-circle-dot"></i>대조군 그룹명 (Control):
+                    </label>
+                    <input type="text" id="mapping-control-name" class="input-text" value="WT" placeholder="예: WT, Control, Pre" style="width: 100%; margin-bottom: 8px;">
+                    <div style="font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">대조군 소속 샘플 열:</div>
+                    <div id="mapping-control-columns" style="display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px;"></div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                    <label style="font-size: 13px; font-weight: 600; color: #ef4444; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                        <i class="fa-solid fa-circle-dot"></i>실험군 그룹명 (Treated):
+                    </label>
+                    <input type="text" id="mapping-treated-name" class="input-text" value="Mutant" placeholder="예: Mutant, Treat, Post" style="width: 100%; margin-bottom: 8px;">
+                    <div style="font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">실험군 소속 샘플 열:</div>
+                    <div id="mapping-treated-columns" style="display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px;"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-secondary" id="btn-cancel-mapping" style="padding: 8px 16px; font-size: 13px;">취소</button>
+                <button class="btn btn-primary" id="btn-confirm-mapping" style="padding: 8px 20px; font-size: 13px; font-weight: 600;">
+                    <i class="fa-solid fa-check icon-margin"></i>이 설정으로 분석 진행
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- jsPDF & html2canvas for PDF and Image Exporting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Application JavaScript -->
-    <script src="app.js?v=25"></script>
+    <script src="app.js?v=27"></script>
 </body>
 </html>

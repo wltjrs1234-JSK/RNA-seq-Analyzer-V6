@@ -1,7 +1,7 @@
 {
   "yeast_gsh_pathway": {
     "name": "Yeast GSH Pathway",
-    "width": 1024,
+    "width": 1200,
     "height": 580,
     "nodes": [],
     "arrows": [],
@@ -535,6 +535,29 @@
         "fillColor": "#ecfdf5",
         "strokeColor": "#10b981",
         "textColor": "#065f46"
+      },
+      {
+        "id": "node_1786417460081",
+        "label": "R5P",
+        "x": 541,
+        "y": 234,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard"
+      },
+      {
+        "id": "node_1786417466188",
+        "label": "PRPP",
+        "x": 693,
+        "y": 235,
+        "w": 80,
+        "h": 24,
+        "rx": 12,
+        "type": "standard",
+        "fillColor": "#fffbeb",
+        "strokeColor": "#f59e0b",
+        "textColor": "#78350f"
       }
     ],
     "arrows": [
@@ -1569,6 +1592,36 @@
         "toCoords": {
           "x": 973,
           "y": 700
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1786417475260",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 575,
+          "y": 146
+        },
+        "toCoords": {
+          "x": 575,
+          "y": 233
+        },
+        "type": "straight",
+        "direction": "forward"
+      },
+      {
+        "id": "arrow_1786417476715",
+        "from": null,
+        "to": null,
+        "fromCoords": {
+          "x": 610,
+          "y": 244
+        },
+        "toCoords": {
+          "x": 698,
+          "y": 244
         },
         "type": "straight",
         "direction": "forward"
@@ -3961,6 +4014,349 @@
             "original_index": 483
           }
         ]
+      },
+      {
+        "id": "gene_1786416910597_145",
+        "symbol": "TNA1",
+        "x": 63.24999999999999,
+        "y": 2.7777777777777777,
+        "rep_log2fc": 0.7935,
+        "genes": [
+          {
+            "locus_tag": "YGR260W",
+            "gene_symbol": "TNA1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 72.93,
+            "mutant_val": 126.42,
+            "log2fc": 0.7935,
+            "pvalue": 3.5e-05,
+            "fdr": 0.003285,
+            "sample_values": {
+              "D452 Basal_1": 72.81,
+              "D452 Basal_2": 74.73,
+              "D452 Basal_3": 71.26,
+              "N16 Basal_1": 126.33,
+              "N16 Basal_2": 129.18,
+              "N16 Basal_3": 123.75
+            },
+            "control_vals": [
+              72.81,
+              74.73,
+              71.26
+            ],
+            "treated_vals": [
+              126.33,
+              129.18,
+              123.75
+            ],
+            "wt_reps": [
+              72.81,
+              74.73,
+              71.26
+            ],
+            "mut_reps": [
+              126.33,
+              129.18,
+              123.75
+            ],
+            "original_index": 2646
+          }
+        ]
+      },
+      {
+        "id": "gene_1786417490820_863",
+        "symbol": "RKI1",
+        "x": 48.125,
+        "y": 24.333333333333336,
+        "rep_log2fc": 0.3947,
+        "genes": [
+          {
+            "locus_tag": "YOR095C",
+            "gene_symbol": "RKI1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 173.32,
+            "mutant_val": 227.86,
+            "log2fc": 0.3947,
+            "pvalue": 0.024294,
+            "fdr": 0.059603,
+            "sample_values": {
+              "D452 Basal_1": 194.85,
+              "D452 Basal_2": 160.99,
+              "D452 Basal_3": 164.13,
+              "N16 Basal_1": 229.61,
+              "N16 Basal_2": 234.45,
+              "N16 Basal_3": 219.52
+            },
+            "control_vals": [
+              194.85,
+              160.99,
+              164.13
+            ],
+            "treated_vals": [
+              229.61,
+              234.45,
+              219.52
+            ],
+            "wt_reps": [
+              194.85,
+              160.99,
+              164.13
+            ],
+            "mut_reps": [
+              229.61,
+              234.45,
+              219.52
+            ],
+            "original_index": 3645
+          }
+        ]
+      },
+      {
+        "id": "gene_1786417495358_607",
+        "symbol": "PRS1",
+        "x": 38.75,
+        "y": 36.333333333333336,
+        "rep_log2fc": 0.2592,
+        "genes": [
+          {
+            "locus_tag": "YKL181W",
+            "gene_symbol": "PRS1",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 303.45,
+            "mutant_val": 363.18,
+            "log2fc": 0.2592,
+            "pvalue": 0.001863,
+            "fdr": 0.015008,
+            "sample_values": {
+              "D452 Basal_1": 315.18,
+              "D452 Basal_2": 296.6,
+              "D452 Basal_3": 298.58,
+              "N16 Basal_1": 351.95,
+              "N16 Basal_2": 369.68,
+              "N16 Basal_3": 367.9
+            },
+            "control_vals": [
+              315.18,
+              296.6,
+              298.58
+            ],
+            "treated_vals": [
+              351.95,
+              369.68,
+              367.9
+            ],
+            "wt_reps": [
+              315.18,
+              296.6,
+              298.58
+            ],
+            "mut_reps": [
+              351.95,
+              369.68,
+              367.9
+            ],
+            "original_index": 3082
+          }
+        ]
+      },
+      {
+        "id": "gene_1786417498041_885",
+        "symbol": "PRS2",
+        "x": 42.4375,
+        "y": 42.11111111111111,
+        "rep_log2fc": 0.1595,
+        "genes": [
+          {
+            "locus_tag": "YER099C",
+            "gene_symbol": "PRS2",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 80.85,
+            "mutant_val": 90.31,
+            "log2fc": 0.1595,
+            "pvalue": 0.07736,
+            "fdr": 0.135253,
+            "sample_values": {
+              "D452 Basal_1": 80.88,
+              "D452 Basal_2": 84.78,
+              "D452 Basal_3": 76.9,
+              "N16 Basal_1": 84.11,
+              "N16 Basal_2": 92.56,
+              "N16 Basal_3": 94.25
+            },
+            "control_vals": [
+              80.88,
+              84.78,
+              76.9
+            ],
+            "treated_vals": [
+              84.11,
+              92.56,
+              94.25
+            ],
+            "wt_reps": [
+              80.88,
+              84.78,
+              76.9
+            ],
+            "mut_reps": [
+              84.11,
+              92.56,
+              94.25
+            ],
+            "original_index": 6049
+          }
+        ]
+      },
+      {
+        "id": "gene_1786417500766_468",
+        "symbol": "PRS3",
+        "x": 36.1875,
+        "y": 37.77777777777778,
+        "rep_log2fc": 0.3162,
+        "genes": [
+          {
+            "locus_tag": "YHL011C",
+            "gene_symbol": "PRS3",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 263.42,
+            "mutant_val": 327.97,
+            "log2fc": 0.3162,
+            "pvalue": 0.013465,
+            "fdr": 0.042091,
+            "sample_values": {
+              "D452 Basal_1": 260.72,
+              "D452 Basal_2": 268.68,
+              "D452 Basal_3": 260.85,
+              "N16 Basal_1": 316.8,
+              "N16 Basal_2": 345.85,
+              "N16 Basal_3": 321.26
+            },
+            "control_vals": [
+              260.72,
+              268.68,
+              260.85
+            ],
+            "treated_vals": [
+              316.8,
+              345.85,
+              321.26
+            ],
+            "wt_reps": [
+              260.72,
+              268.68,
+              260.85
+            ],
+            "mut_reps": [
+              316.8,
+              345.85,
+              321.26
+            ],
+            "original_index": 5601
+          }
+        ]
+      },
+      {
+        "id": "gene_1786417503071_600",
+        "symbol": "PRS4",
+        "x": 43.125,
+        "y": 36.333333333333336,
+        "rep_log2fc": 0.6133,
+        "genes": [
+          {
+            "locus_tag": "YBL068W",
+            "gene_symbol": "PRS4",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 86.72,
+            "mutant_val": 132.67,
+            "log2fc": 0.6133,
+            "pvalue": 9e-05,
+            "fdr": 0.004739,
+            "sample_values": {
+              "D452 Basal_1": 87.52,
+              "D452 Basal_2": 88.42,
+              "D452 Basal_3": 84.23,
+              "N16 Basal_1": 134.31,
+              "N16 Basal_2": 134.77,
+              "N16 Basal_3": 128.93
+            },
+            "control_vals": [
+              87.52,
+              88.42,
+              84.23
+            ],
+            "treated_vals": [
+              134.31,
+              134.77,
+              128.93
+            ],
+            "wt_reps": [
+              87.52,
+              88.42,
+              84.23
+            ],
+            "mut_reps": [
+              134.31,
+              134.77,
+              128.93
+            ],
+            "original_index": 1748
+          }
+        ]
+      },
+      {
+        "id": "gene_1786417505708_806",
+        "symbol": "PRS5",
+        "x": 32.875,
+        "y": 34.55555555555556,
+        "rep_log2fc": 0.1743,
+        "genes": [
+          {
+            "locus_tag": "YOL061W",
+            "gene_symbol": "PRS5",
+            "description": "",
+            "biotype": "protein_coding",
+            "wt_val": 155.28,
+            "mutant_val": 175.22,
+            "log2fc": 0.1743,
+            "pvalue": 0.016963,
+            "fdr": 0.048128,
+            "sample_values": {
+              "D452 Basal_1": 151.91,
+              "D452 Basal_2": 162.62,
+              "D452 Basal_3": 151.3,
+              "N16 Basal_1": 171.63,
+              "N16 Basal_2": 182.15,
+              "N16 Basal_3": 171.89
+            },
+            "control_vals": [
+              151.91,
+              162.62,
+              151.3
+            ],
+            "treated_vals": [
+              171.63,
+              182.15,
+              171.89
+            ],
+            "wt_reps": [
+              151.91,
+              162.62,
+              151.3
+            ],
+            "mut_reps": [
+              171.63,
+              182.15,
+              171.89
+            ],
+            "original_index": 3489
+          }
+        ]
       }
     ],
     "geneOffsets": {
@@ -4271,6 +4667,34 @@
       "gene_1784593070590_845": {
         "dx": -67.44186046511625,
         "dy": 94.18604651162788
+      },
+      "gene_1786416910597_145": {
+        "dx": 200.3179572486882,
+        "dy": 15.646358448763232
+      },
+      "gene_1786417490820_863": {
+        "dx": -131.0748783701828,
+        "dy": -20.97060819469179
+      },
+      "gene_1786417495358_607": {
+        "dx": 73.23973739600945,
+        "dy": -58.64834490246971
+      },
+      "gene_1786417498041_885": {
+        "dx": 11.64075296360415,
+        "dy": -95.36730866749421
+      },
+      "gene_1786417500766_468": {
+        "dx": 112.52727864817346,
+        "dy": -39.26889180426233
+      },
+      "gene_1786417503071_600": {
+        "dx": 0.4850313734835063,
+        "dy": -9.68972654910369
+      },
+      "gene_1786417505708_806": {
+        "dx": 166.85079247832616,
+        "dy": 21.929381137445198
       }
     }
   },
@@ -4279,65 +4703,41 @@
     "species": "cgl",
     "width": 1024,
     "height": 580,
-    "nodes": [
+    "nodes": [],
+    "arrows": [],
+    "customGenes": [
       {
-        "id": "node_1",
-        "x": 80,
-        "y": 150,
-        "w": 140,
-        "h": 50,
-        "label": "L-Aspartate",
-        "color": "blue"
-      },
-      {
-        "id": "node_2",
-        "x": 744,
-        "y": 417,
-        "w": 140,
-        "h": 50,
-        "label": "L-Aspartyl-P",
-        "color": "blue"
-      },
-      {
-        "id": "node_3",
-        "x": 520,
-        "y": 150,
-        "w": 140,
-        "h": 50,
-        "label": "ASA",
-        "color": "blue"
-      },
-      {
-        "id": "node_4",
-        "x": 740,
-        "y": 150,
-        "w": 140,
-        "h": 50,
-        "label": "L-Lysine",
-        "color": "green"
+        "id": "gene_1785908939634_611",
+        "symbol": "HOM",
+        "x": 35.64453125,
+        "y": 32.241379310344826,
+        "rep_log2fc": -2.3177,
+        "genes": [
+          {
+            "locus_tag": "NCgl1216",
+            "gene_symbol": "hom",
+            "description": "Homoserine dehydrogenase",
+            "biotype": "protein_coding",
+            "wt_val": 111.11,
+            "mutant_val": 22.28,
+            "log2fc": -2.3177,
+            "pvalue": 0.004339,
+            "fdr": 0.016237,
+            "wt_reps": [
+              112.04,
+              98.07,
+              123.23
+            ],
+            "mut_reps": [
+              21.59,
+              25.89,
+              19.36
+            ],
+            "original_index": 3
+          }
+        ]
       }
     ],
-    "arrows": [
-      {
-        "id": "arr_1",
-        "from": "node_1",
-        "to": "node_2",
-        "label": "lysC"
-      },
-      {
-        "id": "arr_2",
-        "from": "node_2",
-        "to": "node_3",
-        "label": "asd"
-      },
-      {
-        "id": "arr_3",
-        "from": "node_3",
-        "to": "node_4",
-        "label": "dapA/dapB"
-      }
-    ],
-    "customGenes": [],
     "geneOffsets": {},
     "deletedDefaultGenes": []
   }

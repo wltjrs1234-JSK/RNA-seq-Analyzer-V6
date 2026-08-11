@@ -202,10 +202,24 @@ function switchTab(tabId) {
 
 // Enable tabs after successful upload
 function enableAnalysisTabs() {
-    const disabledIds = ["nav-deg", "nav-volcano", "nav-pca", "nav-heatmap", "nav-kegg", "nav-go", "nav-network", "nav-gsea", "nav-motif", "nav-advanced", "nav-custom-pathway"];
-    disabledIds.forEach(id => {
-        document.getElementById(id).classList.remove("disabled");
+    const menuItems = document.querySelectorAll(".sidebar-menu .menu-item");
+    menuItems.forEach(item => {
+        item.classList.remove("disabled");
     });
+}
+
+function updateDEGTableHeaders() {
+    const ctrlName = (window.gSampleMetadata && window.gSampleMetadata.control_name) ? window.gSampleMetadata.control_name : "WT";
+    const treatName = (window.gSampleMetadata && window.gSampleMetadata.treated_name) ? window.gSampleMetadata.treated_name : "Mutant";
+    
+    const thWt = document.getElementById("deg-th-wt");
+    if (thWt) {
+        thWt.innerHTML = `${escapeHtml(ctrlName)} 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i>`;
+    }
+    const thMut = document.getElementById("deg-th-mutant");
+    if (thMut) {
+        thMut.innerHTML = `${escapeHtml(treatName)} 발현 (평균) <i class="fa-solid fa-sort sort-icon"></i>`;
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -381,6 +395,9 @@ function switchSession(sessionId) {
     .then(data => {
         gGenes = data.genes || [];
         gActiveSessionId = data.active_session_id;
+        if (data.sample_metadata) {
+            window.gSampleMetadata = data.sample_metadata;
+        }
         gIsReplicateMode = gGenes.length > 0 && gGenes[0].hasOwnProperty("fdr") && gGenes[0].fdr !== null;
         
         loadSessions(); // Refresh UI dropdown and catalog cards
@@ -591,10 +608,9 @@ function fallbackAddCol() {
     }
 }
 
-// Automatically predict next column name (e.g. WT_Rep4) and insert new column
+// Automatically predict next column name (e.g. Sample_2, Mutant_Rep4) and insert new column
 function addNewColumnAutomatically() {
     const addCount = parseInt(document.getElementById("grid-add-col-count").value, 10) || 1;
-    let newColName = "New_Col";
     
     if (isFallbackGrid) {
         for (let c = 0; c < addCount; c++) {
@@ -602,7 +618,7 @@ function addNewColumnAutomatically() {
             const table = document.getElementById("fallback-html-table");
             if (table && table.rows[0]) {
                 const currentCols = table.rows[0].cells.length;
-                newColName = "Col_" + currentCols;
+                const newColName = "Sample_" + currentCols;
                 const lastCell = table.rows[0].cells[currentCols - 1];
                 lastCell.textContent = newColName;
             }
@@ -613,37 +629,41 @@ function addNewColumnAutomatically() {
             if (!gridData || gridData.length === 0) return;
             
             const selected = hotInstance.getSelected();
-            let colIdx = gridData[0].length - 1;
+            let colIdx = (gridData[0] ? gridData[0].length : 8) - 1;
             if (selected && selected.length > 0) {
                 colIdx = Math.max(selected[0][1], selected[0][3]);
             }
             
-            // Loop for inserting specified number of columns
+            const firstRow = gridData[0] || [];
+            const baseColVal = String(firstRow[colIdx] || "Sample_1").trim();
+            
+            // Extract prefix and number pattern (e.g. "WT_Rep3" -> prefix="WT_Rep", num=3)
+            const match = baseColVal.match(/^(.*?)([\-_]?)(\d+)$/);
+            let prefix = "Sample_";
+            let separator = "";
+            let startNum = colIdx + 1;
+            
+            if (match) {
+                prefix = match[1];
+                separator = match[2];
+                startNum = parseInt(match[3], 10);
+            } else {
+                prefix = baseColVal + "_";
+                startNum = 1;
+            }
+            
             for (let c = 0; c < addCount; c++) {
-                const currentGridData = hotInstance.getData();
-                const firstRow = currentGridData[0];
-                let wtMax = 3;
-                if (firstRow && firstRow.length > 0) {
-                    firstRow.forEach(val => {
-                        if (val && String(val).startsWith("WT_Rep")) {
-                            const num = parseInt(String(val).replace("WT_Rep", ""), 10);
-                            if (!isNaN(num) && num > wtMax) wtMax = num;
-                        }
-                    });
-                }
-                const genColName = "WT_Rep" + (wtMax + 1);
-                
-                // Splice new elements into grid row arrays
-                currentGridData.forEach((row, index) => {
-                    if (index === 0) {
+                const genColName = `${prefix}${separator}${startNum + 1 + c}`;
+                gridData.forEach((row, rIdx) => {
+                    if (rIdx === 0) {
                         row.splice(colIdx + 1 + c, 0, genColName);
                     } else {
                         row.splice(colIdx + 1 + c, 0, "");
                     }
                 });
-                
-                hotInstance.loadData(currentGridData);
             }
+            
+            hotInstance.loadData(gridData);
         } catch (err) {
             console.error("Failed to add columns:", err);
             alert("열을 추가하는 도중 에러가 발생했습니다: " + err.message);
@@ -1039,8 +1059,18 @@ function loadMockData() {
 }
 
 function processUploadedData(data) {
-    gGenes = data.genes;
-    gIsReplicateMode = data.is_replicate_mode;
+    gGenes = data.genes || [];
+    if (data.hasOwnProperty("is_replicate_mode")) {
+        gIsReplicateMode = data.is_replicate_mode;
+    } else {
+        gIsReplicateMode = gGenes.length > 0 && gGenes[0].hasOwnProperty("fdr") && gGenes[0].fdr !== null;
+    }
+    if (data.sample_metadata) {
+        window.gSampleMetadata = data.sample_metadata;
+    }
+    if (data.session && data.session.id) {
+        gActiveSessionId = data.session.id;
+    }
     if (data.species) {
         gCurrentSpecies = data.species;
         const select = document.getElementById("species-select");
@@ -1048,25 +1078,74 @@ function processUploadedData(data) {
         updateSpeciesTitle(data.species);
     }
     
-    // Fetch all genes to get full dataset
-    fetch(`${API_URL}/api/genes`)
-        .then(r => r.json())
+    // Fetch all genes to get full dataset for active session
+    const sidParam = gActiveSessionId ? `?session_id=${encodeURIComponent(gActiveSessionId)}` : '';
+    fetch(`${API_URL}/api/genes${sidParam}`)
+        .then(r => {
+            if (!r.ok) throw new Error("전체 유전자 데이터 로드 실패");
+            return r.json();
+        })
         .then(fullData => {
-            gGenes = fullData.genes;
+            if (fullData.genes && fullData.genes.length > 0) {
+                gGenes = fullData.genes;
+            }
+            if (fullData.sample_metadata) {
+                window.gSampleMetadata = fullData.sample_metadata;
+            }
             if (fullData.species) {
                 gCurrentSpecies = fullData.species;
                 const select = document.getElementById("species-select");
                 if (select) select.value = fullData.species;
                 updateSpeciesTitle(fullData.species);
             }
-            loadSessions();
+            gIsReplicateMode = gGenes.length > 0 && gGenes[0].hasOwnProperty("fdr") && gGenes[0].fdr !== null;
+            
+            if (typeof loadSessions === "function") {
+                loadSessions();
+            }
+            finalizeDataLoading();
+        })
+        .catch(err => {
+            console.warn("api/genes 호출 실패, 업로드 직후 데이터로 렌더링을 진행합니다:", err);
             finalizeDataLoading();
         });
 }
 
+function resetOtherAnalysisViews() {
+    // Reset GO Enrichment view
+    const goTbody = document.getElementById("go-table-body");
+    if (goTbody) {
+        goTbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">분석 실행 버튼을 누르시면 검정이 시작됩니다.</td></tr>';
+    }
+    const goChart = document.getElementById("go-chart-container");
+    if (goChart) goChart.style.display = "none";
+    
+    // Reset Network view
+    const cyNet = document.getElementById("cy-network");
+    if (cyNet) cyNet.innerHTML = "";
+    const netDetails = document.getElementById("network-node-details");
+    if (netDetails) {
+        netDetails.innerHTML = '<p class="text-center text-muted" style="margin-top: 100px;">네트워크에서 유전자 노드를 클릭하시면 상세 기능 설명이 여기에 표시됩니다.</p>';
+    }
+    
+    // Reset GSEA view
+    const gseaList = document.getElementById("gsea-terms-list");
+    if (gseaList) {
+        gseaList.innerHTML = '<p class="text-center text-muted" style="padding: 20px 0;">데이터 분석 대기 중...</p>';
+    }
+    const gseaBanner = document.getElementById("gsea-dashboard-banner");
+    if (gseaBanner) gseaBanner.style.display = "none";
+}
+
 function finalizeDataLoading() {
     updateStatus("ready", "분석 완료");
-    enableAnalysisTabs();
+    
+    // Enable all analysis navigation tabs
+    try {
+        enableAnalysisTabs();
+    } catch (e) {
+        console.error("enableAnalysisTabs error:", e);
+    }
     
     // Assign original order index for sort reset fallback
     gGenes.forEach((gene, index) => {
@@ -1075,40 +1154,104 @@ function finalizeDataLoading() {
     
     window.gGenes = gGenes;
     
-    // Configure p-value filters visibility based on mode
-    const pvalFilterGroup = document.getElementById("pvalue-filter-group");
-    const heatmapMetricPvalue = document.getElementById("heatmap-metric-pvalue");
-    const statType = document.getElementById("stat-type").value;
-    const pvalInput = document.getElementById("pvalue-thresh");
-    
-    if (gIsReplicateMode) {
-        pvalFilterGroup.style.display = "flex";
-        if (statType === "none") {
-            pvalInput.disabled = true;
-            pvalInput.style.opacity = "0.5";
-        } else {
-            pvalInput.disabled = false;
-            pvalInput.style.opacity = "1.0";
-        }
-        heatmapMetricPvalue.disabled = false;
-        document.getElementById("plot-title-text").textContent = "Volcano Plot";
-        document.getElementById("plot-toggle-btns").style.display = "flex";
-    } else {
-        pvalFilterGroup.style.display = "none";
-        heatmapMetricPvalue.disabled = true;
-        document.getElementById("heatmap-metric").value = "log2fc"; // Fallback metric
-        document.getElementById("plot-title-text").textContent = "MA Plot";
-        document.getElementById("plot-toggle-btns").style.display = "none";
+    // Update dynamic sample headers
+    try {
+        updateDEGTableHeaders();
+    } catch (e) {
+        console.error("updateDEGTableHeaders error:", e);
     }
     
-    // Populate DEG Table
-    renderDEGTable();
+    // Configure p-value filters visibility based on mode
+    try {
+        const pvalFilterGroup = document.getElementById("pvalue-filter-group");
+        const heatmapMetricPvalue = document.getElementById("heatmap-metric-pvalue");
+        const statTypeEl = document.getElementById("stat-type");
+        const statType = statTypeEl ? statTypeEl.value : "fdr";
+        const pvalInput = document.getElementById("pvalue-thresh");
+        
+        if (gIsReplicateMode) {
+            if (pvalFilterGroup) pvalFilterGroup.style.display = "flex";
+            if (pvalInput) {
+                if (statType === "none") {
+                    pvalInput.disabled = true;
+                    pvalInput.style.opacity = "0.5";
+                } else {
+                    pvalInput.disabled = false;
+                    pvalInput.style.opacity = "1.0";
+                }
+            }
+            if (heatmapMetricPvalue) heatmapMetricPvalue.disabled = false;
+            const titleEl = document.getElementById("plot-title-text");
+            if (titleEl) titleEl.textContent = "Volcano Plot";
+            const plotBtns = document.getElementById("plot-toggle-btns");
+            if (plotBtns) plotBtns.style.display = "flex";
+        } else {
+            if (pvalFilterGroup) pvalFilterGroup.style.display = "none";
+            if (heatmapMetricPvalue) heatmapMetricPvalue.disabled = true;
+            const metricEl = document.getElementById("heatmap-metric");
+            if (metricEl) metricEl.value = "log2fc";
+            const titleEl = document.getElementById("plot-title-text");
+            if (titleEl) titleEl.textContent = "MA Plot";
+            const plotBtns = document.getElementById("plot-toggle-btns");
+            if (plotBtns) plotBtns.style.display = "none";
+        }
+    } catch (e) {
+        console.error("Filter configuration error:", e);
+    }
     
-    // Fetch KEGG pathways list
-    fetchKEGGPathways();
+    // 1. Populate DEG Table
+    try {
+        renderDEGTable();
+    } catch (e) {
+        console.error("renderDEGTable error:", e);
+    }
     
-    // Automatically switch to DEG view
-    switchTab("deg-tab");
+    // 2. Refresh Volcano / MA Plot
+    try {
+        renderVolcanoOrMAPlot();
+    } catch (e) {
+        console.error("renderVolcanoOrMAPlot error:", e);
+    }
+    
+    // 3. Fetch KEGG pathways list
+    try {
+        if (typeof fetchKEGGPathways === "function") fetchKEGGPathways();
+    } catch (e) {
+        console.error("fetchKEGGPathways error:", e);
+    }
+    
+    // 4. Update Custom Pathway expression mapping
+    try {
+        if (typeof loadGSHPathwayData === "function") loadGSHPathwayData();
+    } catch (e) {
+        console.error("loadGSHPathwayData error:", e);
+    }
+    
+    // 5. Trigger Heatmap and PCA refresh
+    try {
+        if (typeof renderHeatmap === "function") renderHeatmap();
+    } catch (e) {
+        console.error("renderHeatmap error:", e);
+    }
+    try {
+        if (typeof renderPCAPlot === "function") renderPCAPlot();
+    } catch (e) {
+        console.error("renderPCAPlot error:", e);
+    }
+    
+    // 6. Reset older mock states on secondary tabs to ensure clean data isolation
+    try {
+        resetOtherAnalysisViews();
+    } catch (e) {
+        console.error("resetOtherAnalysisViews error:", e);
+    }
+    
+    // 7. Automatically switch to DEG result view
+    try {
+        switchTab("deg-tab");
+    } catch (e) {
+        console.error("switchTab error:", e);
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -3008,72 +3151,6 @@ function exportSelectedGOGenesToExcel() {
     document.body.removeChild(link);
 }
 
-// ----------------------------------------------------------------------
-// 10. Principal Component Analysis (PCA)
-// ----------------------------------------------------------------------
-function renderPCAPlot() {
-    if (gGenes.length === 0) return;
-    
-    const chartDiv = document.getElementById("pca-scatter-chart");
-    chartDiv.innerHTML = `<div style="text-align: center; padding-top: 150px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 10px;">PCA 차원 축소 연산 중...</p></div>`;
-    
-    fetch(`${API_URL}/api/pca`)
-    .then(r => {
-        if (!r.ok) return r.json().then(e => { throw new Error(e.detail || "PCA 연산 실패") });
-        return r.json();
-    })
-    .then(data => {
-        const results = data.results || [];
-        if (results.length === 0) {
-            chartDiv.innerHTML = `<div class="text-center text-muted" style="padding-top: 150px;">PCA 연산을 위한 반복구 데이터가 부족합니다.</div>`;
-            return;
-        }
-        
-        const wtPoints = results.filter(r => r.group === "WT");
-        const mutPoints = results.filter(r => r.group === "Mutant");
-        
-        const traceWT = {
-            x: wtPoints.map(p => p.pc1),
-            y: wtPoints.map(p => p.pc2),
-            mode: 'markers+text',
-            type: 'scatter',
-            name: '대조군 (WT)',
-            text: wtPoints.map(p => p.sample),
-            textposition: 'top center',
-            marker: { size: 16, color: '#3b82f6', symbol: 'circle' }
-        };
-        
-        const traceMut = {
-            x: mutPoints.map(p => p.pc1),
-            y: mutPoints.map(p => p.pc2),
-            mode: 'markers+text',
-            type: 'scatter',
-            name: '실험군 (Mutant)',
-            text: mutPoints.map(p => p.sample),
-            textposition: 'top center',
-            marker: { size: 16, color: '#ef4444', symbol: 'square' }
-        };
-        
-        const layout = {
-            title: {
-                text: `PCA 주성분 분포 (PC1: ${(data.pc1_var * 100).toFixed(1)}% / PC2: ${(data.pc2_var * 100).toFixed(1)}%)`,
-                font: { size: 16, color: '#0f172a', family: 'Inter, sans-serif' }
-            },
-            xaxis: { title: 'Principal Component 1 (PC1)', gridcolor: '#e2e8f0', zerolinecolor: '#cbd5e1' },
-            yaxis: { title: 'Principal Component 2 (PC2)', gridcolor: '#e2e8f0', zerolinecolor: '#cbd5e1' },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            hovermode: 'closest',
-            margin: { l: 60, r: 40, t: 60, b: 60 }
-        };
-        
-        chartDiv.innerHTML = "";
-        Plotly.newPlot('pca-scatter-chart', [traceWT, traceMut], layout, {responsive: true});
-    })
-    .catch(err => {
-        chartDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 150px;"><i class="fa-solid fa-circle-exclamation fa-2x mb-10"></i><p>PCA 수행 실패: ${err.message}</p></div>`;
-    });
-}
 
 // ----------------------------------------------------------------------
 // 11. STRING PPI & TF-Target Regulatory Network Graph
@@ -5030,7 +5107,8 @@ function selectAndLoadMap(mapId) {
     }
     
     // Load gene expression mapping
-    fetch(`${API_URL}/api/gsh_pathway_data`)
+    const sidParam = gActiveSessionId ? `?session_id=${encodeURIComponent(gActiveSessionId)}` : '';
+    fetch(`${API_URL}/api/gsh_pathway_data${sidParam}`)
     .then(response => {
         if (!response.ok) throw new Error("GSH pathway data fetch failed.");
         return response.json();
@@ -5759,6 +5837,42 @@ function deleteGeneElement(key) {
     pushGshHistory();
     loadGSHPathwayData();
 }
+
+function lookupGeneInActiveSession(querySymbol) {
+    if (!querySymbol || !window.gGenes || window.gGenes.length === 0) return null;
+    const clean = String(querySymbol).trim().toUpperCase();
+    
+    // 1. Direct match by symbol or locus tag
+    for (const g of window.gGenes) {
+        if ((g.gene_symbol && g.gene_symbol.toUpperCase() === clean) ||
+            (g.locus_tag && g.locus_tag.toUpperCase() === clean)) {
+            return {
+                gene_symbol: g.gene_symbol || g.locus_tag,
+                locus_tag: g.locus_tag,
+                log2fc: parseFloat(g.log2fc) || 0.0,
+                p_value: g.pvalue ?? g.fdr ?? 1.0,
+                fdr: g.fdr ?? g.pvalue ?? 1.0,
+                description: g.description || ""
+            };
+        }
+    }
+    
+    // 2. Composite query (e.g. GSH1/GSH2 or GSH1,GSH2)
+    if (clean.includes("/") || clean.includes(",")) {
+        const parts = clean.split(/[\/,]+/).map(s => s.trim()).filter(Boolean);
+        const matches = [];
+        for (const p of parts) {
+            const found = lookupGeneInActiveSession(p);
+            if (found) matches.push(found);
+        }
+        if (matches.length > 0) {
+            // Sort by highest absolute log2fc
+            matches.sort((a, b) => Math.abs(b.log2fc) - Math.abs(a.log2fc));
+            return matches[0];
+        }
+    }
+    return null;
+}
  
 function renderGSHPathwayOverlay(results) {
     const overlayLayer = document.getElementById("gsh-dynamic-overlay");
@@ -5806,7 +5920,6 @@ function renderGSHPathwayOverlay(results) {
         });
     }
 
-    
     // 2. Add Custom Genes (Supports duplicates & key tracking)
     customGenes.forEach(cg => {
         const uniqueId = cg.id || `gene_legacy_${cg.symbol}_${Math.random()}`; // Handle old local storage models gracefully
@@ -5824,6 +5937,11 @@ function renderGSHPathwayOverlay(results) {
     genesToRender.forEach(item => {
         const key = item.id; // unique id to track movements & selections
         const symbol = item.symbol;
+        
+        // Dynamically resolve expression from active session genes first!
+        const dynamicGene = lookupGeneInActiveSession(symbol);
+        const resolvedLog2fc = dynamicGene ? dynamicGene.log2fc : (parseFloat(item.rep_log2fc) || 0.0);
+        const resolvedGenes = dynamicGene ? [dynamicGene] : (item.genes && item.genes.length ? item.genes : []);
         
         // Convert coords based on dynamic map dimensions
         const baseX = (item.x * mapWidth) / 100;
@@ -5868,7 +5986,7 @@ function renderGSHPathwayOverlay(results) {
         const indicator = document.createElement("div");
         indicator.className = "gsh-gene-indicator";
         
-        const log2fc = parseFloat(item.rep_log2fc);
+        const log2fc = resolvedLog2fc;
         const absFC = Math.abs(log2fc);
         
         if (log2fc > 0.5) {
@@ -5885,6 +6003,10 @@ function renderGSHPathwayOverlay(results) {
             indicator.style.backgroundColor = `rgba(148, 163, 184, 0.2)`;
             indicator.style.borderColor = `rgba(148, 163, 184, 0.4)`;
         }
+        
+        // Attach resolved genes list to item for tooltip rendering
+        item.genes = resolvedGenes;
+        item.rep_log2fc = resolvedLog2fc;
         
         box.appendChild(geneText);
         box.appendChild(indicator);
@@ -7678,6 +7800,83 @@ document.addEventListener("DOMContentLoaded", () => {
                 btnGenReport.innerHTML = `<i class="fa-solid fa-file-contract"></i> 📄 종합 보고서 생성`;
                 alert("종합 보고서 생성 중 오류가 발생했습니다: " + err.message);
             });
+        });
+    }
+
+    // Initialize Sample Group Mapping Modal handlers
+    const modalMapping = document.getElementById("sample-mapping-modal");
+    const closeBtnMapping = document.getElementById("close-sample-mapping-modal");
+    const cancelBtnMapping = document.getElementById("btn-cancel-mapping");
+    const confirmBtnMapping = document.getElementById("btn-confirm-mapping");
+
+    if (closeBtnMapping && modalMapping) {
+        closeBtnMapping.addEventListener("click", () => {
+            modalMapping.style.display = "none";
+        });
+    }
+    if (cancelBtnMapping && modalMapping) {
+        cancelBtnMapping.addEventListener("click", () => {
+            modalMapping.style.display = "none";
+        });
+    }
+    if (confirmBtnMapping && modalMapping) {
+        confirmBtnMapping.addEventListener("click", () => {
+            const ctrlName = document.getElementById("mapping-control-name").value.trim() || "Control";
+            const treatName = document.getElementById("mapping-treated-name").value.trim() || "Treated";
+
+            const ctrlCheckboxes = document.querySelectorAll("#mapping-control-columns input[type='checkbox']:checked");
+            const treatCheckboxes = document.querySelectorAll("#mapping-treated-columns input[type='checkbox']:checked");
+
+            const ctrlCols = Array.from(ctrlCheckboxes).map(cb => cb.value);
+            const treatCols = Array.from(treatCheckboxes).map(cb => cb.value);
+
+            if (ctrlCols.length === 0 || treatCols.length === 0) {
+                alert("대조군과 실험군 각각 최소 1개 이상의 샘플 열을 선택해야 합니다.");
+                return;
+            }
+
+            modalMapping.style.display = "none";
+
+            // If raw text data is available, re-run with new mapping
+            const rawText = getGridTextContent();
+            if (rawText && rawText.trim().length > 0) {
+                updateStatus("analyzing", "사용자 정의 샘플 매핑으로 재분석 중...");
+                fetch(`${API_URL}/api/upload_text`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        text: rawText,
+                        species: gCurrentSpecies,
+                        control_cols: ctrlCols,
+                        treated_cols: treatCols,
+                        control_name: ctrlName,
+                        treated_name: treatName
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        processUploadedData(data);
+                    } else {
+                        alert("분석 실패: " + (data.detail || "오류 발생"));
+                        updateStatus("ready", "대기 중");
+                    }
+                })
+                .catch(err => {
+                    alert("오류: " + err.message);
+                    updateStatus("ready", "대기 중");
+                });
+            } else {
+                // If just updating metadata in memory
+                window.gSampleMetadata = {
+                    control_name: ctrlName,
+                    treated_name: treatName,
+                    control_cols: ctrlCols,
+                    treated_cols: treatCols,
+                    sample_names: [...ctrlCols, ...treatCols]
+                };
+                finalizeDataLoading();
+            }
         });
     }
 });

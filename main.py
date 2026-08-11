@@ -373,7 +373,22 @@ def get_session_species(session_id: str = None) -> str:
                 return s.get("species", "sce")
     return "sce"
 
-def save_new_session(genes_list: list, source_name: str, is_replicate_mode: bool, custom_name: str = None, species: str = "sce") -> dict:
+def get_session_sample_metadata(session_id: str = None) -> dict:
+    idx = load_sessions_index()
+    sid = session_id or idx.get("active_session_id")
+    if sid:
+        for s in idx.get("sessions", []):
+            if s["id"] == sid:
+                return {
+                    "control_cols": s.get("control_cols", []),
+                    "treated_cols": s.get("treated_cols", []),
+                    "control_name": s.get("control_name", "WT"),
+                    "treated_name": s.get("treated_name", "Mutant"),
+                    "sample_names": s.get("sample_names", [])
+                }
+    return None
+
+def save_new_session(genes_list: list, source_name: str, is_replicate_mode: bool, custom_name: str = None, species: str = "sce", sample_metadata: dict = None) -> dict:
     import datetime
     now_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     session_id = f"session_{now_str}"
@@ -404,6 +419,13 @@ def save_new_session(genes_list: list, source_name: str, is_replicate_mode: bool
         "up_count": up_count,
         "down_count": down_count
     }
+    
+    if sample_metadata:
+        session_info["control_cols"] = sample_metadata.get("control_cols", [])
+        session_info["treated_cols"] = sample_metadata.get("treated_cols", [])
+        session_info["control_name"] = sample_metadata.get("control_name", "WT")
+        session_info["treated_name"] = sample_metadata.get("treated_name", "Mutant")
+        session_info["sample_names"] = sample_metadata.get("sample_names", [])
     
     session_path = os.path.join(SESSIONS_DIR, f"{session_id}.json")
     with open(session_path, "w", encoding="utf-8") as f:
@@ -457,12 +479,21 @@ def switch_session(payload: dict):
         
     session_info = next((s for s in idx["sessions"] if s["id"] == session_id), None)
     species = session_info.get("species", "sce") if session_info else "sce"
+    sample_metadata = {
+        "control_cols": session_info.get("control_cols", []),
+        "treated_cols": session_info.get("treated_cols", []),
+        "control_name": session_info.get("control_name", "WT"),
+        "treated_name": session_info.get("treated_name", "Mutant"),
+        "sample_names": session_info.get("sample_names", [])
+    } if session_info else None
+    
     return {
         "success": True,
         "active_session_id": session_id,
         "session": session_info,
         "species": species,
-        "genes": genes
+        "genes": genes,
+        "sample_metadata": sample_metadata
     }
 
 @app.put("/api/sessions/{session_id}/rename")
@@ -545,8 +576,19 @@ def delete_session(session_id: str):
         "active_session_id": idx["active_session_id"]
     }
 
-def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", species: str = None) -> dict:
-    """Helper to automatically parse RNA-seq DataFrame, detect columns, and run statistical analysis."""
+def parse_rnaseq_dataframe(
+    df: pd.DataFrame, 
+    source_name: str = "Dataset", 
+    species: str = None,
+    control_cols: list = None,
+    treated_cols: list = None,
+    control_name: str = None,
+    treated_name: str = None
+) -> dict:
+    """Helper to automatically parse RNA-seq DataFrame, detect columns, and run statistical analysis with flexible sample names."""
+    import re as _re
+    from collections import OrderedDict
+    
     # 1. Clean column names
     df.columns = [str(c).strip() for c in df.columns]
     
@@ -581,6 +623,13 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
             best_col = col
             detected_species = "sce"
             
+        eco_matches = non_nulls.str.match(r"^b[0-9]{4}$", case=False)
+        eco_rate = eco_matches.mean()
+        if eco_rate > 0.2 and eco_rate > best_rate:
+            best_rate = eco_rate
+            best_col = col
+            detected_species = "eco"
+            
     if best_col and best_rate > 0.3:
         locus_col = best_col
 
@@ -590,9 +639,6 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
                 locus_col = col
                 break
                 
-    if not locus_col:
-        locus_col = df.columns[0] if len(df.columns) > 0 else None
-
     if not locus_col:
         # Fallback to first column
         if len(df.columns) > 0:
@@ -613,7 +659,7 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
         for col in df.columns:
             if col != locus_col and col.lower() not in ["description", "gene_biotype"]:
                 non_nulls = df[col].dropna().astype(str).str.strip()
-                if not non_nulls.empty and non_nulls.str.match(r"^[A-Z]{3}[0-9]+", case=True).mean() > 0.4:
+                if not non_nulls.empty and non_nulls.str.match(r"^[A-Za-z]{2,5}[0-9]*", case=True).mean() > 0.4:
                     symbol_col = col
                     break
     if not symbol_col:
@@ -645,91 +691,128 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
     # 5. Classify numeric columns for expression values
     numeric_cols = []
     for col in df.columns:
-        if col != locus_col and col != symbol_col and col != desc_col and col != biotype_col and col != pre_pvalue_col and col != pre_fdr_col:
+        if col not in [locus_col, symbol_col, desc_col, biotype_col, pre_pvalue_col, pre_fdr_col]:
             try:
                 pd.to_numeric(df[col].dropna())
                 numeric_cols.append(col)
             except:
                 pass
 
-    # Group numeric columns into WT and Mutant
-    # Use word-boundary aware regex matching to avoid false positives like "t" in "WT"
-    import re as _re
-    
-    # Robust patterns: must be surrounded by non-alphabetics or string boundaries to avoid false positives (e.g. 'weight' vs 'wt')
-    wt_patterns = [
-        r"(?:^|[^a-zA-Z])wt(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])control(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])ctrl(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])con(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])wildtype(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])wild_type(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])reference(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])ref(?:[^a-zA-Z]|$)"
-    ]
-    mut_patterns = [
-        r"(?:^|[^a-zA-Z])mutant(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])mut(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])ko(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])treatment(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])treat(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])target(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])overexpression(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])oe(?:[^a-zA-Z]|$)",
-        r"(?:^|[^a-zA-Z])m(?:[0-9]+|$)"
-    ]
-
-    wt_candidates = []
-    mut_candidates = []
-
-    def matches_any(colname, patterns):
-        cn = colname.lower()
-        return any(_re.search(pat, cn) for pat in patterns)
-
-    for col in numeric_cols:
-        is_wt  = matches_any(col, wt_patterns)
-        is_mut = matches_any(col, mut_patterns)
-
-        if is_wt and not is_mut:
-            wt_candidates.append(col)
-        elif is_mut and not is_wt:
-            mut_candidates.append(col)
-        elif is_wt and is_mut:
-            mut_candidates.append(col)
-
-    # Smart filtering: If there are replicates AND summary columns (like AVG, Mean, Average),
-    # exclude summary columns from t-test list to prevent stat calculation break.
-    def filter_summary_cols(cols):
-        avg_patterns = ["avg", "mean", "average", "평균"]
-        reps = [c for c in cols if not any(p in c.lower() for p in avg_patterns)]
-        return reps if reps else cols
-
-    wt_cols = filter_summary_cols(wt_candidates)
-    mut_cols = filter_summary_cols(mut_candidates)
-            
-    # Fallback splitting if we couldn't classify them
-    unclassified = [c for c in numeric_cols if c not in wt_cols and c not in mut_cols]
-    if not wt_cols or not mut_cols:
-        if len(numeric_cols) == 2:
-            wt_cols = [numeric_cols[0]]
-            mut_cols = [numeric_cols[1]]
-        elif len(unclassified) >= 2:
-            half = len(unclassified) // 2
-            wt_cols = wt_cols + unclassified[:half]
-            mut_cols = mut_cols + unclassified[half:]
-            
-    if not wt_cols or not mut_cols:
+    if len(numeric_cols) < 2:
         raise HTTPException(
-            status_code=400, 
-            detail="대조군(WT) 및 실험군(Mutant) 발현량 데이터를 나타내는 숫자 열을 감지할 수 없습니다. 열 이름에 'WT', 'Mutant', 'Control' 등을 포함해 주세요."
+            status_code=400,
+            detail=f"발현량 데이터를 나타내는 숫자 열이 최소 2개 이상 필요합니다. (현재 감지된 숫자 열: {len(numeric_cols)}개)"
+        )
+
+    # 6. Intelligent Sample Grouping & Replicate Detection
+    final_control_cols = []
+    final_treated_cols = []
+    detected_control_name = control_name
+    detected_treated_name = treated_name
+
+    # Check if user explicitly supplied column mappings
+    if control_cols and treated_cols:
+        final_control_cols = [c for c in control_cols if c in numeric_cols]
+        final_treated_cols = [c for c in treated_cols if c in numeric_cols]
+
+    if not final_control_cols or not final_treated_cols:
+        # Step A: Pattern matching (WT / Mutant / Control / Treat)
+        wt_patterns = [
+            r"(?:^|[^a-zA-Z])wt(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])control(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])ctrl(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])con(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])wildtype(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])wild_type(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])reference(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])ref(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])parental(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])parent(?:[^a-zA-Z]|$)"
+        ]
+        mut_patterns = [
+            r"(?:^|[^a-zA-Z])mutant(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])mut(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])ko(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])treatment(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])treat(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])target(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])overexpression(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])oe(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])evolved(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])sample(?:[^a-zA-Z]|$)",
+            r"(?:^|[^a-zA-Z])m(?:[0-9]+|$)"
+        ]
+
+        def matches_any(colname, patterns):
+            cn = colname.lower()
+            return any(_re.search(pat, cn) for pat in patterns)
+
+        def filter_summary_cols(cols):
+            avg_patterns = ["avg", "mean", "average", "평균"]
+            reps = [c for c in cols if not any(p in c.lower() for p in avg_patterns)]
+            return reps if reps else cols
+
+        wt_cands = filter_summary_cols([c for c in numeric_cols if matches_any(c, wt_patterns) and not matches_any(c, mut_patterns)])
+        mut_cands = filter_summary_cols([c for c in numeric_cols if matches_any(c, mut_patterns) and not matches_any(c, wt_patterns)])
+
+        if wt_cands and mut_cands:
+            final_control_cols = wt_cands
+            final_treated_cols = mut_cands
+            detected_control_name = detected_control_name or "WT"
+            detected_treated_name = detected_treated_name or "Mutant"
+        else:
+            # Step B: Smart prefix / group clustering for arbitrary sample names (e.g. StrainA_1, StrainB_1)
+            # Remove replicate suffixes like _Rep1, _R1, _1, .1, #1, -1, Rep1, R1
+            group_dict = OrderedDict()
+            for col in numeric_cols:
+                # Strip replicate tags from suffix
+                prefix = _re.sub(r'[\s_\-\.#]*(?:rep|replicate|r|batch|b)?\d+$', '', col, flags=_re.IGNORECASE)
+                if not prefix:
+                    prefix = col
+                if prefix not in group_dict:
+                    group_dict[prefix] = []
+                group_dict[prefix].append(col)
+
+            group_keys = list(group_dict.keys())
+            if len(group_keys) == 2:
+                # Perfectly 2 distinct groups detected!
+                detected_control_name = detected_control_name or group_keys[0]
+                detected_treated_name = detected_treated_name or group_keys[1]
+                final_control_cols = group_dict[group_keys[0]]
+                final_treated_cols = group_dict[group_keys[1]]
+            elif len(group_keys) > 2:
+                # More than 2 groups: Use first group as control, and remaining groups or 2nd group as treated
+                detected_control_name = detected_control_name or group_keys[0]
+                detected_treated_name = detected_treated_name or group_keys[1]
+                final_control_cols = group_dict[group_keys[0]]
+                final_treated_cols = group_dict[group_keys[1]]
+            else:
+                # Single group prefix or no common pattern: Split numeric columns evenly
+                half = max(1, len(numeric_cols) // 2)
+                final_control_cols = numeric_cols[:half]
+                final_treated_cols = numeric_cols[half:]
+                detected_control_name = detected_control_name or (final_control_cols[0] if len(final_control_cols) == 1 else "Control")
+                detected_treated_name = detected_treated_name or (final_treated_cols[0] if len(final_treated_cols) == 1 else "Treated")
+
+    if not final_control_cols or not final_treated_cols:
+        raise HTTPException(
+            status_code=400,
+            detail="대조군 및 실험군에 해당하는 숫자 열을 올바르게 분리하지 못했습니다."
         )
 
     # Determine replicate mode
-    is_replicate_mode = len(wt_cols) >= 2 and len(mut_cols) >= 2
+    is_replicate_mode = len(final_control_cols) >= 2 and len(final_treated_cols) >= 2
     
+    sample_names = final_control_cols + final_treated_cols
+    sample_metadata = {
+        "control_cols": final_control_cols,
+        "treated_cols": final_treated_cols,
+        "control_name": detected_control_name or "Control",
+        "treated_name": detected_treated_name or "Treated",
+        "sample_names": sample_names
+    }
+
     genes_list = []
-    
-    # Load NCBI ID mapping table
     ncbi_map = get_ncbi_mapping()
     
     for _, row in df.iterrows():
@@ -739,29 +822,25 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
         if not locus:
             continue
             
-        # Try translating numerical NCBI Gene ID to Systematic ORF ID
-        # If input locus is like "852415" (TEF2 NCBI ID), it will convert to "YAL038W"
         if locus.isdigit() and locus in ncbi_map:
             locus = ncbi_map[locus]
             
         symbol = str(row[symbol_col]).strip() if symbol_col in row and pd.notna(row[symbol_col]) else locus
         
-        # Check if description column exists and parse
         desc = ""
         if desc_col and desc_col in row and pd.notna(row[desc_col]):
             desc = str(row[desc_col]).strip()
         elif "Description" in df.columns and pd.notna(row["Description"]):
             desc = str(row["Description"]).strip()
             
-        # Check if biotype column exists and parse
         biotype = "protein_coding"
         if biotype_col and biotype_col in row and pd.notna(row[biotype_col]):
             biotype = str(row[biotype_col]).strip()
         elif "gene_biotype" in df.columns and pd.notna(row["gene_biotype"]):
             biotype = str(row["gene_biotype"]).strip()
         
-        wt_vals = [float(row[c]) for c in wt_cols if pd.notna(row[c])]
-        mut_vals = [float(row[c]) for c in mut_cols if pd.notna(row[c])]
+        wt_vals = [float(row[c]) for c in final_control_cols if pd.notna(row[c])]
+        mut_vals = [float(row[c]) for c in final_treated_cols if pd.notna(row[c])]
         
         if not wt_vals or not mut_vals:
             continue
@@ -772,6 +851,14 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
         # Log2 Fold Change
         log2fc = np.log2((mut_mean + 0.01) / (wt_mean + 0.01))
         
+        sample_values = {}
+        for c in sample_names:
+            if c in row and pd.notna(row[c]):
+                try:
+                    sample_values[c] = round(float(row[c]), 2)
+                except:
+                    sample_values[c] = 0.0
+
         gene_item = {
             "locus_tag": locus,
             "gene_symbol": symbol,
@@ -781,7 +868,12 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
             "mutant_val": round(mut_mean, 2),
             "log2fc": round(float(log2fc), 4),
             "pvalue": None,
-            "fdr": None
+            "fdr": None,
+            "sample_values": sample_values,
+            "control_vals": [round(v, 2) for v in wt_vals],
+            "treated_vals": [round(v, 2) for v in mut_vals],
+            "wt_reps": [round(v, 2) for v in wt_vals],
+            "mut_reps": [round(v, 2) for v in mut_vals]
         }
         
         if is_replicate_mode:
@@ -789,8 +881,6 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
             if np.isnan(p_val):
                 p_val = 1.0
             gene_item["pvalue"] = round(float(p_val), 6)
-            gene_item["wt_reps"] = [round(v, 2) for v in wt_vals]
-            gene_item["mut_reps"] = [round(v, 2) for v in mut_vals]
             
         genes_list.append(gene_item)
 
@@ -815,8 +905,8 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
         for idx, item in enumerate(genes_list):
             item["fdr"] = round(float(unsorted_fdrs[idx]), 6)
             
-    # Save parsed data to new session
-    session_info = save_new_session(genes_list, source_name, is_replicate_mode, species=species)
+    # Save parsed data to new session with full metadata
+    session_info = save_new_session(genes_list, source_name, is_replicate_mode, species=species, sample_metadata=sample_metadata)
         
     return {
         "success": True,
@@ -824,11 +914,19 @@ def parse_rnaseq_dataframe(df: pd.DataFrame, source_name: str = "Dataset", speci
         "is_replicate_mode": is_replicate_mode,
         "genes_count": len(genes_list),
         "genes": genes_list[:100],
-        "session": session_info
+        "session": session_info,
+        "sample_metadata": sample_metadata
     }
 
 @app.post("/api/upload")
-def upload_file(file: UploadFile = File(...), species: str = Form(None)):
+def upload_file(
+    file: UploadFile = File(...), 
+    species: str = Form(None),
+    control_cols: str = Form(None),
+    treated_cols: str = Form(None),
+    control_name: str = Form(None),
+    treated_name: str = Form(None)
+):
     """Upload Excel/CSV and calculate DEG statistics using automatic column mapping."""
     temp_path = os.path.join(CACHE_DIR, file.filename)
     try:
@@ -846,7 +944,17 @@ def upload_file(file: UploadFile = File(...), species: str = Form(None)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"파일을 읽는 도중 오류가 발생했습니다: {str(e)}")
         
-    return parse_rnaseq_dataframe(df, source_name=file.filename, species=species)
+    ctrl_list = json.loads(control_cols) if control_cols else None
+    treat_list = json.loads(treated_cols) if treated_cols else None
+    return parse_rnaseq_dataframe(
+        df, 
+        source_name=file.filename, 
+        species=species,
+        control_cols=ctrl_list,
+        treated_cols=treat_list,
+        control_name=control_name,
+        treated_name=treated_name
+    )
 
 @app.post("/api/upload_text")
 def upload_text(payload: dict):
@@ -854,6 +962,11 @@ def upload_text(payload: dict):
     import io
     text_data = payload.get("text", "").strip()
     species = payload.get("species")
+    control_cols = payload.get("control_cols")
+    treated_cols = payload.get("treated_cols")
+    control_name = payload.get("control_name")
+    treated_name = payload.get("treated_name")
+    
     if not text_data:
         raise HTTPException(status_code=400, detail="입력된 텍스트 데이터가 비어있습니다.")
         
@@ -862,7 +975,6 @@ def upload_text(payload: dict):
         first_line = f.readline()
         f.seek(0)
         
-        # Automatically detect separator
         sep = None
         if "\t" in first_line:
             sep = "\t"
@@ -870,7 +982,7 @@ def upload_text(payload: dict):
             sep = ","
         elif ";" in first_line:
             sep = ";"
-        # If no common delimiter is found, default to whitespace separation (engine='python' sep=r'\s+')
+            
         if not sep:
             df = pd.read_csv(f, sep=r'\s+', engine='python')
         else:
@@ -882,14 +994,23 @@ def upload_text(payload: dict):
         raise HTTPException(status_code=400, detail="텍스트에서 유효한 테이블 행을 발견하지 못했습니다.")
         
     custom_title = payload.get("name") or "입력 텍스트 데이터"
-    return parse_rnaseq_dataframe(df, source_name=custom_title, species=species)
+    return parse_rnaseq_dataframe(
+        df, 
+        source_name=custom_title, 
+        species=species,
+        control_cols=control_cols,
+        treated_cols=treated_cols,
+        control_name=control_name,
+        treated_name=treated_name
+    )
 
 @app.get("/api/genes")
 def get_all_genes(session_id: str = None):
     """Retrieve full parsed genes dataset for active or specified session."""
     genes = get_session_genes(session_id)
     species = get_session_species(session_id)
-    return {"genes": genes, "species": species}
+    sample_meta = get_session_sample_metadata(session_id)
+    return {"genes": genes, "species": species, "sample_metadata": sample_meta}
 
 @app.get("/api/export_deg_excel")
 def export_deg_excel(session_id: str = None):
@@ -1381,6 +1502,15 @@ def run_cluster_heatmap(payload: dict):
     if not dataset_genes:
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
         
+    # Retrieve session metadata for real sample names if available
+    session_meta = {}
+    if session_id:
+        idx = load_sessions_index()
+        for s in idx.get("sessions", []):
+            if s["id"] == session_id:
+                session_meta = s
+                break
+                
     # Match data case-insensitively
     dataset_map = {g["locus_tag"].upper(): g for g in dataset_genes}
     matched_genes = [dataset_map[g.upper()] for g in gene_list if g.upper() in dataset_map]
@@ -1394,18 +1524,29 @@ def run_cluster_heatmap(payload: dict):
     has_reps = ("wt_reps" in matched_genes[0] and "mut_reps" in matched_genes[0] 
                 and matched_genes[0]["wt_reps"] and matched_genes[0]["mut_reps"])
     
-    if has_reps:
+    # Determine sample names dynamically
+    if session_meta.get("sample_names"):
+        samples = list(session_meta["sample_names"])
+    elif matched_genes[0].get("sample_values"):
+        samples = list(matched_genes[0]["sample_values"].keys())
+    elif has_reps:
+        ctrl_name = session_meta.get("control_name", "WT")
+        treat_name = session_meta.get("treated_name", "Mutant")
         wt_rep_len = len(matched_genes[0]["wt_reps"])
         mut_rep_len = len(matched_genes[0]["mut_reps"])
-        samples = [f"WT_Rep{i+1}" for i in range(wt_rep_len)] + [f"Mutant_Rep{i+1}" for i in range(mut_rep_len)]
+        samples = [f"{ctrl_name}_Rep{i+1}" for i in range(wt_rep_len)] + [f"{treat_name}_Rep{i+1}" for i in range(mut_rep_len)]
     else:
-        samples = ["WT", "Mutant"]
+        ctrl_name = session_meta.get("control_name", "WT")
+        treat_name = session_meta.get("treated_name", "Mutant")
+        samples = [ctrl_name, treat_name]
         
     # Build matrix (Z-score normalize each gene)
     matrix = []
     gene_labels = []
     for g in matched_genes:
-        if has_reps:
+        if g.get("sample_values") and all(s in g["sample_values"] for s in samples):
+            row = np.array([float(g["sample_values"][s]) for s in samples], dtype=float)
+        elif has_reps:
             row = np.array(g["wt_reps"] + g["mut_reps"], dtype=float)
         else:
             row = np.array([g.get("wt_val", 0.0), g.get("mutant_val", 0.0)], dtype=float)
@@ -1441,13 +1582,9 @@ def run_cluster_heatmap(payload: dict):
     reordered_samples = [samples[idx] for idx in sample_order]
     
     # Format gene dendrogram line segments for Plotly scatter plot rendering
-    # scipy coordinates are returned in 'icoord' and 'dcoord'
-    # we normalize and map them to match heatmap grid index
     gene_dendrogram_x = []
     gene_dendrogram_y = []
     for xs, ys in zip(gene_dendro['icoord'], gene_dendro['dcoord']):
-        # scipy returns (10 * idx + 5) style values for leaves, so we divide by 10.0 and subtract 0.5
-        # but to keep it simple, we do (x - 5) / 10.0 to match the 0-indexed scale.
         gene_dendrogram_x.append([float(y) for y in ys]) 
         gene_dendrogram_y.append([float(x - 5) / 10.0 for x in xs])
         
@@ -1491,6 +1628,14 @@ def run_pca_analysis(payload: dict):
     if not dataset_genes:
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
         
+    session_meta = {}
+    if session_id:
+        idx = load_sessions_index()
+        for s in idx.get("sessions", []):
+            if s["id"] == session_id:
+                session_meta = s
+                break
+
     requested_genes = payload.get("genes", [])
     mode = payload.get("mode", "sample")
     
@@ -1518,19 +1663,38 @@ def run_pca_analysis(payload: dict):
     has_reps = ("wt_reps" in matched_genes[0] and "mut_reps" in matched_genes[0] 
                 and matched_genes[0]["wt_reps"] and matched_genes[0]["mut_reps"])
     
-    if has_reps:
+    # Determine sample names & groups
+    ctrl_name = session_meta.get("control_name", "WT")
+    treat_name = session_meta.get("treated_name", "Mutant")
+    
+    if session_meta.get("control_cols") and session_meta.get("treated_cols"):
+        c_cols = session_meta["control_cols"]
+        t_cols = session_meta["treated_cols"]
+        sample_names = c_cols + t_cols
+        sample_groups = [ctrl_name] * len(c_cols) + [treat_name] * len(t_cols)
+    elif session_meta.get("sample_names"):
+        sample_names = list(session_meta["sample_names"])
+        half = len(sample_names) // 2
+        sample_groups = [ctrl_name] * half + [treat_name] * (len(sample_names) - half)
+    elif matched_genes[0].get("sample_values"):
+        sample_names = list(matched_genes[0]["sample_values"].keys())
+        half = len(sample_names) // 2
+        sample_groups = [ctrl_name] * half + [treat_name] * (len(sample_names) - half)
+    elif has_reps:
         wt_len = len(matched_genes[0]["wt_reps"])
         mut_len = len(matched_genes[0]["mut_reps"])
-        sample_names = [f"WT_Rep{i+1}" for i in range(wt_len)] + [f"Mutant_Rep{i+1}" for i in range(mut_len)]
-        sample_groups = ["WT"] * wt_len + ["Mutant"] * mut_len
+        sample_names = [f"{ctrl_name}_Rep{i+1}" for i in range(wt_len)] + [f"{treat_name}_Rep{i+1}" for i in range(mut_len)]
+        sample_groups = [ctrl_name] * wt_len + [treat_name] * mut_len
     else:
-        sample_names = ["WT", "Mutant"]
-        sample_groups = ["WT", "Mutant"]
+        sample_names = [ctrl_name, treat_name]
+        sample_groups = [ctrl_name, treat_name]
         
     matrix = []
     gene_labels = []
     for g in matched_genes:
-        if has_reps:
+        if g.get("sample_values") and all(s in g["sample_values"] for s in sample_names):
+            row = [float(g["sample_values"][s]) for s in sample_names]
+        elif has_reps:
             row = g["wt_reps"] + g["mut_reps"]
         else:
             row = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
@@ -1581,7 +1745,9 @@ def run_pca_analysis(payload: dict):
         
     gene_profiles = []
     for g in matched_genes:
-        if has_reps:
+        if g.get("sample_values") and all(s in g["sample_values"] for s in sample_names):
+            vals = [float(g["sample_values"][s]) for s in sample_names]
+        elif has_reps:
             vals = g["wt_reps"] + g["mut_reps"]
         else:
             vals = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
@@ -1596,7 +1762,7 @@ def run_pca_analysis(payload: dict):
     # Build Gene x Sample 2D PCA Matrix (Only for custom gene mode)
     gene_sample_points = []
     if mode == "custom":
-        wt_len = len(matched_genes[0]["wt_reps"]) if has_reps else 1
+        wt_len = len(session_meta.get("control_cols", [])) or (len(matched_genes[0]["wt_reps"]) if has_reps else 1)
         point_feature_matrix = []
         point_metadata = []
 
@@ -1604,7 +1770,9 @@ def run_pca_analysis(payload: dict):
             g_name = g.get("gene_symbol") or g.get("locus_tag")
             locus_tag = g.get("locus_tag")
             log2fc = float(g.get("log2fc", 0.0))
-            if has_reps:
+            if g.get("sample_values") and all(s in g["sample_values"] for s in sample_names):
+                vals = [float(g["sample_values"][s]) for s in sample_names]
+            elif has_reps:
                 vals = g["wt_reps"] + g["mut_reps"]
             else:
                 vals = [g.get("wt_val", 0.0), g.get("mutant_val", 0.0)]
@@ -1621,7 +1789,7 @@ def run_pca_analysis(payload: dict):
                 s_group = sample_groups[idx]
                 expr = float(vals[idx])
                 z_score = float((expr - mean_val) / std_val)
-                group_mean = float(wt_mean if s_group == "WT" else mut_mean)
+                group_mean = float(wt_mean if s_group == ctrl_name else mut_mean)
                 
                 feat = [expr, z_score, log2fc, group_mean, wt_mean, mut_mean]
                 point_feature_matrix.append(feat)
@@ -1632,6 +1800,7 @@ def run_pca_analysis(payload: dict):
                     "group": s_group,
                     "expr": round(expr, 2),
                     "log2fc": round(log2fc, 2),
+                    "zscore": round(z_score, 2),
                     "z_score": round(z_score, 2)
                 })
 
@@ -2167,7 +2336,7 @@ def get_reporter_metabolites(payload: dict = None):
     return {"success": True, "results": reporter_results}
 
 @app.get("/api/gsh_pathway_data")
-def get_gsh_pathway_data():
+def get_gsh_pathway_data(session_id: str = None):
     """Retrieve expression data mapped onto the custom GSH pathway coordinates."""
     coords_path = os.path.join("data", "gsh_pathway_coords.json")
     if not os.path.exists(coords_path):
@@ -2176,20 +2345,22 @@ def get_gsh_pathway_data():
     with open(coords_path, "r", encoding="utf-8") as f:
         coords_db = json.load(f)
         
-    # Load current uploaded expression data
+    # Load session expression data
+    dataset_genes = get_session_genes(session_id)
     expression_db = {}
-    if os.path.exists(PARSED_DATA_PATH):
-        with open(PARSED_DATA_PATH, "r", encoding="utf-8") as f:
-            for item in json.load(f):
-                tag = item["locus_tag"].upper()
-                expression_db[tag] = {
-                    "gene_symbol": item["gene_symbol"],
-                    "locus_tag": item["locus_tag"],
-                    "log2fc": item["log2fc"],
-                    "p_value": item.get("pvalue") if item.get("pvalue") is not None else item.get("fdr", 1.0),
-                    "wt_mean": item.get("wt_val", 0.0),
-                    "mut_mean": item.get("mutant_val", 0.0)
-                }
+    for item in dataset_genes:
+        tag = item["locus_tag"].upper()
+        expression_db[tag] = {
+            "gene_symbol": item.get("gene_symbol", item["locus_tag"]),
+            "locus_tag": item["locus_tag"],
+            "log2fc": item.get("log2fc", 0.0),
+            "p_value": item.get("pvalue") if item.get("pvalue") is not None else item.get("fdr", 1.0),
+            "wt_mean": item.get("wt_val", 0.0),
+            "mut_mean": item.get("mutant_val", 0.0)
+        }
+        if item.get("gene_symbol"):
+            sym = item["gene_symbol"].upper()
+            expression_db[sym] = expression_db[tag]
                 
     mapped_data = {}
     for key, data in coords_db.items():
