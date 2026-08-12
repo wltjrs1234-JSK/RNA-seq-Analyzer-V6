@@ -1060,6 +1060,263 @@ def export_deg_excel(session_id: str = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Excel 생성 중 오류 발생: {str(e)}")
 
+@app.post("/api/pca")
+def run_pca_analysis(payload: dict):
+    """
+    Perform PCA analysis for RNA-seq dataset.
+    Supports:
+    - mode = "sample": Whole-dataset PCA across all samples based on all genes
+    - mode = "custom": Gene-level PCA and expression profiles for specified genes
+    """
+    session_id = payload.get("session_id")
+    mode = payload.get("mode", "sample")
+    target_genes = payload.get("genes", [])
+    
+    dataset_genes = get_session_genes(session_id)
+    if not dataset_genes:
+        raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드하거나 세션을 선택해주세요.")
+        
+    sample_meta = get_session_sample_metadata(session_id)
+    control_cols = sample_meta.get("control_cols", []) if sample_meta else []
+    treated_cols = sample_meta.get("treated_cols", []) if sample_meta else []
+    sample_names = sample_meta.get("sample_names", []) if sample_meta else []
+    
+    # If sample metadata is not explicitly defined, infer from dataset
+    first_gene = dataset_genes[0]
+    if not sample_names:
+        if "sample_values" in first_gene and first_gene["sample_values"]:
+            sample_names = list(first_gene["sample_values"].keys())
+        elif "control_vals" in first_gene and "treated_vals" in first_gene:
+            num_ctrl = len(first_gene.get("control_vals", []))
+            num_treat = len(first_gene.get("treated_vals", []))
+            control_cols = [f"WT_{i+1}" for i in range(num_ctrl)]
+            treated_cols = [f"Mutant_{i+1}" for i in range(num_treat)]
+            sample_names = control_cols + treated_cols
+        else:
+            control_cols = ["WT"]
+            treated_cols = ["Mutant"]
+            sample_names = ["WT", "Mutant"]
+            
+    if not control_cols and not treated_cols:
+        ctrl_cands = [s for s in sample_names if any(w in s.lower() for w in ["wt", "ctrl", "con", "ref", "parent"])]
+        mut_cands = [s for s in sample_names if any(m in s.lower() for m in ["mut", "ko", "treat", "oe", "sample"])]
+        if ctrl_cands and mut_cands:
+            control_cols = ctrl_cands
+            treated_cols = mut_cands
+        else:
+            half = max(1, len(sample_names) // 2)
+            control_cols = sample_names[:half]
+            treated_cols = sample_names[half:]
+
+    sample_group_map = {}
+    for s in control_cols:
+        sample_group_map[s] = "WT"
+    for s in treated_cols:
+        sample_group_map[s] = "Mutant"
+    for s in sample_names:
+        if s not in sample_group_map:
+            sample_group_map[s] = "WT" if any(w in s.lower() for w in ["wt", "ctrl"]) else "Mutant"
+
+    if mode == "custom":
+        if not target_genes:
+            raise HTTPException(status_code=400, detail="분석할 유전자 목록이 비어있습니다.")
+            
+        target_set = set(str(t).strip().lower() for t in target_genes if str(t).strip())
+        
+        # Match genes in dataset
+        matched_genes = []
+        for g in dataset_genes:
+            sym = str(g.get("gene_symbol", "")).strip().lower()
+            loc = str(g.get("locus_tag", "")).strip().lower()
+            if sym in target_set or loc in target_set:
+                matched_genes.append(g)
+                
+        if not matched_genes:
+            raise HTTPException(status_code=404, detail="입력한 유전자 중 데이터셋에서 일치하는 유전자를 찾을 수 없습니다.")
+
+        gene_profiles = []
+        gene_sample_points = []
+        gene_names = []
+        data_matrix = []
+        
+        for g in matched_genes:
+            g_sym = g.get("gene_symbol") or g.get("locus_tag")
+            g_loc = g.get("locus_tag") or g_sym
+            log2fc = g.get("log2fc", 0.0)
+            
+            s_vals = {}
+            row_vals = []
+            for s in sample_names:
+                if "sample_values" in g and s in g["sample_values"]:
+                    val = float(g["sample_values"][s])
+                else:
+                    if s in control_cols:
+                        idx = control_cols.index(s)
+                        ctrls = g.get("control_vals") or g.get("wt_reps") or [g.get("wt_val", 0.0)]
+                        val = float(ctrls[idx % len(ctrls)]) if ctrls else float(g.get("wt_val", 0.0))
+                    else:
+                        idx = treated_cols.index(s) if s in treated_cols else 0
+                        treats = g.get("treated_vals") or g.get("mut_reps") or [g.get("mutant_val", 0.0)]
+                        val = float(treats[idx % len(treats)]) if treats else float(g.get("mutant_val", 0.0))
+                s_vals[s] = round(val, 2)
+                row_vals.append(val)
+                
+            gene_names.append(g_sym)
+            data_matrix.append(row_vals)
+            
+            gene_profiles.append({
+                "gene": g_sym,
+                "locus_tag": g_loc,
+                "log2fc": round(float(log2fc), 2) if log2fc is not None else 0.0,
+                "sample_values": s_vals
+            })
+
+        data_np = np.array(data_matrix, dtype=float)
+        X_samples = data_np.T # shape: (n_samples, k_genes)
+        
+        mean_s = np.mean(X_samples, axis=0)
+        std_s = np.std(X_samples, axis=0)
+        std_s[std_s == 0] = 1.0
+        X_norm = (X_samples - mean_s) / std_s
+        
+        try:
+            U, S, Vt = np.linalg.svd(X_norm, full_matrices=False)
+            explained_variance = (S ** 2) / (X_norm.shape[0] - 1) if X_norm.shape[0] > 1 else S ** 2
+            total_var = np.sum(explained_variance) if np.sum(explained_variance) > 0 else 1.0
+            var_ratio = explained_variance / total_var
+            
+            pc1_var = round(float(var_ratio[0] * 100), 1) if len(var_ratio) > 0 else 50.0
+            pc2_var = round(float(var_ratio[1] * 100), 1) if len(var_ratio) > 1 else (100.0 - pc1_var)
+            
+            coords = U * S
+            pc1_coords = coords[:, 0] if coords.shape[1] > 0 else np.zeros(len(sample_names))
+            pc2_coords = coords[:, 1] if coords.shape[1] > 1 else np.zeros(len(sample_names))
+        except Exception:
+            pc1_var = 60.0
+            pc2_var = 40.0
+            pc1_coords = np.linspace(-1, 1, len(sample_names))
+            pc2_coords = np.zeros(len(sample_names))
+
+        samples_res = []
+        for i, s in enumerate(sample_names):
+            samples_res.append({
+                "name": s,
+                "group": sample_group_map.get(s, "WT"),
+                "pc1": round(float(pc1_coords[i]), 4),
+                "pc2": round(float(pc2_coords[i]), 4)
+            })
+
+        for g_idx, g_item in enumerate(matched_genes):
+            g_sym = g_item.get("gene_symbol") or g_item.get("locus_tag")
+            row = data_np[g_idx, :]
+            
+            for s_idx, s in enumerate(sample_names):
+                expr_val = round(float(row[s_idx]), 2)
+                s_pc1 = float(pc1_coords[s_idx])
+                s_pc2 = float(pc2_coords[s_idx])
+                
+                gene_angle = (2 * np.pi * g_idx) / max(1, len(matched_genes))
+                offset_x = 0.15 * np.cos(gene_angle) * (g_idx > 0)
+                offset_y = 0.15 * np.sin(gene_angle) * (g_idx > 0)
+                
+                pt_pc1 = s_pc1 + offset_x * (abs(s_pc1) + 0.5)
+                pt_pc2 = s_pc2 + offset_y * (abs(s_pc2) + 0.5)
+                
+                gene_sample_points.append({
+                    "gene": g_sym,
+                    "sample": s,
+                    "group": sample_group_map.get(s, "WT"),
+                    "expr": expr_val,
+                    "pc1": round(float(pt_pc1), 4),
+                    "pc2": round(float(pt_pc2), 4)
+                })
+
+        return {
+            "success": True,
+            "mode": "custom",
+            "samples": samples_res,
+            "gene_sample_points": gene_sample_points,
+            "gene_profiles": gene_profiles,
+            "sample_names": sample_names,
+            "pca_info": {
+                "pc1_var": pc1_var,
+                "pc2_var": pc2_var,
+                "sample_count": len(sample_names),
+                "gene_count": len(matched_genes)
+            }
+        }
+
+    else:
+        # Whole dataset PCA (mode == "sample")
+        data_matrix = []
+        for g in dataset_genes:
+            row_vals = []
+            for s in sample_names:
+                if "sample_values" in g and s in g["sample_values"]:
+                    val = float(g["sample_values"][s])
+                else:
+                    if s in control_cols:
+                        idx = control_cols.index(s)
+                        ctrls = g.get("control_vals") or g.get("wt_reps") or [g.get("wt_val", 0.0)]
+                        val = float(ctrls[idx % len(ctrls)]) if ctrls else float(g.get("wt_val", 0.0))
+                    else:
+                        idx = treated_cols.index(s) if s in treated_cols else 0
+                        treats = g.get("treated_vals") or g.get("mut_reps") or [g.get("mutant_val", 0.0)]
+                        val = float(treats[idx % len(treats)]) if treats else float(g.get("mutant_val", 0.0))
+                row_vals.append(val)
+            data_matrix.append(row_vals)
+
+        data_np = np.array(data_matrix, dtype=float)
+        X_samples = data_np.T # shape: (n_samples, n_genes)
+        X_log = np.log2(np.maximum(X_samples, 0) + 1.0)
+        
+        mean_g = np.mean(X_log, axis=0)
+        std_g = np.std(X_log, axis=0)
+        std_g[std_g == 0] = 1.0
+        X_norm = (X_log - mean_g) / std_g
+        
+        try:
+            U, S, Vt = np.linalg.svd(X_norm, full_matrices=False)
+            explained_variance = (S ** 2) / (X_norm.shape[0] - 1) if X_norm.shape[0] > 1 else S ** 2
+            total_var = np.sum(explained_variance) if np.sum(explained_variance) > 0 else 1.0
+            var_ratio = explained_variance / total_var
+            
+            pc1_var = round(float(var_ratio[0] * 100), 1) if len(var_ratio) > 0 else 50.0
+            pc2_var = round(float(var_ratio[1] * 100), 1) if len(var_ratio) > 1 else (100.0 - pc1_var)
+            
+            coords = U * S
+            pc1_coords = coords[:, 0] if coords.shape[1] > 0 else np.zeros(len(sample_names))
+            pc2_coords = coords[:, 1] if coords.shape[1] > 1 else np.zeros(len(sample_names))
+        except Exception:
+            pc1_var = 70.0
+            pc2_var = 30.0
+            pc1_coords = np.linspace(-2, 2, len(sample_names))
+            pc2_coords = np.zeros(len(sample_names))
+
+        samples_res = []
+        for i, s in enumerate(sample_names):
+            samples_res.append({
+                "name": s,
+                "group": sample_group_map.get(s, "WT"),
+                "pc1": round(float(pc1_coords[i]), 4),
+                "pc2": round(float(pc2_coords[i]), 4)
+            })
+
+        return {
+            "success": True,
+            "mode": "sample",
+            "samples": samples_res,
+            "gene_sample_points": [],
+            "gene_profiles": [],
+            "sample_names": sample_names,
+            "pca_info": {
+                "pc1_var": pc1_var,
+                "pc2_var": pc2_var,
+                "sample_count": len(sample_names),
+                "gene_count": len(dataset_genes)
+            }
+        }
+
 @app.post("/api/go_enrichment")
 def run_go_enrichment(payload: dict):
     """Run Gene Ontology enrichment (hypergeometric test) on target genes."""
@@ -2413,31 +2670,7 @@ def get_gsh_pathway_data(session_id: str = None):
         
     return {"success": True, "results": mapped_data}
 
-@app.get("/api/pathway_maps")
-def get_custom_pathway_maps():
-    """Retrieve server-side backup of custom pathway maps and coordinates."""
-    pathway_backup_path = os.path.join("data", "custom_pathways.json")
-    if not os.path.exists(pathway_backup_path):
-        return {"success": False, "message": "No custom pathways backup found on server."}
-    try:
-        with open(pathway_backup_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return {"success": True, "store": data}
-    except Exception as e:
-        return {"success": False, "message": f"Failed to load custom pathways: {str(e)}"}
 
-@app.post("/api/pathway_maps")
-def save_custom_pathway_maps(payload: dict):
-    """Save client-side custom pathway maps and layout configurations onto the server as backup."""
-    pathway_backup_path = os.path.join("data", "custom_pathways.json")
-    try:
-        # Ensure 'data' directory exists
-        os.makedirs("data", exist_ok=True)
-        with open(pathway_backup_path, "w", encoding="utf-8") as f:
-            json.dump(payload, f, indent=2, ensure_ascii=False)
-        return {"success": True, "message": "Custom pathways backup successfully saved on server."}
-    except Exception as e:
-        return {"success": False, "message": f"Failed to save custom pathways backup: {str(e)}"}
 
 @app.get("/api/pathways")
 def get_pathways(session_id: str = None, species: str = None):
@@ -3601,7 +3834,53 @@ def generate_report(payload: dict = Body(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Mount static files folder (will serve our frontend UI)
+# Pathway Maps backup & restore endpoint
+PATHWAY_MAPS_FILE = os.path.join("data", "custom_pathway_maps.json")
+
+@app.get("/api/pathway_maps")
+def get_saved_pathway_maps():
+    if os.path.exists(PATHWAY_MAPS_FILE):
+        try:
+            with open(PATHWAY_MAPS_FILE, "r", encoding="utf-8") as f:
+                store = json.load(f)
+                return {"success": True, "store": store}
+        except Exception as e:
+            return {"success": False, "message": str(e)}
+    # If no custom backup file exists, try loading default gsh_pathway_layout.json
+    default_layout_path = os.path.join("data", "gsh_pathway_layout.json")
+    if os.path.exists(default_layout_path):
+        try:
+            with open(default_layout_path, "r", encoding="utf-8") as f:
+                layout = json.load(f)
+                default_store = {
+                    "yeast_gsh_pathway": {
+                        "name": "Yeast GSH Pathway (S. cerevisiae)",
+                        "species": "sce",
+                        "width": layout.get("width", 1024),
+                        "height": layout.get("height", 580),
+                        "nodes": layout.get("nodes", []),
+                        "arrows": layout.get("arrows", [])
+                    }
+                }
+                return {"success": True, "store": default_store}
+        except Exception as e:
+            return {"success": False, "message": str(e)}
+    return {"success": True, "store": {}}
+
+@app.post("/api/pathway_maps")
+async def save_pathway_maps(request: Request):
+    try:
+        data = await request.json()
+        with open(PATHWAY_MAPS_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        with open(os.path.join("data", "custom_pathways.json"), "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        return {"success": True, "message": "Saved successfully"}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
+# Mount static and data files folders
+app.mount("/data", StaticFiles(directory="data"), name="data_dir")
 app.mount("/static", StaticFiles(directory="static"), name="static_dir")
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 

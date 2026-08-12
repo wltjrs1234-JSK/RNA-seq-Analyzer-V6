@@ -4832,6 +4832,7 @@ let currentMapId = "yeast_gsh_pathway";
 let isGshEditMode = false;
 let activeGshTool = null; // 'add-node', 'add-arrow', 'add-gene', 'delete', null
 let selectedArrowSourceId = null;
+let showGshTargetBadges = localStorage.getItem("gsh_show_target_badges") !== "false"; // Global toggle for on-map OE/KO badges
 
 // Global selection sets for advanced editor UX
 let selectedNodes = new Set();
@@ -4893,16 +4894,36 @@ function setGshDeletedDefaultGenes(mapId, val) {
     }
 }
 
+function getGshTargetGenes(mapId) {
+    const map = pathwayMapsStore[mapId];
+    if (!map) return [];
+    if (!map.targetGenes) {
+        const local = localStorage.getItem(`gsh_target_genes_${mapId}`);
+        map.targetGenes = local ? JSON.parse(local) : [];
+    }
+    return map.targetGenes;
+}
+
+function setGshTargetGenes(mapId, val) {
+    const map = pathwayMapsStore[mapId];
+    if (map) {
+        map.targetGenes = val;
+        localStorage.setItem(`gsh_target_genes_${mapId}`, JSON.stringify(val));
+    }
+}
+
 function removeGshGeneData(mapId) {
     const map = pathwayMapsStore[mapId];
     if (map) {
         delete map.geneOffsets;
         delete map.customGenes;
         delete map.deletedDefaultGenes;
+        delete map.targetGenes;
     }
     localStorage.removeItem(`gsh_gene_offsets_${mapId}`);
     localStorage.removeItem(`gsh_custom_genes_${mapId}`);
     localStorage.removeItem(`gsh_deleted_default_genes_${mapId}`);
+    localStorage.removeItem(`gsh_target_genes_${mapId}`);
 }
 
 function clearSelection() {
@@ -4979,11 +5000,14 @@ function loadGSHPathwayData() {
             fetchDefaultLayout()
             .then(defaultLayout => {
                 pathwayMapsStore["yeast_gsh_pathway"] = {
-                    name: "Yeast GSH Pathway",
-                    width: defaultLayout.width || 1024,
-                    height: defaultLayout.height || 580,
+                    name: "Yeast GSH Pathway (S. cerevisiae)",
+                    species: "sce",
+                    width: defaultLayout.width || 1880,
+                    height: defaultLayout.height || 1150,
                     nodes: defaultLayout.nodes || [],
-                    arrows: defaultLayout.arrows || []
+                    arrows: defaultLayout.arrows || [],
+                    customGenes: defaultLayout.customGenes || [],
+                    geneOffsets: defaultLayout.geneOffsets || {}
                 };
                 saveAllPathwayMaps();
                 initializeMapDropdown();
@@ -5146,7 +5170,8 @@ function captureGshSnapshot() {
         mapData: JSON.parse(JSON.stringify(pathwayMapsStore[currentMapId])),
         customGenes: JSON.parse(JSON.stringify(getGshCustomGenes(currentMapId))),
         geneOffsets: JSON.parse(JSON.stringify(getGshGeneOffsets(currentMapId))),
-        deletedDefaults: JSON.parse(JSON.stringify(getGshDeletedDefaultGenes(currentMapId)))
+        deletedDefaults: JSON.parse(JSON.stringify(getGshDeletedDefaultGenes(currentMapId))),
+        targetGenes: JSON.parse(JSON.stringify(getGshTargetGenes(currentMapId)))
     };
 }
 
@@ -5176,12 +5201,14 @@ function restoreGshSnapshot(snapshot) {
     currentMapId = mapId;
     pathwayMapsStore[mapId] = JSON.parse(JSON.stringify(snapshot.mapData));
     saveAllPathwayMaps();
-    setGshCustomGenes(mapId, JSON.parse(JSON.stringify(snapshot.customGenes)));
-    setGshGeneOffsets(mapId, JSON.parse(JSON.stringify(snapshot.geneOffsets)));
-    setGshDeletedDefaultGenes(mapId, JSON.parse(JSON.stringify(snapshot.deletedDefaults)));
+    setGshCustomGenes(mapId, JSON.parse(JSON.stringify(snapshot.customGenes || [])));
+    setGshGeneOffsets(mapId, JSON.parse(JSON.stringify(snapshot.geneOffsets || {})));
+    setGshDeletedDefaultGenes(mapId, JSON.parse(JSON.stringify(snapshot.deletedDefaults || [])));
+    setGshTargetGenes(mapId, JSON.parse(JSON.stringify(snapshot.targetGenes || [])));
     
     clearSelection();
     renderGSHPathway();
+    renderTargetGeneList();
     updateGshUndoRedoButtons();
 }
 
@@ -5241,6 +5268,344 @@ function showGshToast(msg) {
     window._gshToastTimer = setTimeout(() => {
         toast.style.opacity = "0";
     }, 1500);
+}
+
+// ----------------------------------------------------------------------
+// Target Gene Engineering Management (OE / KO)
+// ----------------------------------------------------------------------
+let currentTargetStrategy = 'OE';
+
+function updateTargetBadgeToggleButton() {
+    const btn = document.getElementById("btn-toggle-target-badges");
+    if (!btn) return;
+    if (showGshTargetBadges) {
+        btn.innerHTML = `<i class="fa-solid fa-eye" style="color: #4f46e5;"></i><span>뱃지 표시</span>`;
+        btn.style.background = "#eef2ff";
+        btn.style.borderColor = "#c7d2fe";
+        btn.style.color = "#4338ca";
+        btn.title = "현재 맵 상에 조작 전략 배지(OE/KO)가 표시 중입니다. 클릭하면 숨깁니다.";
+    } else {
+        btn.innerHTML = `<i class="fa-solid fa-eye-slash" style="color: #94a3b8;"></i><span>뱃지 숨김</span>`;
+        btn.style.background = "#f8fafc";
+        btn.style.borderColor = "#cbd5e1";
+        btn.style.color = "#94a3b8";
+        btn.title = "현재 맵 상에 조작 전략 배지가 숨겨져 있습니다. 클릭하면 표시합니다.";
+    }
+}
+
+function renderTargetGeneList() {
+    updateTargetBadgeToggleButton();
+    const listContainer = document.getElementById("target-genes-list-container");
+    const statTotal = document.getElementById("target-stat-total");
+    const statOe = document.getElementById("target-stat-oe");
+    const statKo = document.getElementById("target-stat-ko");
+    const datalist = document.getElementById("target-gene-datalist");
+    
+    if (!listContainer) return;
+    
+    const targets = getGshTargetGenes(currentMapId) || [];
+    const oeCount = targets.filter(t => t.strategy === 'OE').length;
+    const koCount = targets.filter(t => t.strategy === 'KO').length;
+    
+    if (statTotal) statTotal.textContent = `${targets.length}개`;
+    if (statOe) statOe.textContent = `${oeCount}개`;
+    if (statKo) statKo.textContent = `${koCount}개`;
+    
+    // Update gene datalist suggestions
+    if (datalist) {
+        datalist.innerHTML = "";
+        const suggestedSymbols = new Set();
+        
+        if (window.gGenes && window.gGenes.length > 0) {
+            window.gGenes.forEach(g => {
+                if (g.gene_symbol) suggestedSymbols.add(g.gene_symbol.toUpperCase());
+                if (g.locus_tag) suggestedSymbols.add(g.locus_tag.toUpperCase());
+            });
+        }
+        
+        const customGenes = getGshCustomGenes(currentMapId);
+        customGenes.forEach(cg => {
+            if (cg.symbol) suggestedSymbols.add(cg.symbol.toUpperCase());
+        });
+        if (window.lastGSHResults) {
+            Object.keys(window.lastGSHResults).forEach(s => suggestedSymbols.add(s.toUpperCase()));
+        }
+        
+        let count = 0;
+        suggestedSymbols.forEach(sym => {
+            if (count < 200) {
+                const opt = document.createElement("option");
+                opt.value = sym;
+                datalist.appendChild(opt);
+                count++;
+            }
+        });
+    }
+    
+    if (targets.length === 0) {
+        listContainer.innerHTML = `
+            <div style="text-align: center; color: #94a3b8; padding: 32px 12px; font-size: 12px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                <i class="fa-solid fa-bullseye" style="font-size: 26px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
+                등록된 타겟 유전자가 없습니다.<br>
+                <span style="font-size: 11px; color: #64748b;">상단 입력창 또는 맵 위의 유전자를 통해 과발현(OE) / 결손(KO) 타겟을 추가하세요.</span>
+            </div>
+        `;
+        return;
+    }
+    
+    listContainer.innerHTML = "";
+    targets.forEach((target) => {
+        const geneInfo = lookupGeneInActiveSession(target.symbol);
+        const resolvedLog2fc = geneInfo ? parseFloat(geneInfo.log2fc) : (target.log2fc !== undefined && target.log2fc !== null ? parseFloat(target.log2fc) : null);
+        const resolvedPval = geneInfo ? parseFloat(geneInfo.p_value) : (target.pvalue !== undefined && target.pvalue !== null ? parseFloat(target.pvalue) : null);
+        const locusTag = geneInfo ? geneInfo.locus_tag : (target.locus_tag || "");
+        
+        const isOE = target.strategy === "OE";
+        const card = document.createElement("div");
+        card.className = `target-gene-item ${isOE ? 'item-oe' : 'item-ko'}`;
+        card.setAttribute("data-target-id", target.id);
+        
+        let fcBadgeHtml = "";
+        if (resolvedLog2fc !== null && !isNaN(resolvedLog2fc)) {
+            const fcColor = resolvedLog2fc > 0.5 ? '#ef4444' : (resolvedLog2fc < -0.5 ? '#3b82f6' : '#64748b');
+            const sign = resolvedLog2fc > 0 ? '+' : '';
+            fcBadgeHtml = `<span style="font-size: 11px; font-weight: 700; color: ${fcColor}; background: ${resolvedLog2fc > 0.5 ? '#fee2e2' : (resolvedLog2fc < -0.5 ? '#dbeafe' : '#f1f5f9')}; padding: 1px 6px; border-radius: 4px;">Log2FC: ${sign}${resolvedLog2fc.toFixed(2)}</span>`;
+        } else {
+            fcBadgeHtml = `<span style="font-size: 10px; color: #94a3b8; background: #f1f5f9; padding: 1px 5px; border-radius: 3px;">발현량 미확인</span>`;
+        }
+        
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="target-badge-pill ${isOE ? 'target-badge-pill-oe' : 'target-badge-pill-ko'}" onclick="toggleTargetStrategy('${target.id}')" title="클릭하여 전략 전환 (OE ↔ KO)">
+                        ${isOE ? '<i class="fa-solid fa-arrow-up"></i> OE (과발현)' : '<i class="fa-solid fa-scissors"></i> KO (결손)'}
+                    </span>
+                    <strong style="font-size: 13px; color: #1e293b; font-family: 'Outfit', sans-serif;">${target.symbol}</strong>
+                    ${locusTag ? `<span style="font-size: 10px; color: #64748b; background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">${locusTag}</span>` : ''}
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <button class="btn btn-secondary btn-sm" onclick="focusGeneOnPathway('${target.symbol}')" title="대사 경로 맵에서 이 유전자 위치로 이동 및 강조" style="width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #4f46e5;">
+                        <i class="fa-solid fa-magnifying-glass-location"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="removeTargetGene('${target.id}')" title="타겟 목록에서 제거" style="width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #ef4444;">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    ${fcBadgeHtml}
+                    ${resolvedPval !== null && !isNaN(resolvedPval) ? `<span style="font-size: 10px; color: #94a3b8;">(p: ${resolvedPval.toExponential(2)})</span>` : ''}
+                </div>
+            </div>
+            
+            <div style="margin-top: 4px;">
+                <input type="text" class="target-note-edit" placeholder="의도/노트 입력..." value="${target.note ? target.note.replace(/"/g, '&quot;') : ''}" onchange="updateTargetNote('${target.id}', this.value)" style="width: 100%; height: 22px; font-size: 10px; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; color: #334155;">
+            </div>
+        `;
+        
+        listContainer.appendChild(card);
+    });
+}
+
+function addTargetGene(symbol, strategy, note = "") {
+    if (!symbol || !symbol.trim()) {
+        showGshToast("유전자명을 입력해주세요.");
+        return;
+    }
+    const cleanSymbol = symbol.trim().toUpperCase();
+    const strat = (strategy || currentTargetStrategy || "OE").toUpperCase();
+    
+    const currentMap = pathwayMapsStore[currentMapId];
+    if (!currentMap) return;
+    
+    let targets = getGshTargetGenes(currentMapId);
+    
+    const existing = targets.find(t => t.symbol.toUpperCase() === cleanSymbol);
+    if (existing) {
+        existing.strategy = strat;
+        if (note) existing.note = note.trim();
+        showGshToast(`'${cleanSymbol}' 타겟 전략이 ${strat}(으)로 갱신되었습니다.`);
+    } else {
+        const geneInfo = lookupGeneInActiveSession(cleanSymbol);
+        const newTarget = {
+            id: `tgt_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+            symbol: cleanSymbol,
+            locus_tag: geneInfo ? geneInfo.locus_tag : "",
+            strategy: strat,
+            note: note ? note.trim() : "",
+            log2fc: geneInfo ? geneInfo.log2fc : null,
+            pvalue: geneInfo ? geneInfo.p_value : null,
+            created_at: new Date().toISOString()
+        };
+        targets.push(newTarget);
+        showGshToast(`'${cleanSymbol}' (${strat}) 타겟이 추가되었습니다.`);
+    }
+    
+    setGshTargetGenes(currentMapId, targets);
+    saveAllPathwayMaps();
+    pushGshHistory();
+    renderTargetGeneList();
+    renderGSHPathway();
+    
+    const inputGene = document.getElementById("target-gene-input");
+    const inputNote = document.getElementById("target-note-input");
+    if (inputGene) inputGene.value = "";
+    if (inputNote) inputNote.value = "";
+}
+
+function removeTargetGene(id) {
+    let targets = getGshTargetGenes(currentMapId);
+    targets = targets.filter(t => t.id !== id);
+    setGshTargetGenes(currentMapId, targets);
+    saveAllPathwayMaps();
+    pushGshHistory();
+    renderTargetGeneList();
+    renderGSHPathway();
+    showGshToast("타겟 유전자가 삭제되었습니다.");
+}
+
+function toggleTargetStrategy(id) {
+    const targets = getGshTargetGenes(currentMapId);
+    const item = targets.find(t => t.id === id);
+    if (item) {
+        item.strategy = item.strategy === "OE" ? "KO" : "OE";
+        setGshTargetGenes(currentMapId, targets);
+        saveAllPathwayMaps();
+        pushGshHistory();
+        renderTargetGeneList();
+        renderGSHPathway();
+        showGshToast(`'${item.symbol}' 전략이 ${item.strategy}(으)로 변경되었습니다.`);
+    }
+}
+
+function updateTargetNote(id, note) {
+    const targets = getGshTargetGenes(currentMapId);
+    const item = targets.find(t => t.id === id);
+    if (item) {
+        item.note = note ? note.trim() : "";
+        setGshTargetGenes(currentMapId, targets);
+        saveAllPathwayMaps();
+    }
+}
+
+window.quickAddTargetGene = function(symbol, strategy) {
+    addTargetGene(symbol, strategy);
+};
+
+window.toggleTargetStrategy = toggleTargetStrategy;
+window.removeTargetGene = removeTargetGene;
+window.updateTargetNote = updateTargetNote;
+window.focusGeneOnPathway = focusGeneOnPathway;
+
+function focusGeneOnPathway(geneSymbol) {
+    if (!geneSymbol) return;
+    const clean = geneSymbol.trim().toUpperCase();
+    
+    const overlayContainer = document.getElementById("gsh-dynamic-overlay");
+    if (!overlayContainer) return;
+    
+    const foElements = overlayContainer.querySelectorAll("foreignObject[data-gene]");
+    let targetFo = null;
+    let targetX = null;
+    let targetY = null;
+    
+    foElements.forEach(fo => {
+        const geneKey = fo.getAttribute("data-gene") || "";
+        const geneText = fo.querySelector(".gsh-gene-text");
+        const symbolText = geneText ? geneText.innerText.trim().toUpperCase() : "";
+        if (geneKey.toUpperCase() === clean || symbolText === clean || geneKey.toUpperCase().includes(clean) || symbolText.includes(clean)) {
+            targetFo = fo;
+            targetX = parseFloat(fo.getAttribute("x")) + 30;
+            targetY = parseFloat(fo.getAttribute("y")) + 10;
+        }
+    });
+    
+    const wrapper = document.querySelector(".gsh-pathway-wrapper");
+    if (!wrapper) return;
+    
+    if (targetFo && targetX !== null && targetY !== null) {
+        const rect = wrapper.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const targetScale = Math.max(1.3, gshZoomScale);
+        gshZoomScale = targetScale;
+        gshZoomPanX = centerX - targetX * targetScale;
+        gshZoomPanY = centerY - targetY * targetScale;
+        
+        const vp = document.getElementById("gsh-pathway-viewport");
+        if (vp) {
+            vp.setAttribute("transform", `translate(${gshZoomPanX}, ${gshZoomPanY}) scale(${gshZoomScale})`);
+        }
+        
+        const box = targetFo.querySelector(".gsh-gene-overlay-container");
+        if (box) {
+            box.classList.remove("gsh-target-focus-pulse");
+            void box.offsetWidth;
+            box.classList.add("gsh-target-focus-pulse");
+            setTimeout(() => {
+                box.classList.remove("gsh-target-focus-pulse");
+            }, 3200);
+        }
+        showGshToast(`🔍 '${clean}' 유전자 위치로 이동했습니다.`);
+    } else {
+        showGshToast(`ℹ️ '${clean}' 유전자는 현재 맵 캔버스에 배치되어 있지 않은 타겟입니다. (편집 모드에서 유전자 추가 가능)`);
+    }
+}
+
+function exportTargetGenesCSV() {
+    const targets = getGshTargetGenes(currentMapId) || [];
+    if (targets.length === 0) {
+        alert("내보낼 타겟 유전자가 없습니다.");
+        return;
+    }
+    
+    const mapName = (pathwayMapsStore[currentMapId] && pathwayMapsStore[currentMapId].name) || "pathway";
+    let csv = "Gene Symbol,Locus Tag,Strategy,Log2FC,P-Value,Design Note,Created At\n";
+    
+    targets.forEach(t => {
+        const geneInfo = lookupGeneInActiveSession(t.symbol);
+        const fc = geneInfo ? geneInfo.log2fc : (t.log2fc !== null && t.log2fc !== undefined ? t.log2fc : "");
+        const pval = geneInfo ? geneInfo.p_value : (t.pvalue !== null && t.pvalue !== undefined ? t.pvalue : "");
+        const locus = geneInfo ? geneInfo.locus_tag : (t.locus_tag || "");
+        const noteEscaped = (t.note || "").replace(/"/g, '""');
+        
+        csv += `"${t.symbol}","${locus}","${t.strategy}","${fc}","${pval}","${noteEscaped}","${t.created_at || ""}"\n`;
+    });
+    
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `target_engineering_genes_${mapName.replace(/\s+/g, '_')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function copyTargetGenesToClipboard() {
+    const targets = getGshTargetGenes(currentMapId) || [];
+    if (targets.length === 0) {
+        showGshToast("복사할 타겟 유전자가 없습니다.");
+        return;
+    }
+    
+    let text = "Gene\tLocus\tStrategy\tLog2FC\tNote\n";
+    targets.forEach(t => {
+        const geneInfo = lookupGeneInActiveSession(t.symbol);
+        const fc = geneInfo ? geneInfo.log2fc : (t.log2fc !== null && t.log2fc !== undefined ? t.log2fc : "-");
+        const locus = geneInfo ? geneInfo.locus_tag : (t.locus_tag || "-");
+        text += `${t.symbol}\t${locus}\t${t.strategy}\t${fc}\t${t.note || ""}\n`;
+    });
+    
+    navigator.clipboard.writeText(text).then(() => {
+        showGshToast("📋 타겟 유전자 목록이 클립보드에 복사되었습니다!");
+    }).catch(err => {
+        console.error("Clipboard copy error:", err);
+        showGshToast("클립보드 복사 실패");
+    });
 }
 
 // Global reference mapping for fast lookup
@@ -5814,6 +6179,13 @@ function renderGSHPathway() {
     } catch (e) {
         console.error("Error rendering GSH Pathway Overlay:", e);
     }
+    
+    // 4. Render Target Gene Engineering sidebar
+    try {
+        renderTargetGeneList();
+    } catch (e) {
+        console.error("Error rendering Target Gene List:", e);
+    }
 }
  
 // Gene Deletion Helper
@@ -5971,7 +6343,7 @@ function renderGSHPathwayOverlay(results) {
         box.style.alignItems = "center";
         box.style.gap = "4px";
         box.style.whiteSpace = "nowrap";
-        box.style.cursor = isGshEditMode ? "move" : "grab";
+        box.style.cursor = isGshEditMode ? "move" : "default";
         box.style.userSelect = "none";
         box.style.pointerEvents = "auto";
         
@@ -6011,7 +6383,22 @@ function renderGSHPathwayOverlay(results) {
         box.appendChild(geneText);
         box.appendChild(indicator);
         
-        // If edit-mode delete tool is active, display a small deletion badge next to custom genes
+        // Target Gene Engineering on-map emblem badge
+        const targetList = getGshTargetGenes(currentMapId) || [];
+        const targetMatch = targetList.find(t => t.symbol.toUpperCase() === symbol.toUpperCase());
+        if (showGshTargetBadges && targetMatch) {
+            const tgtEmblem = document.createElement("span");
+            const isOE = targetMatch.strategy === "OE";
+            tgtEmblem.className = isOE ? "gsh-map-target-badge-oe" : "gsh-map-target-badge-ko";
+            tgtEmblem.innerText = isOE ? "OE ↑" : "KO Δ";
+            tgtEmblem.title = `대사공학 조작 타겟: ${isOE ? '과발현 (OE)' : '결손 (KO)'}${targetMatch.note ? ` - ${targetMatch.note}` : ''}`;
+            box.appendChild(tgtEmblem);
+            box.classList.add("gsh-gene-is-target");
+        }
+        
+        fo.appendChild(box);
+
+        // Edit Mode Specific Handlers: Delete Tool, Selection & Dragging, Rename
         if (isGshEditMode) {
             box.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -6031,187 +6418,142 @@ function renderGSHPathwayOverlay(results) {
                     renderGSHPathway();
                 }
             });
-        }
-        
-        fo.appendChild(box);
-        
-        // Drag and Drop (Bulk Dragging supported)
-        let startMux = 0;
-        let startMuy = 0;
-        let isMoving = false;
-        
-        box.addEventListener("mousedown", (e) => {
-            if (activeGshTool === 'add-arrow') return; // Let background canvas handle drag drawing!
+
+            // Drag and Drop (Bulk Dragging supported)
+            let startMux = 0;
+            let startMuy = 0;
+            let isMoving = false;
             
-            e.stopPropagation();
-            if (e.button !== 0) return;
-            if (activeGshTool === 'delete') return; // let click handle delete
-            
-            // Selection handling
-            if (!activeGshTool) {
-                if (e.ctrlKey || e.shiftKey) {
-                    if (selectedGenes.has(key)) selectedGenes.delete(key);
-                    else selectedGenes.add(key);
-                } else {
-                    if (!selectedGenes.has(key)) {
-                        clearSelection();
-                        selectedGenes.add(key);
+            box.addEventListener("mousedown", (e) => {
+                if (activeGshTool === 'add-arrow') return; // Let background canvas handle drag drawing!
+                
+                e.stopPropagation();
+                if (e.button !== 0) return;
+                if (activeGshTool === 'delete') return; // let click handle delete
+                
+                // Selection handling
+                if (!activeGshTool) {
+                    if (e.ctrlKey || e.shiftKey) {
+                        if (selectedGenes.has(key)) selectedGenes.delete(key);
+                        else selectedGenes.add(key);
+                    } else {
+                        if (!selectedGenes.has(key)) {
+                            clearSelection();
+                            selectedGenes.add(key);
+                        }
                     }
-                }
-                renderGSHPathway();
-            }
-            
-            isMoving = true;
-            box.style.cursor = "grabbing";
-            startMux = e.clientX;
-            startMuy = e.clientY;
-            
-            // Capture offsets of selected genes
-            const startOffsets = {};
-            startOffsets[key] = JSON.parse(JSON.stringify(savedOffsets[key] || { dx: 0, dy: 0 })); // Ensure current dragged gene is captured
-            selectedGenes.forEach(geneKey => {
-                startOffsets[geneKey] = JSON.parse(JSON.stringify(savedOffsets[geneKey] || { dx: 0, dy: 0 }));
-            });
-            
-            // Capture coords of selected nodes
-            const nodesMap = getNodesMap();
-            const startCoords = {};
-            selectedNodes.forEach(nid => {
-                const n = nodesMap[nid];
-                if (n) startCoords[nid] = { x: n.x, y: n.y };
-            });
-            
-            // Capture start coordinates of all selected arrows for delta movement
-            const startArrowCoords = {};
-            selectedArrows.forEach(aid => {
-                const arrow = currentMap.arrows.find(a => a.id === aid);
-                if (arrow) {
-                    startArrowCoords[aid] = {
-                        fromCoords: arrow.fromCoords ? { x: arrow.fromCoords.x, y: arrow.fromCoords.y } : null,
-                        toCoords: arrow.toCoords ? { x: arrow.toCoords.x, y: arrow.toCoords.y } : null
-                    };
-                }
-            });
-            
-            const handleMouseMove = (mvEvent) => {
-                if (!isMoving) return;
-                
-                const deltaMux = mvEvent.clientX - startMux;
-                const deltaMuy = mvEvent.clientY - startMuy;
-                
-                const svgEl = document.getElementById("gsh-pathway-svg");
-                const svgRect = svgEl ? svgEl.getBoundingClientRect() : { width: 1024, height: 580 };
-                const currentMap = pathwayMapsStore[currentMapId] || {};
-                const mapWidth = currentMap.width || 1024;
-                const mapHeight = currentMap.height || 580;
-                const scaleRatioX = mapWidth / (svgRect.width || 1024);
-                const scaleRatioY = mapHeight / (svgRect.height || 580);
-                
-                const correctedDx = (deltaMux * scaleRatioX) / gshZoomScale;
-                const correctedDy = (deltaMuy * scaleRatioY) / gshZoomScale;
-                
-                if (selectedGenes.has(key)) {
-                    // Bulk Move Genes
-                    selectedGenes.forEach(geneKey => {
-                        const sOffset = startOffsets[geneKey];
-                        if (sOffset) {
-                            savedOffsets[geneKey] = {
-                                dx: sOffset.dx + correctedDx,
-                                dy: sOffset.dy + correctedDy
-                            };
-                        }
-                    });
-                    setGshGeneOffsets(currentMapId, savedOffsets);
-                    
-                    // Bulk Move Nodes
-                    selectedNodes.forEach(nid => {
-                        const n = nodesMap[nid];
-                        const sCoord = startCoords[nid];
-                        if (n && sCoord) {
-                            n.x = sCoord.x + correctedDx;
-                            n.y = sCoord.y + correctedDy;
-                        }
-                    });
-                    
-                    // Also bulk move selected arrows
-                    selectedArrows.forEach(aid => {
-                        const arrow = currentMap.arrows.find(a => a.id === aid);
-                        const sArrowCoord = startArrowCoords[aid];
-                        if (arrow && sArrowCoord) {
-                            if (arrow.fromCoords && sArrowCoord.fromCoords) {
-                                arrow.fromCoords.x = sArrowCoord.fromCoords.x + correctedDx;
-                                arrow.fromCoords.y = sArrowCoord.fromCoords.y + correctedDy;
-                            }
-                            if (arrow.toCoords && sArrowCoord.toCoords) {
-                                arrow.toCoords.x = sArrowCoord.toCoords.x + correctedDx;
-                                arrow.toCoords.y = sArrowCoord.toCoords.y + correctedDy;
-                            }
-                        }
-                    });
-                } else {
-                    // Single Gene move
-                    const sOffset = startOffsets[key];
-                    const currentOffsets = getGshGeneOffsets(currentMapId);
-                    if (sOffset) {
-                        currentOffsets[key] = {
-                            dx: sOffset.dx + correctedDx,
-                            dy: sOffset.dy + correctedDy
-                        };
-                    }
-                    setGshGeneOffsets(currentMapId, currentOffsets);
-                }
-                
-                renderGSHPathway();
-            };
-            
-            const handleMouseUp = () => {
-                if (isMoving) {
-                    isMoving = false;
-                    box.style.cursor = isGshEditMode ? "move" : "grab";
-                    
-                    document.removeEventListener("mousemove", handleMouseMove);
-                    document.removeEventListener("mouseup", handleMouseUp);
-                    
-                    saveAllPathwayMaps();
-                    pushGshHistory();
                     renderGSHPathway();
                 }
-            };
-            
-            document.addEventListener("mousemove", handleMouseMove);
-            document.addEventListener("mouseup", handleMouseUp);
-        });
-        
-        // Double click to rename custom gene
-        box.addEventListener("dblclick", (e) => {
-            e.stopPropagation();
-            const custom = getGshCustomGenes(currentMapId);
-            const cg = custom.find(g => g.id === key);
-            if (cg) {
-                const newSymbol = prompt("유전자 이름을 수정하세요:", cg.symbol);
-                if (newSymbol !== null && newSymbol.trim() !== "" && newSymbol.trim() !== cg.symbol) {
-                    const cleanSymbol = newSymbol.trim().toUpperCase();
-                    cg.symbol = cleanSymbol;
-                    
-                    // Update log2fc & isoforms for renamed symbol
-                    let repLog2fc = 0.0;
-                    let geneIsoforms = [];
-                    if (gGenes && gGenes.length > 0) {
-                        const match = gGenes.find(g => (g.gene_symbol && g.gene_symbol.toUpperCase() === cleanSymbol) || (g.locus_tag && g.locus_tag.toUpperCase() === cleanSymbol));
-                        if (match) {
-                            repLog2fc = parseFloat(match.log2fc) || 0.0;
-                            geneIsoforms = [match];
-                        }
-                    }
-                    cg.rep_log2fc = repLog2fc;
-                    cg.genes = geneIsoforms;
-                    
-                    setGshCustomGenes(currentMapId, custom);
-                    pushGshHistory();
-                    loadGSHPathwayData();
+                
+                isMoving = true;
+                startMux = e.clientX;
+                startMuy = e.clientY;
+                
+                const savedOffsets = getGshGeneOffsets(currentMapId);
+                startOffsets = {};
+                
+                if (selectedGenes.has(key)) {
+                    selectedGenes.forEach(gKey => {
+                        const curOffset = savedOffsets[gKey] || { dx: 0, dy: 0 };
+                        startOffsets[gKey] = { dx: curOffset.dx, dy: curOffset.dy };
+                    });
+                } else {
+                    const curOffset = savedOffsets[key] || { dx: 0, dy: 0 };
+                    startOffsets[key] = { dx: curOffset.dx, dy: curOffset.dy };
                 }
-            }
-        });
+                
+                const handleMouseMove = (mvEvent) => {
+                    if (!isMoving) return;
+                    
+                    const deltaMux = mvEvent.clientX - startMux;
+                    const deltaMuy = mvEvent.clientY - startMuy;
+                    
+                    const correctedDx = deltaMux / gshZoomScale;
+                    const correctedDy = deltaMuy / gshZoomScale;
+                    
+                    const curSavedOffsets = getGshGeneOffsets(currentMapId);
+                    
+                    if (selectedGenes.has(key)) {
+                        selectedGenes.forEach(gKey => {
+                            const initOff = startOffsets[gKey] || { dx: 0, dy: 0 };
+                            curSavedOffsets[gKey] = {
+                                dx: Math.round((initOff.dx + correctedDx) * 10) / 10,
+                                dy: Math.round((initOff.dy + correctedDy) * 10) / 10
+                            };
+                            
+                            const foTarget = overlayLayer.querySelector(`foreignObject[data-gene="${gKey}"]`);
+                            if (foTarget) {
+                                const gItem = customGenes.find(cg => (cg.id === gKey) || (!cg.id && cg.symbol === gKey)) || (window.lastGSHResults ? window.lastGSHResults[gKey] : null);
+                                if (gItem) {
+                                    const bX = (gItem.x * mapWidth) / 100;
+                                    const bY = (gItem.y * mapHeight) / 100;
+                                    foTarget.setAttribute("x", (bX + curSavedOffsets[gKey].dx - 60).toFixed(1));
+                                    foTarget.setAttribute("y", (bY + curSavedOffsets[gKey].dy - 14).toFixed(1));
+                                }
+                            }
+                        });
+                    } else {
+                        const initOff = startOffsets[key] || { dx: 0, dy: 0 };
+                        curSavedOffsets[key] = {
+                            dx: Math.round((initOff.dx + correctedDx) * 10) / 10,
+                            dy: Math.round((initOff.dy + correctedDy) * 10) / 10
+                        };
+                        fo.setAttribute("x", (baseX + curSavedOffsets[key].dx - 60).toFixed(1));
+                        fo.setAttribute("y", (baseY + curSavedOffsets[key].dy - 14).toFixed(1));
+                    }
+                    
+                    setGshGeneOffsets(currentMapId, curSavedOffsets);
+                };
+                
+                const handleMouseUp = () => {
+                    if (isMoving) {
+                        isMoving = false;
+                        box.style.cursor = isGshEditMode ? "move" : "default";
+                        
+                        document.removeEventListener("mousemove", handleMouseMove);
+                        document.removeEventListener("mouseup", handleMouseUp);
+                        
+                        saveAllPathwayMaps();
+                        pushGshHistory();
+                        renderGSHPathway();
+                    }
+                };
+                
+                document.addEventListener("mousemove", handleMouseMove);
+                document.addEventListener("mouseup", handleMouseUp);
+            });
+            
+            // Double click to rename custom gene
+            box.addEventListener("dblclick", (e) => {
+                e.stopPropagation();
+                const custom = getGshCustomGenes(currentMapId);
+                const cg = custom.find(g => g.id === key);
+                if (cg) {
+                    const newSymbol = prompt("유전자 이름을 수정하세요:", cg.symbol);
+                    if (newSymbol !== null && newSymbol.trim() !== "" && newSymbol.trim() !== cg.symbol) {
+                        const cleanSymbol = newSymbol.trim().toUpperCase();
+                        cg.symbol = cleanSymbol;
+                        
+                        // Update log2fc & isoforms for renamed symbol
+                        let repLog2fc = 0.0;
+                        let geneIsoforms = [];
+                        if (gGenes && gGenes.length > 0) {
+                            const match = gGenes.find(g => (g.gene_symbol && g.gene_symbol.toUpperCase() === cleanSymbol) || (g.locus_tag && g.locus_tag.toUpperCase() === cleanSymbol));
+                            if (match) {
+                                repLog2fc = parseFloat(match.log2fc) || 0.0;
+                                geneIsoforms = [match];
+                            }
+                        }
+                        cg.rep_log2fc = repLog2fc;
+                        cg.genes = geneIsoforms;
+                        
+                        setGshCustomGenes(currentMapId, custom);
+                        pushGshHistory();
+                        loadGSHPathwayData();
+                    }
+                }
+            });
+        }
         
         // Tooltip bindings
         box.addEventListener("mouseenter", (e) => {
@@ -6236,6 +6578,21 @@ function renderGSHPathwayOverlay(results) {
                 tooltipHtml += `<span style="color:#a1a1aa;">DEG 분석 데이터에 없는 수동 등록 유전자입니다.</span>`;
             }
             tooltipHtml += `</div>`;
+            
+            // Target gene info in tooltip
+            const targetList = getGshTargetGenes(currentMapId) || [];
+            const isTarget = targetList.find(t => t.symbol.toUpperCase() === symbol.toUpperCase());
+            if (isTarget) {
+                const isOE = isTarget.strategy === "OE";
+                tooltipHtml += `
+                    <div style="margin-top: 6px; padding: 4px 6px; background: rgba(0,0,0,0.3); border-radius: 4px; border-left: 3px solid ${isOE ? '#ef4444' : '#3b82f6'};">
+                        <div style="color: ${isOE ? '#fca5a5' : '#93c5fd'}; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-bullseye"></i> 엔지니어링 타겟: ${isOE ? '과발현 (OE ↑)' : '결손 (KO Δ)'}
+                        </div>
+                        ${isTarget.note ? `<div style="color: #cbd5e1; font-size: 10px; margin-top: 2px;">메모: ${isTarget.note}</div>` : ''}
+                    </div>
+                `;
+            }
             
             tooltip.innerHTML = tooltipHtml;
             tooltip.style.display = "block";
@@ -6435,7 +6792,7 @@ function initGSHZoomPan() {
         const shouldPan = !isGshEditMode || gshSpacePressed || e.button === 1 || e.button === 2;
         
         if (shouldPan) {
-            if (e.target.closest(".gsh-gene-overlay-container") || e.target.closest("button") || e.target.closest("a")) {
+            if (e.target.closest("button") || e.target.closest("a") || e.target.closest("input") || e.target.closest("select")) {
                 return;
             }
             gshIsDragging = true;
@@ -7074,6 +7431,49 @@ function initGSHEditorBindings() {
             alert("현재 대사 경로의 노드, 화살표, 유전자 배지 정렬 배치가 성공적으로 저장되었습니다.");
         });
     }
+
+    // Reset current pathway map layout
+    const btnResetPathway = document.getElementById("btn-refresh-gsh-pathway");
+    if (btnResetPathway) {
+        btnResetPathway.addEventListener("click", () => {
+            if (confirm("현재 대사 경로의 노드, 화살표 및 배치를 기본값으로 초기화하시겠습니까?")) {
+                if (currentMapId === "yeast_gsh_pathway") {
+                    fetchDefaultLayout()
+                    .then(defaultLayout => {
+                        pathwayMapsStore["yeast_gsh_pathway"] = {
+                            name: "Yeast GSH Pathway (S. cerevisiae)",
+                            species: "sce",
+                            width: defaultLayout.width || 1880,
+                            height: defaultLayout.height || 1150,
+                            nodes: defaultLayout.nodes || [],
+                            arrows: defaultLayout.arrows || [],
+                            customGenes: defaultLayout.customGenes || [],
+                            geneOffsets: defaultLayout.geneOffsets || {}
+                        };
+                        removeGshGeneData("yeast_gsh_pathway");
+                        saveAllPathwayMaps();
+                        pushGshHistory();
+                        selectAndLoadMap("yeast_gsh_pathway");
+                        alert("글루타치온 생합성 맵이 기본 레이아웃으로 초기화되었습니다.");
+                    })
+                    .catch(err => {
+                        alert("초기화 실패: " + err.message);
+                    });
+                } else {
+                    const currentMap = pathwayMapsStore[currentMapId];
+                    if (currentMap) {
+                        currentMap.nodes = [];
+                        currentMap.arrows = [];
+                        removeGshGeneData(currentMapId);
+                        saveAllPathwayMaps();
+                        pushGshHistory();
+                        selectAndLoadMap(currentMapId);
+                        alert("현재 맵이 초기화되었습니다.");
+                    }
+                }
+            }
+        });
+    }
     
     // Apply Canvas Dimensions
     const btnApplySize = document.getElementById("btn-apply-size");
@@ -7138,7 +7538,6 @@ function initGSHEditorBindings() {
             setGshActiveTool(null);
         }
         renderGSHPathway();
-        resetGSHZoom(); // Align view when starting edit
     });
     
     // Undo / Redo Toolbar Button Handlers
@@ -7316,6 +7715,87 @@ function initGSHEditorBindings() {
                 }
             };
             reader.readAsText(file);
+        });
+    }
+    
+    // ----------------------------------------------------------------------
+    // Target Gene Engineering UI Events
+    // ----------------------------------------------------------------------
+    const btnToggleBadges = document.getElementById("btn-toggle-target-badges");
+    const btnAddTarget = document.getElementById("btn-add-target-gene");
+    const inputTarget = document.getElementById("target-gene-input");
+    const inputNote = document.getElementById("target-note-input");
+    const btnStratOe = document.getElementById("btn-strat-oe");
+    const btnStratKo = document.getElementById("btn-strat-ko");
+    const btnExportCsv = document.getElementById("btn-export-target-csv");
+    const btnCopyList = document.getElementById("btn-copy-target-list");
+
+    if (btnToggleBadges) {
+        btnToggleBadges.addEventListener("click", () => {
+            showGshTargetBadges = !showGshTargetBadges;
+            localStorage.setItem("gsh_show_target_badges", showGshTargetBadges ? "true" : "false");
+            updateTargetBadgeToggleButton();
+            renderGSHPathway();
+            showGshToast(showGshTargetBadges ? "대사 경로 맵 상에 조작 전략 배지가 표시됩니다." : "대사 경로 맵 상의 조작 전략 배지를 숨겼습니다.");
+        });
+    }
+
+    if (btnStratOe && btnStratKo) {
+        btnStratOe.addEventListener("click", () => {
+            currentTargetStrategy = "OE";
+            btnStratOe.style.background = "#ef4444";
+            btnStratOe.style.color = "#ffffff";
+            btnStratOe.style.borderColor = "#ef4444";
+            btnStratKo.style.background = "transparent";
+            btnStratKo.style.color = "#64748b";
+            btnStratKo.style.borderColor = "#cbd5e1";
+        });
+        btnStratKo.addEventListener("click", () => {
+            currentTargetStrategy = "KO";
+            btnStratKo.style.background = "#3b82f6";
+            btnStratKo.style.color = "#ffffff";
+            btnStratKo.style.borderColor = "#3b82f6";
+            btnStratOe.style.background = "transparent";
+            btnStratOe.style.color = "#64748b";
+            btnStratOe.style.borderColor = "#cbd5e1";
+        });
+    }
+
+    if (btnAddTarget && inputTarget) {
+        btnAddTarget.addEventListener("click", () => {
+            const sym = inputTarget.value;
+            const note = inputNote ? inputNote.value : "";
+            addTargetGene(sym, currentTargetStrategy, note);
+        });
+
+        inputTarget.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const sym = inputTarget.value;
+                const note = inputNote ? inputNote.value : "";
+                addTargetGene(sym, currentTargetStrategy, note);
+            }
+        });
+    }
+
+    if (inputNote) {
+        inputNote.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && inputTarget) {
+                const sym = inputTarget.value;
+                const note = inputNote.value;
+                addTargetGene(sym, currentTargetStrategy, note);
+            }
+        });
+    }
+
+    if (btnExportCsv) {
+        btnExportCsv.addEventListener("click", () => {
+            exportTargetGenesCSV();
+        });
+    }
+
+    if (btnCopyList) {
+        btnCopyList.addEventListener("click", () => {
+            copyTargetGenesToClipboard();
         });
     }
 }
@@ -7700,7 +8180,9 @@ function renderPCAPlot() {
         }
 
         // Render Individual Gene Expression Profiles Grouped Bar Chart (only in Custom mode)
+        const loadingCard = document.getElementById("pca-loading-card");
         if (mode === "custom" && loadingDiv && profiles.length > 0) {
+            if (loadingCard) loadingCard.style.display = "block";
             const profileTraces = profiles.map((p, idx) => {
                 const yVals = sampleNames.map(sName => p.sample_values[sName] || 0.0);
                 return {
@@ -7732,6 +8214,9 @@ function renderPCAPlot() {
                 }
             };
 
+            Plotly.newPlot('plotly-pca-loading', profileTraces, profileLayout, { responsive: true });
+        } else {
+            if (loadingCard) loadingCard.style.display = "none";
         }
     })
     .catch(err => {

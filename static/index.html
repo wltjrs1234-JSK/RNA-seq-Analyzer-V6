@@ -1121,14 +1121,15 @@
                         </div>
                     </div>
 
-                    <!-- Layout: Left (Pathway Canvas), Right (Legend & Statistics) -->
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px;">
-                        <div class="card glass-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; overflow: hidden; position: relative;">
+                    <!-- Layout: Left (Pathway Canvas), Right (Target Gene Engineering List) -->
+                    <div class="custom-pathway-layout">
+                        <!-- Left: Canvas & Editor Card -->
+                        <div class="card glass-card" style="padding: 20px; display: flex; flex-direction: column; align-items: center; overflow: hidden; position: relative;">
                             
                             <!-- Control & Legend Header -->
-                            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
                                 <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                         <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 6px;">
                                             <i class="fa-solid fa-route" style="color: #4f46e5;"></i>대사 경로 맵:
                                         </h4>
@@ -1152,7 +1153,7 @@
                                             <i class="fa-solid fa-floppy-disk"></i>저장
                                         </button>
                                         
-                                        <div class="edit-mode-toggle-container" style="display: flex; align-items: center; gap: 8px; margin-left: 5px; border-left: 1px solid var(--border-color); padding-left: 12px;">
+                                        <div class="edit-mode-toggle-container" style="display: flex; align-items: center; gap: 8px; margin-left: 5px; border-left: 1px solid var(--border-color); padding-left: 10px;">
                                             <span style="font-size: 12px; font-weight: 600; color: #475569;">편집 모드</span>
                                             <label class="switch" style="position: relative; display: inline-block; width: 34px; height: 18px; margin: 0;">
                                                 <input type="checkbox" id="toggle-edit-mode" style="opacity: 0; width: 0; height: 0;">
@@ -1162,17 +1163,17 @@
                                     </div>
                                     
                                     <!-- Heatmap color scale legend -->
-                                    <div style="display: flex; align-items: center; gap: 16px; font-size: 12px; color: #64748b;">
+                                    <div style="display: flex; align-items: center; gap: 12px; font-size: 11px; color: #64748b;">
                                         <div style="display: flex; align-items: center; gap: 4px;">
-                                            <span style="display: inline-block; width: 12px; height: 12px; background: rgba(239, 68, 68, 0.7); border-radius: 3px;"></span>
-                                            <span>과발현 (Log2FC > 0.5)</span>
+                                            <span style="display: inline-block; width: 10px; height: 10px; background: rgba(239, 68, 68, 0.7); border-radius: 2px;"></span>
+                                            <span>과발현 (&gt;0.5)</span>
                                         </div>
                                         <div style="display: flex; align-items: center; gap: 4px;">
-                                            <span style="display: inline-block; width: 12px; height: 12px; background: rgba(99, 102, 241, 0.7); border-radius: 3px;"></span>
-                                            <span>발현 억제 (Log2FC < -0.5)</span>
+                                            <span style="display: inline-block; width: 10px; height: 10px; background: rgba(99, 102, 241, 0.7); border-radius: 2px;"></span>
+                                            <span>발현 억제 (&lt;-0.5)</span>
                                         </div>
                                         <div style="display: flex; align-items: center; gap: 4px;">
-                                            <span style="display: inline-block; width: 12px; height: 12px; background: rgba(148, 163, 184, 0.3); border-radius: 3px;"></span>
+                                            <span style="display: inline-block; width: 10px; height: 10px; background: rgba(148, 163, 184, 0.3); border-radius: 2px;"></span>
                                             <span>유의차 없음</span>
                                         </div>
                                     </div>
@@ -1271,7 +1272,7 @@
                             </div>
 
                             <!-- Interactive Image Canvas Container -->
-                            <div class="gsh-pathway-wrapper" style="position: relative; width: 100%; max-width: 1400px; height: 750px; overflow: hidden; border: 1px solid var(--border-color); border-radius: 8px; background: #ffffff; cursor: grab; user-select: none;">
+                            <div class="gsh-pathway-wrapper" style="position: relative; width: 100%; max-width: 1400px; height: 720px; overflow: hidden; border: 1px solid var(--border-color); border-radius: 8px; background: #ffffff; cursor: grab; user-select: none;">
                                 <!-- Selection Marquee Overlay Box -->
                                 <div id="selection-marquee" style="display: none;"></div>
                                 
@@ -1328,6 +1329,74 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <!-- Right: Target Gene Engineering Panel -->
+                        <div class="card glass-card target-engineering-card" id="target-engineering-panel">
+                            <!-- Panel Header -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                                <div>
+                                    <h4 style="font-size: 14px; font-weight: 700; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-bullseye" style="color: #ef4444;"></i>타겟 유전자 리스트
+                                    </h4>
+                                    <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">대사공학 조작 타겟 (OE / KO) 설계</p>
+                                </div>
+                                <div style="display: flex; gap: 4px; align-items: center;">
+                                    <button class="btn btn-secondary btn-sm" id="btn-toggle-target-badges" title="맵 상의 조작 전략 배지(OE/KO) 일괄 표시/숨김 토글" style="padding: 3px 8px; font-size: 10px; height: 24px; display: flex; align-items: center; gap: 4px; border-color: #c7d2fe; background: #eef2ff; color: #4338ca; font-weight: 600;">
+                                        <i class="fa-solid fa-eye" style="color: #4f46e5;"></i><span>뱃지 표시</span>
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-export-target-csv" title="타겟 목록 CSV 다운로드" style="padding: 3px 6px; font-size: 10px; height: 24px; display: flex; align-items: center; gap: 3px;">
+                                        <i class="fa-solid fa-file-csv" style="color: #10b981;"></i>CSV
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-copy-target-list" title="클립보드로 복사" style="padding: 3px 6px; font-size: 10px; height: 24px; display: flex; align-items: center; gap: 3px;">
+                                        <i class="fa-solid fa-copy" style="color: #6366f1;"></i>복사
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary Count Badges -->
+                            <div style="display: flex; gap: 6px; font-size: 11px; font-weight: 600;">
+                                <div style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #64748b;">전체</span>
+                                    <span id="target-stat-total" style="color: #0f172a; font-weight: 700;">0개</span>
+                                </div>
+                                <div style="flex: 1; background: #fef2f2; border: 1px solid #fee2e2; border-radius: 6px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #ef4444;"><i class="fa-solid fa-arrow-up" style="margin-right: 2px;"></i>과발현</span>
+                                    <span id="target-stat-oe" style="color: #b91c1c; font-weight: 700;">0개</span>
+                                </div>
+                                <div style="flex: 1; background: #eff6ff; border: 1px solid #dbeafe; border-radius: 6px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #3b82f6;"><i class="fa-solid fa-scissors" style="margin-right: 2px;"></i>결손(KO)</span>
+                                    <span id="target-stat-ko" style="color: #1d4ed8; font-weight: 700;">0개</span>
+                                </div>
+                            </div>
+
+                            <!-- Quick Add Form -->
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; gap: 6px;">
+                                    <input type="text" id="target-gene-input" list="target-gene-datalist" placeholder="유전자명 입력 (예: CDC19, YAL038W)..." style="flex: 1; height: 28px; font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; border-radius: 4px; background: #ffffff; text-transform: uppercase;">
+                                    <datalist id="target-gene-datalist"></datalist>
+                                    <button class="btn btn-primary btn-sm" id="btn-add-target-gene" style="height: 28px; font-size: 11px; padding: 0 10px; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-plus"></i>추가
+                                    </button>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 11px; font-weight: 600; color: #475569;">조작 전략:</span>
+                                    <div style="display: inline-flex; background: #e2e8f0; border-radius: 4px; padding: 2px; gap: 2px;">
+                                        <button type="button" class="target-strategy-toggle-btn active" id="btn-strat-oe" data-strategy="OE" style="padding: 2px 8px; font-size: 10px; font-weight: 600; border-radius: 3px; border: none; background: #ef4444; color: white; cursor: pointer; display: flex; align-items: center; gap: 3px;">
+                                            <i class="fa-solid fa-arrow-up"></i>과발현 (OE)
+                                        </button>
+                                        <button type="button" class="target-strategy-toggle-btn" id="btn-strat-ko" data-strategy="KO" style="padding: 2px 8px; font-size: 10px; font-weight: 600; border-radius: 3px; border: none; background: transparent; color: #475569; cursor: pointer; display: flex; align-items: center; gap: 3px;">
+                                            <i class="fa-solid fa-scissors"></i>결손 (KO)
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="text" id="target-note-input" placeholder="설계 의도 / 메모 (선택 사항, 예: 플럭스 증대)..." style="height: 24px; font-size: 10px; padding: 2px 8px; border: 1px solid #cbd5e1; border-radius: 4px; background: #ffffff;">
+                            </div>
+
+                            <!-- Target Genes List Container -->
+                            <div id="target-genes-list-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 440px; overflow-y: auto; padding-right: 2px;">
+                                <!-- Dynamic Target Cards Rendered Here -->
+                            </div>
                         </div>
                     </div>
                 </section>
