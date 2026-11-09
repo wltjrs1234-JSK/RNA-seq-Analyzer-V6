@@ -7,602 +7,782 @@
     {
       "id": "node_1786343007194",
       "label": "Cysteine",
-      "x": 576.7,
-      "y": 393.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 574.7,
+      "y": 392.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343013214",
       "label": "γ-Glutamylcysteine",
-      "x": 733.0,
-      "y": 393.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 704.0,
+      "y": 392.7,
+      "w": 138,
+      "h": 26,
+      "rx": 13,
+      "type": "gssg",
+      "fillColor": "#ecfdf5",
+      "strokeColor": "#10b981",
+      "textColor": "#065f46"
     },
     {
       "id": "node_1786343019494",
       "label": "Cysteinylglycine",
-      "x": 733.0,
-      "y": 502.5,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 710.0,
+      "y": 501.5,
+      "w": 126,
+      "h": 26,
+      "rx": 13,
+      "type": "gssg",
+      "fillColor": "#ecfdf5",
+      "strokeColor": "#10b981",
+      "textColor": "#065f46"
     },
     {
       "id": "node_1786343045773",
       "label": "GSH",
-      "x": 897.1,
-      "y": 393.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 893.1,
+      "y": 391.7,
+      "w": 88,
+      "h": 28,
+      "rx": 13,
+      "type": "gsh",
+      "fillColor": "#d1fae5",
+      "strokeColor": "#059669",
+      "textColor": "#064e3b"
     },
     {
       "id": "node_1786343049983",
       "label": "GSSG",
-      "x": 1048.1,
-      "y": 393.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1044.1,
+      "y": 391.7,
+      "w": 88,
+      "h": 28,
+      "rx": 13,
+      "type": "gssg",
+      "fillColor": "#ecfdf5",
+      "strokeColor": "#10b981",
+      "textColor": "#065f46"
     },
     {
       "id": "node_1786343316477",
       "label": "Glycine",
-      "x": 568.2,
-      "y": 476.4,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 566.2,
+      "y": 475.4,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343322504",
       "label": "Glutamate",
-      "x": 839.8,
-      "y": 522.9,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 837.8,
+      "y": 521.9,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343359152",
       "label": "SO42-",
-      "x": 315.0,
-      "y": 184.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 313.0,
+      "y": 183.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343363999",
       "label": "APS",
-      "x": 315.0,
-      "y": 274.5,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 313.0,
+      "y": 273.5,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343367764",
       "label": "PAPS",
-      "x": 315.0,
-      "y": 377.8,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 313.0,
+      "y": 376.8,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343371276",
       "label": "SO32-",
-      "x": 315.0,
-      "y": 485.8,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 313.0,
+      "y": 484.8,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343375021",
       "label": "S2-",
-      "x": 315.0,
-      "y": 586.4,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 313.0,
+      "y": 585.4,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343405977",
       "label": "Aspartate",
-      "x": 155.0,
-      "y": 184.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 153.0,
+      "y": 183.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343410050",
       "label": "Aspartyl-phosphate",
-      "x": 155.0,
-      "y": 274.5,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 126.0,
+      "y": 273.5,
+      "w": 138,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343413810",
       "label": "Aspartate semialdehyde",
-      "x": 155.0,
-      "y": 377.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 122.0,
+      "y": 376.2,
+      "w": 146,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343417865",
       "label": "Homoserine",
-      "x": 155.0,
-      "y": 485.8,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 153.0,
+      "y": 484.8,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343421963",
       "label": "OAH",
-      "x": 155.0,
-      "y": 586.4,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 153.0,
+      "y": 585.4,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343425849",
       "label": "Homocysteine",
-      "x": 230.6,
-      "y": 674.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 221.6,
+      "y": 673.6,
+      "w": 98,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343475657",
-      "label": "Methonine",
-      "x": 60.0,
-      "y": 674.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "label": "Methionine",
+      "x": 58.0,
+      "y": 673.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343479498",
       "label": "SAMe",
-      "x": 60.0,
-      "y": 764.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 58.0,
+      "y": 763.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343483210",
       "label": "SAH",
-      "x": 230.6,
-      "y": 764.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 228.6,
+      "y": 763.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343488082",
       "label": "Cystathionine",
-      "x": 453.0,
-      "y": 674.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 441.0,
+      "y": 673.6,
+      "w": 104,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343805884",
       "label": "Serine",
-      "x": 344.0,
-      "y": 737.3,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 342.0,
+      "y": 736.3,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343824419",
       "label": "3PS",
-      "x": 344.0,
-      "y": 818.5,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 342.0,
+      "y": 817.5,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343828687",
       "label": "3PHP",
-      "x": 344.0,
-      "y": 897.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 342.0,
+      "y": 896.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343940098",
       "label": "Succinate",
-      "x": 782.1,
-      "y": 636.8,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 780.1,
+      "y": 635.8,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343943760",
       "label": "Succinyl-CoA",
-      "x": 940.0,
-      "y": 636.8,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 931.0,
+      "y": 635.8,
+      "w": 98,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343947690",
       "label": "Fumarate",
-      "x": 716.5,
-      "y": 715.9,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 714.5,
+      "y": 714.9,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343951233",
       "label": "α-Ketoglutarate",
-      "x": 1026.0,
-      "y": 715.9,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1007.0,
+      "y": 714.9,
+      "w": 118,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343955025",
       "label": "L-malate",
-      "x": 716.5,
-      "y": 833.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 714.5,
+      "y": 832.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343958711",
       "label": "Isocitrate",
-      "x": 1026.0,
-      "y": 833.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1024.0,
+      "y": 832.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786343963016",
       "label": "Oxaloacetate",
-      "x": 797.3,
-      "y": 935.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 788.3,
+      "y": 934.6,
+      "w": 98,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343969513",
       "label": "Citrate",
-      "x": 955.2,
-      "y": 935.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 953.2,
+      "y": 934.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786343973825",
       "label": "Aspartate",
-      "x": 585.0,
-      "y": 936.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 583.0,
+      "y": 935.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786344292172",
       "label": "2H2O2",
-      "x": 912.6,
-      "y": 274.1,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 910.6,
+      "y": 273.1,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#faf5ff",
+      "strokeColor": "#a855f7",
+      "textColor": "#581c87"
     },
     {
       "id": "node_1786344296084",
       "label": "2H2O, O2",
-      "x": 1023.4,
-      "y": 274.1,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1021.4,
+      "y": 273.1,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#faf5ff",
+      "strokeColor": "#a855f7",
+      "textColor": "#581c87"
     },
     {
       "id": "node_1786344306068",
       "label": "NADP",
-      "x": 938.3,
-      "y": 503.8,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 936.3,
+      "y": 502.8,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#faf5ff",
+      "strokeColor": "#a855f7",
+      "textColor": "#581c87"
     },
     {
       "id": "node_1786344310253",
       "label": "NADPH",
-      "x": 1031.9,
-      "y": 503.3,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1029.9,
+      "y": 502.3,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#faf5ff",
+      "strokeColor": "#a855f7",
+      "textColor": "#581c87"
     },
     {
       "id": "node_1786344371402",
       "label": "gsh",
-      "x": 799.2,
-      "y": 247.4,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 797.2,
+      "y": 246.4,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "gssg",
+      "fillColor": "#ecfdf5",
+      "strokeColor": "#10b981",
+      "textColor": "#065f46"
     },
     {
       "id": "node_1786344380925",
       "label": "gsh",
-      "x": 801.4,
-      "y": 81.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 799.4,
+      "y": 80.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "gssg",
+      "fillColor": "#ecfdf5",
+      "strokeColor": "#10b981",
+      "textColor": "#065f46"
     },
     {
       "id": "node_1786344465484",
       "label": "Acetate",
-      "x": 1251.0,
-      "y": 715.9,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1249.0,
+      "y": 714.9,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344476268",
       "label": "Acetyl-CoA",
-      "x": 1251.0,
-      "y": 833.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1249.0,
+      "y": 832.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786344482445",
       "label": "Pyruvate",
-      "x": 1399.8,
-      "y": 833.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1397.8,
+      "y": 832.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786344486539",
       "label": "Acetaldehyde",
-      "x": 1399.8,
-      "y": 715.9,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1390.8,
+      "y": 714.9,
+      "w": 98,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344490523",
       "label": "Ethanol",
-      "x": 1399.8,
-      "y": 611.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1397.8,
+      "y": 610.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344499435",
       "label": "PEP",
-      "x": 1550.8,
-      "y": 833.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1548.8,
+      "y": 832.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344503883",
       "label": "2-PG",
-      "x": 1699.8,
-      "y": 833.7,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1697.8,
+      "y": 832.7,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344508499",
       "label": "3-PG",
-      "x": 1699.8,
-      "y": 715.9,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1697.8,
+      "y": 714.9,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344513292",
-      "label": "1,3- DPG",
-      "x": 1699.8,
-      "y": 611.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "label": "1,3-DPG",
+      "x": 1697.8,
+      "y": 610.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344517931",
       "label": "GA3P",
-      "x": 1699.8,
-      "y": 503.3,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1697.8,
+      "y": 502.3,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344525331",
       "label": "DHAP",
-      "x": 1550.8,
-      "y": 503.3,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1548.8,
+      "y": 502.3,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344530348",
-      "label": "Glycerol\t-3-P",
-      "x": 1399.8,
-      "y": 503.3,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "label": "Glycerol-3-P",
+      "x": 1390.8,
+      "y": 502.3,
+      "w": 98,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344535115",
       "label": "Glycerol",
-      "x": 1399.8,
-      "y": 378.4,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1397.8,
+      "y": 377.4,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344541067",
       "label": "F1,6P",
-      "x": 1619.9,
-      "y": 418.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1617.9,
+      "y": 417.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344547988",
       "label": "F6P",
-      "x": 1619.9,
-      "y": 325.5,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1617.9,
+      "y": 324.5,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344552940",
       "label": "G6P",
-      "x": 1619.9,
-      "y": 222.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1617.9,
+      "y": 221.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344558603",
       "label": "Glucose",
-      "x": 1621.1,
-      "y": 140.2,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1619.1,
+      "y": 139.2,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     },
     {
       "id": "node_1786344565923",
       "label": "6-PG",
-      "x": 1445.9,
-      "y": 222.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1443.9,
+      "y": 221.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344572771",
       "label": "Ru5P",
-      "x": 1270.6,
-      "y": 222.6,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1268.6,
+      "y": 221.6,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#ffffff",
+      "strokeColor": "#94a3b8",
+      "textColor": "#1e293b"
     },
     {
       "id": "node_1786344810871",
       "label": "Glucose",
-      "x": 1621.1,
-      "y": 50.0,
-      "w": 80,
-      "h": 24,
-      "rx": 12,
-      "type": "standard"
+      "x": 1619.1,
+      "y": 49.0,
+      "w": 84,
+      "h": 26,
+      "rx": 13,
+      "type": "standard",
+      "fillColor": "#f8fafc",
+      "strokeColor": "#64748b",
+      "textColor": "#0f172a"
     }
   ],
   "arrows": [
@@ -611,1407 +791,2671 @@
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 657.0,
+        "x": 659.0,
         "y": 405.2
       },
       "toCoords": {
-        "x": 729.0,
+        "x": 700.0,
         "y": 405.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 659,
+        "startY": 405.2,
+        "endX": 717,
+        "endY": 405.2,
+        "cx": 688,
+        "cy": 405.2,
+        "midX": 688,
+        "midY": 405.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786343079635",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 817.0,
+        "x": 846.0,
         "y": 406.2
       },
       "toCoords": {
-        "x": 893.0,
+        "x": 889.0,
         "y": 406.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 819,
+        "startY": 406.2,
+        "endX": 881,
+        "endY": 406.2,
+        "cx": 850,
+        "cy": 406.2,
+        "midX": 850,
+        "midY": 406.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786343114432",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 934.0,
-        "y": 423.2
+        "x": 934,
+        "y": 425.2
       },
       "toCoords": {
-        "x": 821.0,
-        "y": 505.2
+        "x": 844.0,
+        "y": 504.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 932.3812898208679,
+        "startY": 424.37463924503396,
+        "endX": 830.712261074793,
+        "endY": 498.15216452979627,
+        "cx": 881.5467754478304,
+        "cy": 461.2634018874151,
+        "midX": 881.5467754478304,
+        "midY": 461.2634018874151,
+        "ux": -0.8093550895660787,
+        "uy": 0.5873196225169774,
+        "nx": -0.5873196225169774,
+        "ny": -0.8093550895660787
+      }
     },
     {
       "id": "arrow_1786343117382",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 730.0,
-        "y": 502.2
+        "x": 707.0,
+        "y": 501.2
       },
       "toCoords": {
-        "x": 628.0,
+        "x": 628,
         "y": 426.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 728.3962343447732,
+        "startY": 501.005037354929,
+        "endX": 637.6225939313608,
+        "endY": 433.36977587042566,
+        "cx": 683.0094141380671,
+        "cy": 467.18740661267736,
+        "midX": 683.0094141380671,
+        "midY": 467.18740661267736,
+        "ux": -0.8018828276133995,
+        "uy": -0.597481322535474,
+        "nx": 0.597481322535474,
+        "ny": -0.8018828276133995
+      }
     },
     {
       "id": "arrow_1786343149828",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 951.0,
-        "y": 388.2
+        "x": 951,
+        "y": 386.2
       },
       "toCoords": {
-        "x": 1011.0,
+        "x": 1011,
         "y": 345.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 952.6256342551479,
+        "startY": 387.03496211714395,
+        "endX": 1001.2461944691124,
+        "endY": 352.1902272971361,
+        "cx": 976.9359143621302,
+        "cy": 369.61259470714003,
+        "midX": 976.9359143621302,
+        "midY": 369.61259470714003,
+        "ux": 0.8128171275739655,
+        "uy": -0.5825189414280086,
+        "nx": 0.5825189414280086,
+        "ny": 0.8128171275739655
+      }
     },
     {
       "id": "arrow_1786343151662",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1009.0,
+        "x": 1009,
         "y": 345.2
       },
       "toCoords": {
-        "x": 1075.0,
-        "y": 392.2
+        "x": 1075,
+        "y": 390.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1010.6291330940819,
+        "startY": 346.3601402336644,
+        "endX": 1065.2252014355083,
+        "endY": 385.23915859801343,
+        "cx": 1037.9271672647951,
+        "cy": 365.7996494158389,
+        "midX": 1037.9271672647951,
+        "midY": 365.7996494158389,
+        "ux": 0.8145665470409791,
+        "uy": 0.5800701168322124,
+        "nx": -0.5800701168322124,
+        "ny": 0.8145665470409791
+      }
     },
     {
       "id": "arrow_1786343155141",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1075.0,
-        "y": 422.2
+        "x": 1075,
+        "y": 424.2
       },
       "toCoords": {
-        "x": 1010.0,
+        "x": 1010,
         "y": 474.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1073.4382623811139,
+        "startY": 423.4493900951088,
+        "endX": 1019.3704257133163,
+        "endY": 466.7036594293469,
+        "cx": 1046.404344047215,
+        "cy": 445.07652476222785,
+        "midX": 1046.404344047215,
+        "midY": 445.07652476222785,
+        "ux": -0.7808688094430304,
+        "uy": 0.6246950475544243,
+        "nx": -0.6246950475544243,
+        "ny": -0.7808688094430304
+      }
     },
     {
       "id": "arrow_1786343156800",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1007.0,
+        "x": 1007,
         "y": 464.2
       },
       "toCoords": {
-        "x": 944.0,
-        "y": 422.2
+        "x": 944,
+        "y": 424.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1005.3358994113244,
+        "startY": 463.0905996075495,
+        "endX": 953.9846035320542,
+        "endY": 428.85640235470277,
+        "cx": 979.6602514716892,
+        "cy": 445.9735009811261,
+        "midX": 979.6602514716892,
+        "midY": 445.9735009811261,
+        "ux": -0.8320502943378436,
+        "uy": -0.5547001962252291,
+        "nx": 0.5547001962252291,
+        "ny": -0.8320502943378436
+      }
     },
     {
       "id": "arrow_1786343159965",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1051.0,
-        "y": 501.2
+        "x": 1051,
+        "y": 500.2
       },
       "toCoords": {
-        "x": 1012.0,
+        "x": 1012,
         "y": 466.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1049.5115154326106,
+        "startY": 499.86418051644546,
+        "endX": 1020.9309074043359,
+        "endY": 474.21491690132706,
+        "cx": 1035.2212114184733,
+        "cy": 487.0395487088863,
+        "midX": 1035.2212114184733,
+        "midY": 487.0395487088863,
+        "ux": -0.7442422836946572,
+        "uy": -0.6679097417772564,
+        "nx": 0.6679097417772564,
+        "ny": -0.7442422836946572
+      }
     },
     {
       "id": "arrow_1786343161551",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1008.0,
+        "x": 1008,
         "y": 468.2
       },
       "toCoords": {
-        "x": 967.0,
-        "y": 508.2
+        "x": 967,
+        "y": 507.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1006.5684361032456,
+        "startY": 469.59664770415066,
+        "endX": 975.5893833805266,
+        "endY": 499.82011377509605,
+        "cx": 991.078909741886,
+        "cy": 484.70838073962335,
+        "midX": 991.078909741886,
+        "midY": 484.70838073962335,
+        "ux": -0.7157819483772108,
+        "uy": 0.6983238520753277,
+        "nx": -0.6983238520753277,
+        "ny": -0.7157819483772108
+      }
     },
     {
       "id": "arrow_1786343166648",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 960.0,
-        "y": 305.2
+        "x": 960,
+        "y": 306.2
       },
       "toCoords": {
-        "x": 1013.0,
+        "x": 1013,
         "y": 350.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 961.524588158338,
+        "startY": 306.4944616438719,
+        "endX": 1003.852471049972,
+        "endY": 342.43323013676866,
+        "cx": 982.6885296041551,
+        "cy": 324.4638458903203,
+        "midX": 982.6885296041551,
+        "midY": 324.4638458903203,
+        "ux": 0.7622940791690036,
+        "uy": 0.6472308219359464,
+        "nx": -0.6472308219359464,
+        "ny": 0.7622940791690036
+      }
     },
     {
       "id": "arrow_1786343167987",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1008.0,
+        "x": 1008,
         "y": 343.2
       },
       "toCoords": {
-        "x": 1059.0,
-        "y": 296.2
+        "x": 1059,
+        "y": 297.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1009.4707119918576,
+        "startY": 341.84463796828805,
+        "endX": 1050.1757280488544,
+        "endY": 304.3321721902714,
+        "cx": 1029.823220020356,
+        "cy": 323.0884050792797,
+        "midX": 1029.823220020356,
+        "midY": 323.0884050792797,
+        "ux": 0.7353559959288023,
+        "uy": -0.6776810158559551,
+        "nx": 0.6776810158559551,
+        "ny": 0.7353559959288023
+      }
     },
     {
       "id": "arrow_1786343301550",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 865.0,
+        "x": 865,
         "y": 476.2
       },
       "toCoords": {
-        "x": 890.0,
+        "x": 890,
         "y": 531.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 865.8276058886024,
+        "startY": 478.0207329549252,
+        "endX": 885.0343646683858,
+        "endY": 520.2756022704488,
+        "cx": 875.4309852784941,
+        "cy": 499.14816761268696,
+        "midX": 875.4309852784941,
+        "midY": 499.14816761268696,
+        "ux": 0.41380294430118364,
+        "uy": 0.9103664774626049,
+        "nx": -0.9103664774626049,
+        "ny": 0.41380294430118364
+      }
     },
     {
       "id": "arrow_1786343305381",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 666.0,
+        "x": 666,
         "y": 456.2
       },
       "toCoords": {
-        "x": 629.0,
-        "y": 471.2
+        "x": 629,
+        "y": 470.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 664.1465214635532,
+        "startY": 456.95141021747844,
+        "endX": 640.1208712186808,
+        "endY": 466.6915386951294,
+        "cx": 652.133696341117,
+        "cy": 461.8214744563039,
+        "midX": 652.133696341117,
+        "midY": 461.8214744563039,
+        "ux": -0.9267392682234049,
+        "uy": 0.3757051087392182,
+        "nx": -0.3757051087392182,
+        "ny": -0.9267392682234049
+      }
     },
     {
       "id": "arrow_1786343536822",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 353.0,
-        "y": 214.2
+        "x": 353,
+        "y": 215.2
       },
       "toCoords": {
-        "x": 353.0,
-        "y": 268.2
+        "x": 353,
+        "y": 267.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 353,
+        "startY": 216.2,
+        "endX": 353,
+        "endY": 256.2,
+        "cx": 353,
+        "cy": 236.2,
+        "midX": 353,
+        "midY": 236.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343538639",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 353.0,
-        "y": 300.2
+        "x": 353,
+        "y": 301.2
       },
       "toCoords": {
-        "x": 353.0,
-        "y": 371.2
+        "x": 353,
+        "y": 370.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 353,
+        "startY": 302.2,
+        "endX": 353,
+        "endY": 359.2,
+        "cx": 353,
+        "cy": 330.7,
+        "midX": 353,
+        "midY": 330.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343540275",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 354.0,
-        "y": 407.2
+        "x": 354,
+        "y": 408.2
       },
       "toCoords": {
-        "x": 354.0,
-        "y": 479.2
+        "x": 354,
+        "y": 478.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 354,
+        "startY": 409.2,
+        "endX": 354,
+        "endY": 467.2,
+        "cx": 354,
+        "cy": 438.2,
+        "midX": 354,
+        "midY": 438.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343542039",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 354.0,
-        "y": 514.2
+        "x": 354,
+        "y": 515.2
       },
       "toCoords": {
-        "x": 354.0,
-        "y": 582.2
+        "x": 354,
+        "y": 581.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 354,
+        "startY": 516.2,
+        "endX": 354,
+        "endY": 570.2,
+        "cx": 354,
+        "cy": 543.2,
+        "midX": 354,
+        "midY": 543.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343544233",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 194.0,
-        "y": 214.2
+        "x": 194,
+        "y": 215.2
       },
       "toCoords": {
-        "x": 194.0,
-        "y": 268.2
+        "x": 194,
+        "y": 267.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 194,
+        "startY": 216.2,
+        "endX": 194,
+        "endY": 256.2,
+        "cx": 194,
+        "cy": 236.2,
+        "midX": 194,
+        "midY": 236.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343546025",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 196.0,
-        "y": 303.2
+        "x": 196,
+        "y": 304.2
       },
       "toCoords": {
-        "x": 196.0,
-        "y": 369.2
+        "x": 196,
+        "y": 368.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 196,
+        "startY": 305.2,
+        "endX": 196,
+        "endY": 357.2,
+        "cx": 196,
+        "cy": 331.2,
+        "midX": 196,
+        "midY": 331.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343547866",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 196.0,
-        "y": 404.2
+        "x": 196,
+        "y": 405.2
       },
       "toCoords": {
-        "x": 196.0,
-        "y": 478.2
+        "x": 196,
+        "y": 477.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 196,
+        "startY": 406.2,
+        "endX": 196,
+        "endY": 466.2,
+        "cx": 196,
+        "cy": 436.2,
+        "midX": 196,
+        "midY": 436.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343549659",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 195.0,
-        "y": 514.2
+        "x": 195,
+        "y": 515.2
       },
       "toCoords": {
-        "x": 195.0,
+        "x": 195,
         "y": 577.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 195,
+        "startY": 516.2,
+        "endX": 195,
+        "endY": 565.2,
+        "cx": 195,
+        "cy": 540.7,
+        "midX": 195,
+        "midY": 540.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343553637",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 204.0,
-        "y": 612.2
+        "x": 204,
+        "y": 613.2
       },
       "toCoords": {
-        "x": 269.0,
-        "y": 671.2
+        "x": 269,
+        "y": 670.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 205.48091062816306,
+        "startY": 613.5442111855634,
+        "endX": 260.1145362310217,
+        "endY": 663.1347328866198,
+        "cx": 232.7977234295924,
+        "cy": 638.3394720360916,
+        "midX": 232.7977234295924,
+        "midY": 638.3394720360916,
+        "ux": 0.7404553140815252,
+        "uy": 0.6721055927816921,
+        "nx": -0.6721055927816921,
+        "ny": 0.7404553140815252
+      }
     },
     {
       "id": "arrow_1786343556726",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 345.0,
-        "y": 613.2
+        "x": 345,
+        "y": 614.2
       },
       "toCoords": {
-        "x": 277.0,
-        "y": 674.2
+        "x": 277,
+        "y": 673.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 343.5112364136044,
+        "startY": 614.5355085113255,
+        "endX": 285.9325815183733,
+        "endY": 666.1869489320475,
+        "cx": 314.72190896598886,
+        "cy": 640.3612287216865,
+        "midX": 314.72190896598886,
+        "midY": 640.3612287216865,
+        "ux": -0.744381793197777,
+        "uy": 0.6677542556627116,
+        "nx": -0.6677542556627116,
+        "ny": -0.744381793197777
+      }
     },
     {
       "id": "arrow_1786343622836",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 233.0,
+        "x": 224.0,
         "y": 688.2
       },
       "toCoords": {
-        "x": 145.0,
+        "x": 147.0,
         "y": 688.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 231,
+        "startY": 688.2,
+        "endX": 157,
+        "endY": 688.2,
+        "cx": 194,
+        "cy": 688.2,
+        "midX": 194,
+        "midY": 688.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786343627907",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 98.0,
-        "y": 694.2
+        "x": 98,
+        "y": 695.2
       },
       "toCoords": {
-        "x": 98.0,
-        "y": 761.2
+        "x": 98,
+        "y": 760.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 98,
+        "startY": 696.2,
+        "endX": 98,
+        "endY": 749.2,
+        "cx": 98,
+        "cy": 722.7,
+        "midX": 98,
+        "midY": 722.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343630524",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 136.0,
+        "x": 138.0,
         "y": 775.2
       },
       "toCoords": {
-        "x": 227.0,
+        "x": 225.0,
         "y": 775.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 138,
+        "startY": 775.2,
+        "endX": 215,
+        "endY": 775.2,
+        "cx": 176.5,
+        "cy": 775.2,
+        "midX": 176.5,
+        "midY": 775.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786343633037",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 275.0,
-        "y": 767.2
+        "x": 275,
+        "y": 766.2
       },
       "toCoords": {
-        "x": 275.0,
-        "y": 697.2
+        "x": 275,
+        "y": 698.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 275,
+        "startY": 765.2,
+        "endX": 275,
+        "endY": 709.2,
+        "cx": 275,
+        "cy": 737.2,
+        "midX": 275,
+        "midY": 737.2,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343662767",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 448.0,
-        "y": 681.2
+        "x": 436.0,
+        "y": 680.2
       },
       "toCoords": {
-        "x": 309.0,
-        "y": 681.2
+        "x": 318.0,
+        "y": 680.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 446,
+        "startY": 681.2,
+        "endX": 321,
+        "endY": 681.2,
+        "cx": 383.5,
+        "cy": 681.2,
+        "midX": 383.5,
+        "midY": 681.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786343664449",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 309.0,
-        "y": 693.2
+        "x": 318.0,
+        "y": 694.2
       },
       "toCoords": {
-        "x": 446.0,
-        "y": 693.2
+        "x": 434.0,
+        "y": 694.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 311,
+        "startY": 693.2,
+        "endX": 434,
+        "endY": 693.2,
+        "cx": 372.5,
+        "cy": 693.2,
+        "midX": 372.5,
+        "midY": 693.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786343725987",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 498.0,
-        "y": 668.2
+        "x": 498,
+        "y": 667.2
       },
       "toCoords": {
-        "x": 498.0,
+        "x": 498,
         "y": 409.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 498,
+        "startY": 666.2,
+        "endX": 498,
+        "endY": 421.2,
+        "cx": 498,
+        "cy": 543.7,
+        "midX": 498,
+        "midY": 543.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343728525",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 494.0,
+        "x": 494,
         "y": 411.2
       },
       "toCoords": {
-        "x": 573.0,
-        "y": 411.2
+        "x": 571.0,
+        "y": 412.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 496,
+        "startY": 411.2,
+        "endX": 561,
+        "endY": 411.2,
+        "cx": 528.5,
+        "cy": 411.2,
+        "midX": 528.5,
+        "midY": 411.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786343731045",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 566.0,
+        "x": 566,
         "y": 397.2
       },
       "toCoords": {
-        "x": 476.0,
+        "x": 476,
         "y": 397.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 564,
+        "startY": 397.2,
+        "endX": 488,
+        "endY": 397.2,
+        "cx": 526,
+        "cy": 397.2,
+        "midX": 526,
+        "midY": 397.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786343732719",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 477.0,
+        "x": 477,
         "y": 400.2
       },
       "toCoords": {
-        "x": 477.0,
-        "y": 668.2
+        "x": 477,
+        "y": 667.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 477,
+        "startY": 402.2,
+        "endX": 477,
+        "endY": 656.2,
+        "cx": 477,
+        "cy": 529.2,
+        "midX": 477,
+        "midY": 529.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343854886",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 426.0,
+        "x": 428.0,
         "y": 750.2
       },
       "toCoords": {
-        "x": 617.0,
+        "x": 617,
         "y": 750.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 428,
+        "startY": 750.2,
+        "endX": 605,
+        "endY": 750.2,
+        "cx": 516.5,
+        "cy": 750.2,
+        "midX": 516.5,
+        "midY": 750.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786343858172",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 607.0,
+        "x": 607,
         "y": 751.2
       },
       "toCoords": {
-        "x": 607.0,
-        "y": 499.2
+        "x": 607,
+        "y": 500.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 607,
+        "startY": 749.2,
+        "endX": 607,
+        "endY": 511.2,
+        "cx": 607,
+        "cy": 630.2,
+        "midX": 607,
+        "midY": 630.2,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343886485",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 369.0,
+        "x": 369,
         "y": 748.2
       },
       "toCoords": {
-        "x": 369.0,
+        "x": 369,
         "y": 685.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 369,
+        "startY": 746.2,
+        "endX": 369,
+        "endY": 697.2,
+        "cx": 369,
+        "cy": 721.7,
+        "midX": 369,
+        "midY": 721.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343902131",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 384.0,
-        "y": 824.2
+        "x": 384,
+        "y": 823.2
       },
       "toCoords": {
-        "x": 384.0,
-        "y": 762.2
+        "x": 384,
+        "y": 763.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 384,
+        "startY": 822.2,
+        "endX": 384,
+        "endY": 774.2,
+        "cx": 384,
+        "cy": 798.2,
+        "midX": 384,
+        "midY": 798.2,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786343904237",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 384.0,
-        "y": 902.2
+        "x": 384,
+        "y": 901.2
       },
       "toCoords": {
-        "x": 384.0,
-        "y": 839.2
+        "x": 384,
+        "y": 840.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 384,
+        "startY": 900.2,
+        "endX": 384,
+        "endY": 851.2,
+        "cx": 384,
+        "cy": 875.7,
+        "midX": 384,
+        "midY": 875.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344036800",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1069.0,
-        "y": 716.2
+        "x": 1069,
+        "y": 715.2
       },
       "toCoords": {
-        "x": 1015.0,
-        "y": 663.2
+        "x": 1024.0,
+        "y": 664.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1067.572631823017,
+        "startY": 714.7990645670352,
+        "endX": 1023.5642090618979,
+        "endY": 671.6056125977888,
+        "cx": 1045.5684204424574,
+        "cy": 693.202338582412,
+        "midX": 1045.5684204424574,
+        "midY": 693.202338582412,
+        "ux": -0.7136840884914969,
+        "uy": -0.7004677164823951,
+        "nx": 0.7004677164823951,
+        "ny": -0.7136840884914969
+      }
     },
     {
       "id": "arrow_1786344039784",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1069.0,
-        "y": 835.2
+        "x": 1069,
+        "y": 834.2
       },
       "toCoords": {
-        "x": 1069.0,
-        "y": 742.2
+        "x": 1069,
+        "y": 743.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1069,
+        "startY": 833.2,
+        "endX": 1069,
+        "endY": 754.2,
+        "cx": 1069,
+        "cy": 793.7,
+        "midX": 1069,
+        "midY": 793.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344044919",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 993.0,
-        "y": 935.2
+        "x": 993,
+        "y": 934.2
       },
       "toCoords": {
-        "x": 1059.0,
-        "y": 859.2
+        "x": 1059,
+        "y": 860.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 994.3113733108925,
+        "startY": 933.6899337632148,
+        "endX": 1051.131760134645,
+        "endY": 868.2603974207118,
+        "cx": 1022.7215667227688,
+        "cy": 900.9751655919633,
+        "midX": 1022.7215667227688,
+        "midY": 900.9751655919633,
+        "ux": 0.655686655446243,
+        "uy": -0.7550331183926435,
+        "nx": 0.7550331183926435,
+        "ny": 0.655686655446243
+      }
     },
     {
       "id": "arrow_1786344049173",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 875.2,
+        "x": 884.2,
         "y": 946.6
       },
       "toCoords": {
-        "x": 955.2,
+        "x": 953.2,
         "y": 946.6
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 877.2,
+        "startY": 946.6,
+        "endX": 943.2,
+        "endY": 946.6,
+        "cx": 910.2,
+        "cy": 946.6,
+        "midX": 910.2,
+        "midY": 946.6,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344056274",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 771.0,
-        "y": 860.2
+        "x": 771,
+        "y": 861.2
       },
       "toCoords": {
-        "x": 827.0,
-        "y": 940.2
+        "x": 827,
+        "y": 939.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 772.1469246887267,
+        "startY": 861.8384638410381,
+        "endX": 820.11845186764,
+        "endY": 930.3692169537716,
+        "cx": 796.1326882781834,
+        "cy": 896.1038403974048,
+        "midX": 796.1326882781834,
+        "midY": 896.1038403974048,
+        "ux": 0.5734623443633283,
+        "uy": 0.8192319205190405,
+        "nx": -0.8192319205190405,
+        "ny": 0.5734623443633283
+      }
     },
     {
       "id": "arrow_1786344059185",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 815.0,
-        "y": 940.2
+        "x": 815,
+        "y": 939.2
       },
       "toCoords": {
-        "x": 757.0,
-        "y": 861.2
+        "x": 757,
+        "y": 862.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 813.8163881497835,
+        "startY": 938.5878390316017,
+        "endX": 764.101671101299,
+        "endY": 870.87296581039,
+        "cx": 788.9590296255412,
+        "cy": 904.7304024209959,
+        "midX": 788.9590296255412,
+        "midY": 904.7304024209959,
+        "ux": -0.5918059251082509,
+        "uy": -0.8060804841991693,
+        "nx": 0.8060804841991693,
+        "ny": -0.5918059251082509
+      }
     },
     {
       "id": "arrow_1786344063322",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 749.0,
-        "y": 832.2
+        "x": 749,
+        "y": 831.2
       },
       "toCoords": {
-        "x": 749.0,
-        "y": 739.2
+        "x": 749,
+        "y": 740.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 749,
+        "startY": 830.2,
+        "endX": 749,
+        "endY": 751.2,
+        "cx": 749,
+        "cy": 790.7,
+        "midX": 749,
+        "midY": 790.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344065074",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 759.0,
-        "y": 736.2
+        "x": 759,
+        "y": 737.2
       },
       "toCoords": {
-        "x": 759.0,
-        "y": 830.2
+        "x": 759,
+        "y": 829.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 759,
+        "startY": 738.2,
+        "endX": 759,
+        "endY": 818.2,
+        "cx": 759,
+        "cy": 778.2,
+        "midX": 759,
+        "midY": 778.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344068624",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 820.0,
-        "y": 659.2
+        "x": 820,
+        "y": 660.2
       },
       "toCoords": {
-        "x": 751.0,
-        "y": 717.2
+        "x": 751,
+        "y": 716.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 818.4690274584184,
+        "startY": 660.4869044552426,
+        "endX": 760.1858352494897,
+        "endY": 709.4785732685449,
+        "cx": 789.3274313539541,
+        "cy": 684.9827388618937,
+        "midX": 789.3274313539541,
+        "midY": 684.9827388618937,
+        "ux": -0.7654862707908162,
+        "uy": 0.6434522276212657,
+        "nx": -0.6434522276212657,
+        "ny": -0.7654862707908162
+      }
     },
     {
       "id": "arrow_1786344071123",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 761.0,
-        "y": 717.2
+        "x": 761,
+        "y": 716.2
       },
       "toCoords": {
-        "x": 828.0,
-        "y": 662.2
+        "x": 828,
+        "y": 663.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 762.5458565946186,
+        "startY": 715.9310132432236,
+        "endX": 818.7248604322882,
+        "endY": 669.813920540659,
+        "cx": 790.6353585134534,
+        "cy": 692.8724668919413,
+        "midX": 790.6353585134534,
+        "midY": 692.8724668919413,
+        "ux": 0.7729282973093136,
+        "uy": -0.6344933783882424,
+        "nx": 0.6344933783882424,
+        "ny": 0.7729282973093136
+      }
     },
     {
       "id": "arrow_1786344075686",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 863.0,
+        "x": 865.0,
         "y": 650.2
       },
       "toCoords": {
-        "x": 942.0,
+        "x": 933.0,
         "y": 650.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 865,
+        "startY": 650.2,
+        "endX": 930,
+        "endY": 650.2,
+        "cx": 897.5,
+        "cy": 650.2,
+        "midX": 897.5,
+        "midY": 650.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344078231",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 944.0,
-        "y": 641.2
+        "x": 935.0,
+        "y": 640.2
       },
       "toCoords": {
-        "x": 861.0,
-        "y": 641.2
+        "x": 863.0,
+        "y": 640.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 942,
+        "startY": 641.2,
+        "endX": 873,
+        "endY": 641.2,
+        "cx": 907.5,
+        "cy": 641.2,
+        "midX": 907.5,
+        "midY": 641.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344117813",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 663.0,
+        "x": 665.0,
         "y": 947.2
       },
       "toCoords": {
-        "x": 789.0,
+        "x": 780.0,
         "y": 947.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 665,
+        "startY": 947.2,
+        "endX": 777,
+        "endY": 947.2,
+        "cx": 721,
+        "cy": 947.2,
+        "midX": 721,
+        "midY": 947.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344259968",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1105.0,
-        "y": 716.2
+        "x": 1124.0,
+        "y": 715.2
       },
       "toCoords": {
-        "x": 1147.0,
+        "x": 1147,
         "y": 671.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1106.36463650072,
+        "startY": 714.7378894635143,
+        "endX": 1138.81218099568,
+        "endY": 679.9726632189145,
+        "cx": 1122.5884087482,
+        "cy": 697.3552763412144,
+        "midX": 1122.5884087482,
+        "midY": 697.3552763412144,
+        "ux": 0.682318250360011,
+        "uy": -0.731055268242869,
+        "nx": 0.731055268242869,
+        "ny": 0.682318250360011
+      }
     },
     {
       "id": "arrow_1786344262940",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1138.0,
+        "x": 1138,
         "y": 682.2
       },
       "toCoords": {
-        "x": 914.0,
-        "y": 540.2
+        "x": 916.0,
+        "y": 541.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1136.3108164944113,
+        "startY": 681.1291783134214,
+        "endX": 924.1351010335324,
+        "endY": 546.6249301194715,
+        "cx": 1030.2229587639717,
+        "cy": 613.8770542164465,
+        "midX": 1030.2229587639717,
+        "midY": 613.8770542164465,
+        "ux": -0.8445917527943646,
+        "uy": -0.5354108432892847,
+        "nx": 0.5354108432892847,
+        "ny": -0.8445917527943646
+      }
     },
     {
       "id": "arrow_1786344387832",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 821.0,
-        "y": 242.2
+        "x": 821,
+        "y": 241.2
       },
       "toCoords": {
-        "x": 821.0,
-        "y": 100.2
+        "x": 821,
+        "y": 101.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 821,
+        "startY": 240.2,
+        "endX": 821,
+        "endY": 112.2,
+        "cx": 821,
+        "cy": 176.2,
+        "midX": 821,
+        "midY": 176.2,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344389455",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 858.0,
-        "y": 108.2
+        "x": 858,
+        "y": 109.2
       },
       "toCoords": {
-        "x": 858.0,
-        "y": 243.2
+        "x": 858,
+        "y": 242.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 858,
+        "startY": 110.2,
+        "endX": 858,
+        "endY": 231.2,
+        "cx": 858,
+        "cy": 170.7,
+        "midX": 858,
+        "midY": 170.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344639387",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1291.0,
-        "y": 733.2
+        "x": 1291,
+        "y": 734.2
       },
       "toCoords": {
-        "x": 1291.0,
-        "y": 831.2
+        "x": 1291,
+        "y": 830.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1291,
+        "startY": 735.2,
+        "endX": 1291,
+        "endY": 819.2,
+        "cx": 1291,
+        "cy": 777.2,
+        "midX": 1291,
+        "midY": 777.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344643875",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1404.0,
+        "x": 1402.0,
         "y": 845.2
       },
       "toCoords": {
-        "x": 1332.0,
+        "x": 1334.0,
         "y": 845.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1402,
+        "startY": 845.2,
+        "endX": 1344,
+        "endY": 845.2,
+        "cx": 1373,
+        "cy": 845.2,
+        "midX": 1373,
+        "midY": 845.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344647315",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1559.0,
+        "x": 1557.0,
         "y": 843.2
       },
       "toCoords": {
-        "x": 1482.0,
+        "x": 1484.0,
         "y": 843.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1557,
+        "startY": 843.2,
+        "endX": 1494,
+        "endY": 843.2,
+        "cx": 1525.5,
+        "cy": 843.2,
+        "midX": 1525.5,
+        "midY": 843.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344658586",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1706.0,
+        "x": 1704.0,
         "y": 842.2
       },
       "toCoords": {
-        "x": 1631.0,
+        "x": 1633.0,
         "y": 842.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1704,
+        "startY": 842.2,
+        "endX": 1643,
+        "endY": 842.2,
+        "cx": 1673.5,
+        "cy": 842.2,
+        "midX": 1673.5,
+        "midY": 842.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344662827",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1440.0,
-        "y": 839.2
+        "x": 1440,
+        "y": 838.2
       },
       "toCoords": {
-        "x": 1440.0,
-        "y": 739.2
+        "x": 1440,
+        "y": 740.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1440,
+        "startY": 837.2,
+        "endX": 1440,
+        "endY": 751.2,
+        "cx": 1440,
+        "cy": 794.2,
+        "midX": 1440,
+        "midY": 794.2,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344671577",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1403.0,
-        "y": 732.2
+        "x": 1394.0,
+        "y": 733.2
       },
       "toCoords": {
-        "x": 1328.0,
-        "y": 732.2
+        "x": 1330.0,
+        "y": 733.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1401,
+        "startY": 732.2,
+        "endX": 1340,
+        "endY": 732.2,
+        "cx": 1370.5,
+        "cy": 732.2,
+        "midX": 1370.5,
+        "midY": 732.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344676420",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1323.0,
+        "x": 1325.0,
         "y": 724.2
       },
       "toCoords": {
-        "x": 1400.0,
+        "x": 1391.0,
         "y": 724.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1325,
+        "startY": 724.2,
+        "endX": 1388,
+        "endY": 724.2,
+        "cx": 1356.5,
+        "cy": 724.2,
+        "midX": 1356.5,
+        "midY": 724.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344682028",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1433.0,
-        "y": 721.2
+        "x": 1433,
+        "y": 720.2
       },
       "toCoords": {
-        "x": 1433.0,
-        "y": 635.2
+        "x": 1433,
+        "y": 636.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1433,
+        "startY": 719.2,
+        "endX": 1433,
+        "endY": 647.2,
+        "cx": 1433,
+        "cy": 683.2,
+        "midX": 1433,
+        "midY": 683.2,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344683403",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1444.0,
-        "y": 629.2
+        "x": 1444,
+        "y": 630.2
       },
       "toCoords": {
-        "x": 1444.0,
-        "y": 720.2
+        "x": 1444,
+        "y": 719.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1444,
+        "startY": 631.2,
+        "endX": 1444,
+        "endY": 708.2,
+        "cx": 1444,
+        "cy": 669.7,
+        "midX": 1444,
+        "midY": 669.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344687705",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1739.0,
-        "y": 734.2
+        "x": 1739,
+        "y": 735.2
       },
       "toCoords": {
-        "x": 1739.0,
-        "y": 830.2
+        "x": 1739,
+        "y": 829.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1739,
+        "startY": 736.2,
+        "endX": 1739,
+        "endY": 818.2,
+        "cx": 1739,
+        "cy": 777.2,
+        "midX": 1739,
+        "midY": 777.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344691843",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1738.0,
-        "y": 629.2
+        "x": 1738,
+        "y": 630.2
       },
       "toCoords": {
-        "x": 1738.0,
-        "y": 713.2
+        "x": 1738,
+        "y": 712.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1738,
+        "startY": 631.2,
+        "endX": 1738,
+        "endY": 701.2,
+        "cx": 1738,
+        "cy": 666.2,
+        "midX": 1738,
+        "midY": 666.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344696913",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1737.0,
-        "y": 523.2
+        "x": 1737,
+        "y": 524.2
       },
       "toCoords": {
-        "x": 1737.0,
-        "y": 606.2
+        "x": 1737,
+        "y": 605.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1737,
+        "startY": 525.2,
+        "endX": 1737,
+        "endY": 594.2,
+        "cx": 1737,
+        "cy": 559.7,
+        "midX": 1737,
+        "midY": 559.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344700081",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1627.0,
-        "y": 511.2
+        "x": 1629.0,
+        "y": 510.2
       },
       "toCoords": {
-        "x": 1701.0,
-        "y": 511.2
+        "x": 1699.0,
+        "y": 510.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1629,
+        "startY": 511.2,
+        "endX": 1689,
+        "endY": 511.2,
+        "cx": 1659,
+        "cy": 511.2,
+        "midX": 1659,
+        "midY": 511.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344701267",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1702.0,
-        "y": 520.2
+        "x": 1700.0,
+        "y": 521.2
       },
       "toCoords": {
-        "x": 1624.0,
-        "y": 520.2
+        "x": 1626.0,
+        "y": 521.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1700,
+        "startY": 520.2,
+        "endX": 1636,
+        "endY": 520.2,
+        "cx": 1668,
+        "cy": 520.2,
+        "midX": 1668,
+        "midY": 520.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344704749",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1659.0,
-        "y": 438.2
+        "x": 1659,
+        "y": 439.2
       },
       "toCoords": {
-        "x": 1595.0,
-        "y": 502.2
+        "x": 1595,
+        "y": 501.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1657.585786437627,
+        "startY": 439.6142135623731,
+        "endX": 1603.4852813742386,
+        "endY": 493.7147186257614,
+        "cx": 1630.5355339059329,
+        "cy": 466.6644660940673,
+        "midX": 1630.5355339059329,
+        "midY": 466.6644660940673,
+        "ux": -0.7071067811865475,
+        "uy": 0.7071067811865475,
+        "nx": -0.7071067811865475,
+        "ny": -0.7071067811865475
+      }
     },
     {
       "id": "arrow_1786344706487",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1657.0,
-        "y": 442.2
+        "x": 1657,
+        "y": 443.2
       },
       "toCoords": {
-        "x": 1735.0,
-        "y": 499.2
+        "x": 1735,
+        "y": 498.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1658.6147822445157,
+        "startY": 443.3800331786846,
+        "endX": 1725.3113065329053,
+        "endY": 492.11980092789224,
+        "cx": 1691.9630443887104,
+        "cy": 467.7499170532884,
+        "midX": 1691.9630443887104,
+        "midY": 467.7499170532884,
+        "ux": 0.8073911222578979,
+        "uy": 0.59001658934231,
+        "nx": -0.59001658934231,
+        "ny": 0.8073911222578979
+      }
     },
     {
       "id": "arrow_1786344710979",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1556.0,
-        "y": 511.2
+        "x": 1554.0,
+        "y": 510.2
       },
       "toCoords": {
-        "x": 1474.0,
-        "y": 511.2
+        "x": 1483.0,
+        "y": 510.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1554,
+        "startY": 511.2,
+        "endX": 1486,
+        "endY": 511.2,
+        "cx": 1520,
+        "cy": 511.2,
+        "midX": 1520,
+        "midY": 511.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344712430",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1471.0,
-        "y": 520.2
+        "x": 1480.0,
+        "y": 521.2
       },
       "toCoords": {
-        "x": 1553.0,
-        "y": 520.2
+        "x": 1551.0,
+        "y": 521.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1473,
+        "startY": 520.2,
+        "endX": 1541,
+        "endY": 520.2,
+        "cx": 1507,
+        "cy": 520.2,
+        "midX": 1507,
+        "midY": 520.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344717584",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1434.0,
-        "y": 398.2
+        "x": 1434,
+        "y": 399.2
       },
       "toCoords": {
-        "x": 1434.0,
-        "y": 510.2
+        "x": 1434,
+        "y": 509.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1434,
+        "startY": 400.2,
+        "endX": 1434,
+        "endY": 498.2,
+        "cx": 1434,
+        "cy": 449.2,
+        "midX": 1434,
+        "midY": 449.2,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344718907",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1448.0,
-        "y": 506.2
+        "x": 1448,
+        "y": 505.2
       },
       "toCoords": {
-        "x": 1448.0,
-        "y": 401.2
+        "x": 1448,
+        "y": 402.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1448,
+        "startY": 504.2,
+        "endX": 1448,
+        "endY": 413.2,
+        "cx": 1448,
+        "cy": 458.7,
+        "midX": 1448,
+        "midY": 458.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344722586",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1659.0,
-        "y": 345.2
+        "x": 1659,
+        "y": 346.2
       },
       "toCoords": {
-        "x": 1659.0,
-        "y": 416.2
+        "x": 1659,
+        "y": 415.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1659,
+        "startY": 347.2,
+        "endX": 1659,
+        "endY": 404.2,
+        "cx": 1659,
+        "cy": 375.7,
+        "midX": 1659,
+        "midY": 375.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344723937",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1659.0,
-        "y": 245.2
+        "x": 1659,
+        "y": 246.2
       },
       "toCoords": {
-        "x": 1659.0,
-        "y": 324.2
+        "x": 1659,
+        "y": 323.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1659,
+        "startY": 247.2,
+        "endX": 1659,
+        "endY": 312.2,
+        "cx": 1659,
+        "cy": 279.7,
+        "midX": 1659,
+        "midY": 279.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344725257",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1659.0,
-        "y": 159.2
+        "x": 1659,
+        "y": 160.2
       },
       "toCoords": {
-        "x": 1658.0,
-        "y": 227.2
+        "x": 1658,
+        "y": 226.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1658.9705914151164,
+        "startY": 161.19978377209515,
+        "endX": 1658.1764515093025,
+        "endY": 215.20129736742905,
+        "cx": 1658.5735214622096,
+        "cy": 188.2005405697621,
+        "midX": 1658.5735214622096,
+        "midY": 188.2005405697621,
+        "ux": -0.014704292441876156,
+        "uy": 0.9998918860475786,
+        "nx": -0.9998918860475786,
+        "ny": -0.014704292441876156
+      }
     },
     {
       "id": "arrow_1786344727676",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1659.0,
-        "y": 78.2
+        "x": 1659,
+        "y": 79.2
       },
       "toCoords": {
-        "x": 1659.0,
-        "y": 140.2
+        "x": 1659,
+        "y": 139.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1659,
+        "startY": 80.2,
+        "endX": 1659,
+        "endY": 128.2,
+        "cx": 1659,
+        "cy": 104.19999999999999,
+        "midX": 1659,
+        "midY": 104.19999999999999,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344731405",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1620.0,
+        "x": 1618.0,
         "y": 233.2
       },
       "toCoords": {
-        "x": 1523.0,
+        "x": 1525.0,
         "y": 233.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1618,
+        "startY": 233.2,
+        "endX": 1535,
+        "endY": 233.2,
+        "cx": 1576.5,
+        "cy": 233.2,
+        "midX": 1576.5,
+        "midY": 233.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344732885",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1448.0,
+        "x": 1446.0,
         "y": 232.2
       },
       "toCoords": {
-        "x": 1344.0,
+        "x": 1346.0,
         "y": 232.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1446,
+        "startY": 232.2,
+        "endX": 1356,
+        "endY": 232.2,
+        "cx": 1401,
+        "cy": 232.2,
+        "midX": 1401,
+        "midY": 232.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344747446",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1290.0,
-        "y": 852.2
+        "x": 1290,
+        "y": 853.2
       },
       "toCoords": {
-        "x": 1290.0,
+        "x": 1290,
         "y": 1029.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1290,
+        "startY": 854.2,
+        "endX": 1290,
+        "endY": 1017.2,
+        "cx": 1290,
+        "cy": 935.7,
+        "midX": 1290,
+        "midY": 935.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344750341",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1291.0,
+        "x": 1291,
         "y": 1018.2
       },
       "toCoords": {
-        "x": 891.0,
+        "x": 891,
         "y": 1018.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1289,
+        "startY": 1018.2,
+        "endX": 903,
+        "endY": 1018.2,
+        "cx": 1096,
+        "cy": 1018.2,
+        "midX": 1096,
+        "midY": 1018.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344752173",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 900.0,
+        "x": 900,
         "y": 1016.2
       },
       "toCoords": {
-        "x": 900.0,
+        "x": 900,
         "y": 945.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 900,
+        "startY": 1014.2,
+        "endX": 900,
+        "endY": 957.2,
+        "cx": 900,
+        "cy": 985.7,
+        "midX": 900,
+        "midY": 985.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344757550",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1441.0,
-        "y": 855.2
+        "x": 1441,
+        "y": 856.2
       },
       "toCoords": {
-        "x": 1441.0,
+        "x": 1441,
         "y": 1060.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1441,
+        "startY": 857.2,
+        "endX": 1441,
+        "endY": 1048.2,
+        "cx": 1441,
+        "cy": 952.7,
+        "midX": 1441,
+        "midY": 952.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344760075",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1441.0,
+        "x": 1441,
         "y": 1048.2
       },
       "toCoords": {
-        "x": 830.0,
+        "x": 830,
         "y": 1048.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1439,
+        "startY": 1048.2,
+        "endX": 842,
+        "endY": 1048.2,
+        "cx": 1140.5,
+        "cy": 1048.2,
+        "midX": 1140.5,
+        "midY": 1048.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344761916",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 839.0,
+        "x": 839,
         "y": 1048.2
       },
       "toCoords": {
-        "x": 839.0,
-        "y": 955.2
+        "x": 839,
+        "y": 956.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 839,
+        "startY": 1046.2,
+        "endX": 839,
+        "endY": 967.2,
+        "cx": 839,
+        "cy": 1006.7,
+        "midX": 839,
+        "midY": 1006.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344773622",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1781.0,
+        "x": 1783.0,
         "y": 728.2
       },
       "toCoords": {
-        "x": 1820.0,
+        "x": 1820,
         "y": 728.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1783,
+        "startY": 728.2,
+        "endX": 1808,
+        "endY": 728.2,
+        "cx": 1795.5,
+        "cy": 728.2,
+        "midX": 1795.5,
+        "midY": 728.2,
+        "ux": 1,
+        "uy": 0,
+        "nx": 0,
+        "ny": 1
+      }
     },
     {
       "id": "arrow_1786344776266",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1810.0,
+        "x": 1810,
         "y": 727.2
       },
       "toCoords": {
-        "x": 1810.0,
+        "x": 1810,
         "y": 1090.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1810,
+        "startY": 729.2,
+        "endX": 1810,
+        "endY": 1078.2,
+        "cx": 1810,
+        "cy": 903.7,
+        "midX": 1810,
+        "midY": 903.7,
+        "ux": 0,
+        "uy": 1,
+        "nx": -1,
+        "ny": 0
+      }
     },
     {
       "id": "arrow_1786344790491",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 1809.0,
+        "x": 1809,
         "y": 1077.2
       },
       "toCoords": {
-        "x": 380.0,
+        "x": 380,
         "y": 1077.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 1807,
+        "startY": 1077.2,
+        "endX": 392,
+        "endY": 1077.2,
+        "cx": 1099.5,
+        "cy": 1077.2,
+        "midX": 1099.5,
+        "midY": 1077.2,
+        "ux": -1,
+        "uy": 0,
+        "nx": 0,
+        "ny": -1
+      }
     },
     {
       "id": "arrow_1786344792849",
       "from": null,
       "to": null,
       "fromCoords": {
-        "x": 383.0,
+        "x": 383,
         "y": 1080.2
       },
       "toCoords": {
-        "x": 383.0,
-        "y": 923.2
+        "x": 383,
+        "y": 924.2
       },
       "type": "straight",
-      "direction": "forward"
+      "direction": "forward",
+      "_calculated": {
+        "startX": 383,
+        "startY": 1078.2,
+        "endX": 383,
+        "endY": 935.2,
+        "cx": 383,
+        "cy": 1006.7,
+        "midX": 383,
+        "midY": 1006.7,
+        "ux": 0,
+        "uy": -1,
+        "nx": 1,
+        "ny": 0
+      }
     }
   ],
   "customGenes": [
-    {
-      "id": "gene_1783476395476_594",
-      "symbol": "NPT1",
-      "x": 33.8808,
-      "y": 41.4435,
-      "rep_log2fc": 0,
-      "genes": []
-    },
-    {
-      "id": "gene_1783476403579_203",
-      "symbol": "PRS1",
-      "x": 47.641,
-      "y": 41.2468,
-      "rep_log2fc": 0,
-      "genes": []
-    },
-    {
-      "id": "gene_1783476414798_887",
-      "symbol": "PNC1",
-      "x": 40.482,
-      "y": 29.5635,
-      "rep_log2fc": 0,
-      "genes": []
-    },
     {
       "id": "gene_1786343180769_193",
       "symbol": "GSH1",
@@ -2077,8 +3521,8 @@
     {
       "id": "gene_1786343193773_240",
       "symbol": "DUG2",
-      "x": 49.3733,
-      "y": 42.168,
+      "x": 49.4043,
+      "y": 42.287,
       "rep_log2fc": -1.0831,
       "genes": [
         {
@@ -2108,8 +3552,8 @@
     {
       "id": "gene_1786343197033_121",
       "symbol": "DUG3",
-      "x": 49.4376,
-      "y": 40.8775,
+      "x": 49.4043,
+      "y": 40.7652,
       "rep_log2fc": -0.8554,
       "genes": [
         {
@@ -2201,8 +3645,8 @@
     {
       "id": "gene_1786343210237_13",
       "symbol": "GPX1",
-      "x": 55.8392,
-      "y": 31.001,
+      "x": 55.7287,
+      "y": 31.0,
       "rep_log2fc": -1.4626,
       "genes": [
         {
@@ -2232,8 +3676,8 @@
     {
       "id": "gene_1786343212871_607",
       "symbol": "GPX2",
-      "x": 55.6165,
-      "y": 32.5251,
+      "x": 55.7287,
+      "y": 32.5217,
       "rep_log2fc": -1.1878,
       "genes": [
         {
@@ -2356,8 +3800,8 @@
     {
       "id": "gene_1786343585415_464",
       "symbol": "MET5",
-      "x": 21.0609,
-      "y": 47.698,
+      "x": 20.8883,
+      "y": 47.6,
       "rep_log2fc": -1.8233,
       "genes": [
         {
@@ -2387,8 +3831,8 @@
     {
       "id": "gene_1786343588747_32",
       "symbol": "MET10",
-      "x": 20.7169,
-      "y": 49.0286,
+      "x": 20.8883,
+      "y": 49.1217,
       "rep_log2fc": -1.6387,
       "genes": [
         {
@@ -2604,8 +4048,8 @@
     {
       "id": "gene_1786343642919_744",
       "symbol": "SAM1",
-      "x": 7.2297,
-      "y": 63.4231,
+      "x": 7.2287,
+      "y": 63.4174,
       "rep_log2fc": -0.4403,
       "genes": [
         {
@@ -2635,8 +4079,8 @@
     {
       "id": "gene_1786343645677_727",
       "symbol": "SAM2",
-      "x": 7.2251,
-      "y": 64.9311,
+      "x": 7.2287,
+      "y": 64.9391,
       "rep_log2fc": -0.4756,
       "genes": [
         {
@@ -2883,8 +4327,8 @@
     {
       "id": "gene_1786344125523_138",
       "symbol": "KGD1",
-      "x": 57.9797,
-      "y": 60.9332,
+      "x": 57.8617,
+      "y": 60.8174,
       "rep_log2fc": -2.1031,
       "genes": [
         {
@@ -2914,8 +4358,8 @@
     {
       "id": "gene_1786344132702_970",
       "symbol": "KGD2",
-      "x": 57.7483,
-      "y": 62.2157,
+      "x": 57.8617,
+      "y": 62.3391,
       "rep_log2fc": -2.0677,
       "genes": [
         {
@@ -2945,8 +4389,8 @@
     {
       "id": "gene_1786344137858_292",
       "symbol": "IDH1",
-      "x": 58.6661,
-      "y": 69.4681,
+      "x": 58.7128,
+      "y": 69.5739,
       "rep_log2fc": -1.6264,
       "genes": [
         {
@@ -2976,8 +4420,8 @@
     {
       "id": "gene_1786344141695_846",
       "symbol": "IDH2",
-      "x": 58.757,
-      "y": 71.1945,
+      "x": 58.7128,
+      "y": 71.0957,
       "rep_log2fc": -2.001,
       "genes": [
         {
@@ -3007,8 +4451,8 @@
     {
       "id": "gene_1786344145955_216",
       "symbol": "ACO1",
-      "x": 56.5635,
-      "y": 79.3804,
+      "x": 56.6489,
+      "y": 79.3739,
       "rep_log2fc": -2.7572,
       "genes": [
         {
@@ -3038,8 +4482,8 @@
     {
       "id": "gene_1786344148837_703",
       "symbol": "ACO2",
-      "x": 56.7354,
-      "y": 80.8825,
+      "x": 56.6489,
+      "y": 80.8957,
       "rep_log2fc": -0.4991,
       "genes": [
         {
@@ -3069,8 +4513,8 @@
     {
       "id": "gene_1786344154012_668",
       "symbol": "CIT1",
-      "x": 50.7409,
-      "y": 81.899,
+      "x": 50.6383,
+      "y": 81.7478,
       "rep_log2fc": -2.892,
       "genes": [
         {
@@ -3100,8 +4544,8 @@
     {
       "id": "gene_1786344158259_360",
       "symbol": "CIT2",
-      "x": 50.5303,
-      "y": 83.3381,
+      "x": 50.6383,
+      "y": 83.2696,
       "rep_log2fc": -3.7558,
       "genes": [
         {
@@ -3131,8 +4575,8 @@
     {
       "id": "gene_1786344161196_639",
       "symbol": "CIT3",
-      "x": 50.6506,
-      "y": 84.5808,
+      "x": 50.6383,
+      "y": 84.7913,
       "rep_log2fc": -3.5932,
       "genes": [
         {
@@ -3162,8 +4606,8 @@
     {
       "id": "gene_1786344167359_33",
       "symbol": "MDH1",
-      "x": 43.858,
-      "y": 78.1638,
+      "x": 43.8085,
+      "y": 77.9478,
       "rep_log2fc": -1.994,
       "genes": [
         {
@@ -3193,8 +4637,8 @@
     {
       "id": "gene_1786344170062_774",
       "symbol": "MDH2",
-      "x": 43.7461,
-      "y": 79.4546,
+      "x": 43.8085,
+      "y": 79.4696,
       "rep_log2fc": -4.4784,
       "genes": [
         {
@@ -3224,8 +4668,8 @@
     {
       "id": "gene_1786344172968_218",
       "symbol": "MDH3",
-      "x": 43.8187,
-      "y": 80.7959,
+      "x": 43.8085,
+      "y": 80.9913,
       "rep_log2fc": -1.5101,
       "genes": [
         {
@@ -3317,8 +4761,8 @@
     {
       "id": "gene_1786344189678_26",
       "symbol": "SDH1",
-      "x": 42.4955,
-      "y": 59.5143,
+      "x": 42.4734,
+      "y": 59.4261,
       "rep_log2fc": -3.7032,
       "genes": [
         {
@@ -3348,8 +4792,8 @@
     {
       "id": "gene_1786344193515_402",
       "symbol": "SDH2",
-      "x": 42.4478,
-      "y": 60.8544,
+      "x": 42.4734,
+      "y": 60.9478,
       "rep_log2fc": -2.3544,
       "genes": [
         {
@@ -3410,8 +4854,8 @@
     {
       "id": "gene_1786344202613_225",
       "symbol": "AAT1",
-      "x": 40.6787,
-      "y": 82.6466,
+      "x": 40.6117,
+      "y": 82.713,
       "rep_log2fc": -1.0553,
       "genes": [
         {
@@ -3441,8 +4885,8 @@
     {
       "id": "gene_1786344207376_512",
       "symbol": "AAT2",
-      "x": 40.5432,
-      "y": 84.3,
+      "x": 40.6117,
+      "y": 84.2348,
       "rep_log2fc": -1.3203,
       "genes": [
         {
@@ -3472,8 +4916,8 @@
     {
       "id": "gene_1786344267820_976",
       "symbol": "GDH1",
-      "x": 57.0015,
-      "y": 53.1786,
+      "x": 56.9468,
+      "y": 53.1304,
       "rep_log2fc": -1.3531,
       "genes": [
         {
@@ -3503,8 +4947,8 @@
     {
       "id": "gene_1786344271027_48",
       "symbol": "GDH3",
-      "x": 56.8907,
-      "y": 54.5974,
+      "x": 56.9468,
+      "y": 54.6522,
       "rep_log2fc": -3.2601,
       "genes": [
         {
@@ -3627,8 +5071,8 @@
     {
       "id": "gene_1786344839162_337",
       "symbol": "HXK1",
-      "x": 90.352,
-      "y": 16.7101,
+      "x": 90.3032,
+      "y": 16.6261,
       "rep_log2fc": -3.6923,
       "genes": [
         {
@@ -3658,8 +5102,8 @@
     {
       "id": "gene_1786344848628_511",
       "symbol": "HXK2",
-      "x": 90.2522,
-      "y": 18.0626,
+      "x": 90.3032,
+      "y": 18.1478,
       "rep_log2fc": -0.8597,
       "genes": [
         {
@@ -3720,8 +5164,8 @@
     {
       "id": "gene_1786344865364_930",
       "symbol": "GND1",
-      "x": 77.1474,
-      "y": 20.8025,
+      "x": 77.0957,
+      "y": 20.6435,
       "rep_log2fc": -0.8137,
       "genes": [
         {
@@ -3751,8 +5195,8 @@
     {
       "id": "gene_1786344867917_212",
       "symbol": "GND2",
-      "x": 77.0429,
-      "y": 22.0133,
+      "x": 77.0957,
+      "y": 22.1652,
       "rep_log2fc": -2.3069,
       "genes": [
         {
@@ -3782,8 +5226,8 @@
     {
       "id": "gene_1786344875007_908",
       "symbol": "PFK1",
-      "x": 90.4039,
-      "y": 33.2257,
+      "x": 90.3138,
+      "y": 33.1217,
       "rep_log2fc": -0.9018,
       "genes": [
         {
@@ -3813,8 +5257,8 @@
     {
       "id": "gene_1786344877653_592",
       "symbol": "PFK2",
-      "x": 90.2288,
-      "y": 34.5431,
+      "x": 90.3138,
+      "y": 34.6435,
       "rep_log2fc": -0.8931,
       "genes": [
         {
@@ -3937,8 +5381,8 @@
     {
       "id": "gene_1786344909413_90",
       "symbol": "GPD1",
-      "x": 83.1091,
-      "y": 44.1503,
+      "x": 83.0532,
+      "y": 43.9826,
       "rep_log2fc": 0.0182,
       "genes": [
         {
@@ -3968,8 +5412,8 @@
     {
       "id": "gene_1786344913892_728",
       "symbol": "GPD2",
-      "x": 83.0011,
-      "y": 45.3361,
+      "x": 83.0532,
+      "y": 45.5043,
       "rep_log2fc": -0.1692,
       "genes": [
         {
@@ -4030,8 +5474,8 @@
     {
       "id": "gene_1786344931266_720",
       "symbol": "GPP1",
-      "x": 80.1277,
-      "y": 40.2692,
+      "x": 80.0479,
+      "y": 40.2609,
       "rep_log2fc": 0.0405,
       "genes": [
         {
@@ -4061,8 +5505,8 @@
     {
       "id": "gene_1786344934541_866",
       "symbol": "GPP2",
-      "x": 79.9698,
-      "y": 41.7759,
+      "x": 80.0479,
+      "y": 41.7826,
       "rep_log2fc": -1.573,
       "genes": [
         {
@@ -4216,8 +5660,8 @@
     {
       "id": "gene_1786344978199_351",
       "symbol": "ENO1",
-      "x": 91.1802,
-      "y": 73.8775,
+      "x": 91.2021,
+      "y": 73.7478,
       "rep_log2fc": 0.2479,
       "genes": [
         {
@@ -4247,8 +5691,8 @@
     {
       "id": "gene_1786344981183_379",
       "symbol": "ENO2",
-      "x": 91.2235,
-      "y": 75.1414,
+      "x": 91.2021,
+      "y": 75.2696,
       "rep_log2fc": -0.9064,
       "genes": [
         {
@@ -4278,16 +5722,16 @@
     {
       "id": "gene_1786344989581_792",
       "symbol": "PYK1",
-      "x": 83.1272,
-      "y": 73.9721,
+      "x": 83.1543,
+      "y": 73.9478,
       "rep_log2fc": 0,
       "genes": []
     },
     {
       "id": "gene_1786344993654_218",
       "symbol": "PYK2",
-      "x": 83.1819,
-      "y": 75.4519,
+      "x": 83.1543,
+      "y": 75.4696,
       "rep_log2fc": -1.9704,
       "genes": [
         {
@@ -4318,7 +5762,7 @@
       "id": "gene_1786345000828_688",
       "symbol": "PDA1",
       "x": 75.1489,
-      "y": 74.0241,
+      "y": 74.0087,
       "rep_log2fc": -1.3173,
       "genes": [
         {
@@ -4348,8 +5792,8 @@
     {
       "id": "gene_1786345003855_825",
       "symbol": "PDB1",
-      "x": 75.1494,
-      "y": 75.52,
+      "x": 75.1489,
+      "y": 75.5304,
       "rep_log2fc": -1.334,
       "genes": [
         {
@@ -4379,8 +5823,8 @@
     {
       "id": "gene_1786345014938_186",
       "symbol": "PDC1",
-      "x": 78.8606,
-      "y": 68.6089,
+      "x": 78.8138,
+      "y": 68.3304,
       "rep_log2fc": -1.1355,
       "genes": [
         {
@@ -4410,8 +5854,8 @@
     {
       "id": "gene_1786345018283_743",
       "symbol": "PDC5",
-      "x": 78.8188,
-      "y": 69.8071,
+      "x": 78.8138,
+      "y": 69.8522,
       "rep_log2fc": -1.0737,
       "genes": [
         {
@@ -4441,8 +5885,8 @@
     {
       "id": "gene_1786345022517_466",
       "symbol": "PDC6",
-      "x": 78.7596,
-      "y": 71.143,
+      "x": 78.8138,
+      "y": 71.3739,
       "rep_log2fc": -1.9642,
       "genes": [
         {
@@ -4472,8 +5916,8 @@
     {
       "id": "gene_1786345030966_651",
       "symbol": "ADH1",
-      "x": 77.6093,
-      "y": 58.642,
+      "x": 77.4521,
+      "y": 58.3826,
       "rep_log2fc": -0.249,
       "genes": [
         {
@@ -4503,8 +5947,8 @@
     {
       "id": "gene_1786345033473_824",
       "symbol": "ADH2",
-      "x": 77.3965,
-      "y": 59.8867,
+      "x": 77.4521,
+      "y": 59.9043,
       "rep_log2fc": -1.6443,
       "genes": [
         {
@@ -4534,8 +5978,8 @@
     {
       "id": "gene_1786345035988_570",
       "symbol": "ADH3",
-      "x": 77.3563,
-      "y": 61.1865,
+      "x": 77.4521,
+      "y": 61.4261,
       "rep_log2fc": -1.5156,
       "genes": [
         {
@@ -4565,8 +6009,8 @@
     {
       "id": "gene_1786345039245_15",
       "symbol": "ADH4",
-      "x": 80.5059,
-      "y": 58.4925,
+      "x": 80.7447,
+      "y": 58.2609,
       "rep_log2fc": -1.1212,
       "genes": [
         {
@@ -4596,8 +6040,8 @@
     {
       "id": "gene_1786345041536_486",
       "symbol": "ADH5",
-      "x": 80.396,
-      "y": 59.7974,
+      "x": 80.7447,
+      "y": 59.7826,
       "rep_log2fc": -0.3989,
       "genes": [
         {
@@ -4627,8 +6071,8 @@
     {
       "id": "gene_1786345044066_706",
       "symbol": "ADH6",
-      "x": 80.2047,
-      "y": 61.0642,
+      "x": 80.7447,
+      "y": 61.3043,
       "rep_log2fc": -1.2499,
       "genes": [
         {
@@ -4658,7 +6102,7 @@
     {
       "id": "gene_1786345046568_966",
       "symbol": "ADH7",
-      "x": 82.8078,
+      "x": 83.9362,
       "y": 58.6737,
       "rep_log2fc": -0.75,
       "genes": [
@@ -4689,8 +6133,8 @@
     {
       "id": "gene_1786345056236_964",
       "symbol": "ALD2",
-      "x": 74.9241,
-      "y": 62.206,
+      "x": 74.7766,
+      "y": 61.687,
       "rep_log2fc": -2.41,
       "genes": [
         {
@@ -4720,8 +6164,8 @@
     {
       "id": "gene_1786345061796_396",
       "symbol": "ALD3",
-      "x": 74.8446,
-      "y": 63.5165,
+      "x": 74.7766,
+      "y": 63.2087,
       "rep_log2fc": -2.7305,
       "genes": [
         {
@@ -4751,8 +6195,8 @@
     {
       "id": "gene_1786345067836_892",
       "symbol": "ALD4",
-      "x": 74.7649,
-      "y": 64.7504,
+      "x": 74.7766,
+      "y": 64.7304,
       "rep_log2fc": -4.1021,
       "genes": [
         {
@@ -4782,8 +6226,8 @@
     {
       "id": "gene_1786345072565_1000",
       "symbol": "ALD5",
-      "x": 74.7667,
-      "y": 66.0348,
+      "x": 74.7766,
+      "y": 66.2522,
       "rep_log2fc": -0.3427,
       "genes": [
         {
@@ -4813,8 +6257,8 @@
     {
       "id": "gene_1786345075126_57",
       "symbol": "ALD6",
-      "x": 74.5942,
-      "y": 67.1233,
+      "x": 74.7766,
+      "y": 67.7739,
       "rep_log2fc": 0,
       "genes": [
         {
@@ -4844,8 +6288,8 @@
     {
       "id": "gene_1786345079083_126",
       "symbol": "ACS1",
-      "x": 70.759,
-      "y": 68.1949,
+      "x": 70.6543,
+      "y": 68.087,
       "rep_log2fc": -6.2815,
       "genes": [
         {
@@ -4875,8 +6319,8 @@
     {
       "id": "gene_1786345087123_914",
       "symbol": "ACS2",
-      "x": 70.554,
-      "y": 69.4966,
+      "x": 70.6543,
+      "y": 69.6087,
       "rep_log2fc": -1.5439,
       "genes": [
         {
@@ -4906,8 +6350,8 @@
     {
       "id": "gene_1786345100886_725",
       "symbol": "PYC1",
-      "x": 56.2195,
-      "y": 91.7582,
+      "x": 56.0479,
+      "y": 91.6522,
       "rep_log2fc": -3.2655,
       "genes": [
         {
@@ -4937,8 +6381,8 @@
     {
       "id": "gene_1786345104470_85",
       "symbol": "PYC2",
-      "x": 55.8792,
-      "y": 93.0599,
+      "x": 56.0479,
+      "y": 93.1739,
       "rep_log2fc": -1.407,
       "genes": [
         {
@@ -4968,8 +6412,8 @@
     {
       "id": "gene_1786345115759_749",
       "symbol": "SER3",
-      "x": 49.5623,
-      "y": 94.4573,
+      "x": 49.4043,
+      "y": 94.2609,
       "rep_log2fc": -1.7188,
       "genes": [
         {
@@ -4999,8 +6443,8 @@
     {
       "id": "gene_1786345118190_963",
       "symbol": "SER33",
-      "x": 49.2425,
-      "y": 95.5828,
+      "x": 49.4043,
+      "y": 95.7826,
       "rep_log2fc": -1.0252,
       "genes": [
         {
@@ -5091,18 +6535,6 @@
     }
   ],
   "geneOffsets": {
-    "gene_1783476395476_594": {
-      "dx": 0,
-      "dy": 0
-    },
-    "gene_1783476403579_203": {
-      "dx": 0,
-      "dy": 0
-    },
-    "gene_1783476414798_887": {
-      "dx": 0,
-      "dy": 0
-    },
     "gene_1786343180769_193": {
       "dx": 0,
       "dy": 0
@@ -5582,5 +7014,61 @@
     "gene_1783476403579_203",
     "gene_1783476414798_887",
     "gene_1783476395476_594"
+  ],
+  "zones": [
+    {
+      "id": "zone_gsh_sulfur",
+      "label": "Sulfur Assimilation & Methionine / Serine Pathway",
+      "x": 32,
+      "y": 145,
+      "w": 518,
+      "h": 800,
+      "color": "amber"
+    },
+    {
+      "id": "zone_gsh_core",
+      "label": "Glutathione (GSH) Biosynthesis & Redox Cycle",
+      "x": 556,
+      "y": 50,
+      "w": 604,
+      "h": 522,
+      "color": "emerald"
+    },
+    {
+      "id": "zone_gsh_tca",
+      "label": "TCA Cycle & Amino Acid Link",
+      "x": 556,
+      "y": 592,
+      "w": 604,
+      "h": 430,
+      "color": "violet"
+    },
+    {
+      "id": "zone_gsh_ppp",
+      "label": "Pentose Phosphate Pathway",
+      "x": 1225,
+      "y": 172,
+      "w": 312,
+      "h": 118,
+      "color": "cyan"
+    },
+    {
+      "id": "zone_gsh_ferm",
+      "label": "Glycerol & Ethanol / Acetyl-CoA Fermentation",
+      "x": 1225,
+      "y": 335,
+      "w": 312,
+      "h": 595,
+      "color": "rose"
+    },
+    {
+      "id": "zone_gsh_glycolysis",
+      "label": "Glycolysis",
+      "x": 1543,
+      "y": 24,
+      "w": 297,
+      "h": 906,
+      "color": "blue"
+    }
   ]
 }

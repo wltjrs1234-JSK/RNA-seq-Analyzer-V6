@@ -1403,9 +1403,25 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    transform: translateY(-50%); /* Align vertically centered with coordinates */
+    transform: translateY(-50%);
     pointer-events: none;
     z-index: 5;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    padding: 1.5px 6px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.gsh-gene-overlay-container.gsh-pill-up {
+    background: rgba(255, 250, 250, 0.96);
+    border-color: rgba(239, 68, 68, 0.45);
+}
+
+.gsh-gene-overlay-container.gsh-pill-down {
+    background: rgba(248, 250, 255, 0.96);
+    border-color: rgba(99, 102, 241, 0.45);
 }
 
 .gsh-gene-overlay-container * {
@@ -1413,42 +1429,71 @@ body {
 }
 
 .gsh-gene-overlay-container:hover {
-    z-index: 10;
+    z-index: 25;
+    transform: translateY(-50%) scale(1.06);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
 }
 
 .gsh-gene-text {
     font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
-    color: #e11d48; /* Vibrant crimson matching the image text */
-    text-shadow: 
-        1.5px 1.5px 0px #ffffff, 
-        -1.5px -1.5px 0px #ffffff, 
-        1.5px -1.5px 0px #ffffff, 
-        -1.5px 1.5px 0px #ffffff,
-        1.5px 0px 0px #ffffff,
-        -1.5px 0px 0px #ffffff,
-        0px 1.5px 0px #ffffff,
-        0px -1.5px 0px #ffffff; /* 1.5px White outline to fully obscure the underlying bitmap text */
+    color: #0f172a;
+    letter-spacing: -0.1px;
     white-space: nowrap;
     user-select: none;
     cursor: pointer;
-    line-height: 1;
+    line-height: 1.1;
+}
+
+.gsh-pill-up .gsh-gene-text {
+    color: #be123c;
+}
+
+.gsh-pill-down .gsh-gene-text {
+    color: #3730a3;
 }
 
 .gsh-gene-text-black {
-    color: #1e293b !important; /* Slate black for transport proteins like GEX1, OPT1 */
+    color: #0f172a !important;
+}
+
+.gsh-gene-fc-val {
+    font-family: 'Inter', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    line-height: 1;
+    padding-left: 1px;
+    letter-spacing: -0.2px;
 }
 
 .gsh-gene-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
+    width: 9px;
+    height: 9px;
+    border-radius: 2.5px;
     border: 1px solid transparent;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
     flex-shrink: 0;
     cursor: pointer;
+}
+
+/* Sub-pathway Zone Box Styles in Edit Mode */
+.edit-mode-active .gsh-pathway-zone-group {
+    cursor: move;
+}
+
+.edit-mode-active .gsh-pathway-zone-group.element-selected rect.zone-main-rect {
+    stroke-width: 2.5px !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.35));
+}
+
+.gsh-zone-resize-handle {
+    fill: #4f46e5;
+    stroke: #ffffff;
+    stroke-width: 1.5px;
+    cursor: nwse-resize;
 }
 
 .gsh-gene-overlay-container:hover .gsh-gene-indicator {
