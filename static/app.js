@@ -1,3 +1,582 @@
+
+// ======================================================================
+// 10. Bio-Engineering Auto Pathway Generator Wizard
+// ======================================================================
+
+const AUTO_PATHWAY_PRESETS = {
+    naringenin: {
+        id: "naringenin",
+        name: "나린게닌 (Naringenin) 생합성 경로",
+        tag: "플라보노이드 / 항산화",
+        desc: "티로신/페닐알라닌 전구체 및 말로닐-CoA 풀에서 식물 유래 외래 효소(TAL, 4CL, CHS, CHI)를 도입하여 합성하는 대표적 대사공학 모델",
+        reactionsSummary: "Glucose -> Shikimate -> Tyrosine -> p-Coumarate -> 4-Coumaroyl-CoA (+ Malonyl-CoA) -> Naringenin",
+        text: `Glucose -> Glucose-6P (HXK1, HXK2)
+Glucose-6P -> PEP (ENO1, ENO2)
+Glucose-6P -> Erythrose-4P (TKL1, TAL1)
+PEP + Erythrose-4P -> Shikimate (ARO1)
+Shikimate -> Chorismate (ARO2)
+Chorismate -> Tyrosine (TYR1, AAT2)
+Pyruvate -> Acetyl-CoA (PDA1, PDB1)
+Acetyl-CoA -> Malonyl-CoA (ACC1)
+Tyrosine -> p-Coumarate (TAL)
+p-Coumarate -> 4-Coumaroyl-CoA (4CL)
+4-Coumaroyl-CoA + Malonyl-CoA -> Naringenin-chalcone (CHS)
+Naringenin-chalcone -> Naringenin (CHI)`
+    },
+    bdo: {
+        id: "bdo",
+        name: "2,3-부탄디올 (2,3-Butanediol) 생산 경로",
+        tag: "산업 바이오화학 / 바이오연료",
+        desc: "해당과정 피루브산에서 ILV2(아세토락테이트 합성) 및 AlsD, BDH1 효소를 통해 합성되는 고효율 바이오 화학소재 생산 경로",
+        reactionsSummary: "Glucose -> Pyruvate -> 2-Acetolactate -> Acetoin -> 2,3-Butanediol (+ Ethanol 바이패스)",
+        text: `Glucose -> Glucose-6P (HXK1, HXK2)
+Glucose-6P -> Fructose-6P (PGI1)
+Fructose-6P -> F1,6BP (PFK1, PFK2)
+F1,6BP -> GA3P (FBA1, TPI1)
+GA3P -> 3-PG (TDH3, PGK1)
+3-PG -> PEP (GPM1, ENO1, ENO2)
+PEP -> Pyruvate (PYK1, PYK2)
+Pyruvate -> 2-Acetolactate (ILV2)
+2-Acetolactate -> Acetoin (ILV5, AlsD)
+Acetoin -> 2,3-Butanediol (BDH1)
+Pyruvate -> Acetaldehyde (PDC1, PDC5)
+Acetaldehyde -> Ethanol (ADH1, ADH2)`
+    },
+    lycopene: {
+        id: "lycopene",
+        name: "라이코펜 (Lycopene) 테르페노이드 경로",
+        tag: "카로티노이드 / 천연색소",
+        desc: "메발로네이트(MVA) 경로 전구체(IPP/DMAPP)를 기반으로 FPP(ERG20) 합성 후 박테리아 유래 crtE/B/I 유전자로 생산하는 대표 고부가가치 색소",
+        reactionsSummary: "Acetyl-CoA -> Mevalonate -> IPP/DMAPP -> FPP -> GGPP -> Phytoene -> Lycopene",
+        text: `Acetyl-CoA -> Acetoacetyl-CoA (ERG10)
+Acetoacetyl-CoA -> HMG-CoA (ERG13)
+HMG-CoA -> Mevalonate (HMG1, HMG2)
+Mevalonate -> Mevalonate-P (ERG12)
+Mevalonate-P -> IPP (ERG8, MVD1)
+IPP -> DMAPP (IDI1)
+IPP + DMAPP -> GPP (ERG20)
+GPP + IPP -> FPP (ERG20)
+FPP -> GGPP (BTS1, crtE)
+GGPP -> Phytoene (crtB)
+Phytoene -> Lycopene (crtI)`
+    },
+    succinate: {
+        id: "succinate",
+        name: "숙신산 (Succinate) 글리옥실레이트 우회 경로",
+        tag: "C4 플랫폼 유기산",
+        desc: "TCA 사이클의 글리옥실레이트 우회로(ICL1, MLS1) 활성화 및 환원 경로(MDH, FUM, FRD)를 통한 고효율 숙신산 축적 엔지니어링",
+        reactionsSummary: "PEP -> Oxaloacetate -> Malate -> Fumarate -> Succinate (+ ICL1/MLS1 우회로)",
+        text: `PEP -> Oxaloacetate (PYC1, PYC2)
+Oxaloacetate -> Malate (MDH1, MDH2)
+Malate -> Fumarate (FUM1)
+Fumarate -> Succinate (FRD1, OSM1)
+Citrate -> Isocitrate (ACO1, ACO2)
+Isocitrate -> Glyoxylate (ICL1)
+Glyoxylate + Acetyl-CoA -> Malate (MLS1)`
+    },
+    glutathione: {
+        id: "glutathione",
+        name: "글루타치온 (Glutathione) 생합성 & 항산화 순환",
+        tag: "항산화 펩타이드",
+        desc: "시스테인 및 글루탐산에서 GSH1/GSH2 효소로 GSH를 합성하고, 글루타치온 환원효소(GLR1)로 산화-환원 밸런스를 유지하는 경로",
+        reactionsSummary: "Glutamate + Cysteine -> gamma-GC -> GSH -> GSSG (+ GLR1 환원)",
+        text: `Glutamate + Cysteine -> gamma-Glutamylcysteine (GSH1)
+gamma-Glutamylcysteine + Glycine -> GSH (GSH2)
+GSH -> GSSG (GPX1, GPX2)
+GSSG -> GSH (GLR1)
+Homocysteine -> Cystathionine (CYS4)
+Cystathionine -> Cysteine (CYS3)`
+    }
+};
+
+let gSelectedAutoPresetId = "naringenin";
+
+function initAutoPathwayWizard() {
+    const btnOpen = document.getElementById("btn-open-auto-pathway-wizard");
+    const modal = document.getElementById("auto-pathway-wizard-modal");
+    const btnClose = document.getElementById("btn-close-auto-pathway-modal");
+    const btnCancel = document.getElementById("btn-cancel-auto-pathway");
+    const btnSubmit = document.getElementById("btn-submit-auto-pathway");
+    
+    if (!btnOpen || !modal) return;
+    
+    // Tab toggles
+    const tabPreset = document.getElementById("btn-auto-tab-preset");
+    const tabText = document.getElementById("btn-auto-tab-text");
+    const secPreset = document.getElementById("auto-section-preset");
+    const secText = document.getElementById("auto-section-text");
+    
+    let activeSubtab = "preset";
+    
+    if (tabPreset && tabText && secPreset && secText) {
+        tabPreset.addEventListener("click", () => {
+            activeSubtab = "preset";
+            tabPreset.classList.add("active");
+            tabPreset.style.borderBottom = "2px solid #6366f1";
+            tabPreset.style.color = "#6366f1";
+            tabText.classList.remove("active");
+            tabText.style.borderBottom = "2px solid transparent";
+            tabText.style.color = "#64748b";
+            secPreset.style.display = "block";
+            secText.style.display = "none";
+        });
+        
+        tabText.addEventListener("click", () => {
+            activeSubtab = "text";
+            tabText.classList.add("active");
+            tabText.style.borderBottom = "2px solid #6366f1";
+            tabText.style.color = "#6366f1";
+            tabPreset.classList.remove("active");
+            tabPreset.style.borderBottom = "2px solid transparent";
+            tabPreset.style.color = "#64748b";
+            secText.style.display = "block";
+            secPreset.style.display = "none";
+        });
+    }
+    
+    // Render preset cards
+    renderAutoPresetCards();
+    
+    // Open modal
+    btnOpen.addEventListener("click", () => {
+        modal.style.display = "flex";
+        selectAutoPreset(gSelectedAutoPresetId || "naringenin");
+    });
+    
+    // Close modal
+    const closeModal = () => { modal.style.display = "none"; };
+    if (btnClose) btnClose.addEventListener("click", closeModal);
+    if (btnCancel) btnCancel.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    // Quick template buttons inside text tab
+    document.querySelectorAll(".btn-quick-template").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const pid = btn.getAttribute("data-preset");
+            const preset = AUTO_PATHWAY_PRESETS[pid];
+            if (preset) {
+                const nameInput = document.getElementById("auto-pathway-name");
+                const textArea = document.getElementById("auto-pathway-textarea");
+                if (nameInput) nameInput.value = preset.name;
+                if (textArea) textArea.value = preset.text;
+            }
+        });
+    });
+    
+    // Submit auto pathway generation
+    if (btnSubmit) {
+        btnSubmit.addEventListener("click", () => {
+            let mapName = "";
+            let reactionText = "";
+            let direction = "TB";
+            
+            const dirRadio = document.querySelector('input[name="auto-layout-direction"]:checked');
+            if (dirRadio) direction = dirRadio.value;
+            
+            if (activeSubtab === "preset") {
+                const preset = AUTO_PATHWAY_PRESETS[gSelectedAutoPresetId];
+                if (!preset) {
+                    alert("선택된 프리셋이 없습니다.");
+                    return;
+                }
+                mapName = preset.name;
+                reactionText = preset.text;
+            } else {
+                const nameInput = document.getElementById("auto-pathway-name");
+                const textArea = document.getElementById("auto-pathway-textarea");
+                mapName = nameInput ? nameInput.value.trim() : "";
+                reactionText = textArea ? textArea.value.trim() : "";
+                
+                if (!mapName) {
+                    mapName = "맞춤형 대사경로 (" + new Date().toLocaleTimeString() + ")";
+                }
+                if (!reactionText) {
+                    alert("반응식을 입력하거나 빠른 템플릿을 선택해주세요.");
+                    return;
+                }
+            }
+            
+            generateAutoPathway(mapName, reactionText, direction);
+            closeModal();
+        });
+    }
+}
+
+function renderAutoPresetCards() {
+    const container = document.getElementById("auto-preset-cards");
+    if (!container) return;
+    
+    container.innerHTML = "";
+    Object.values(AUTO_PATHWAY_PRESETS).forEach(p => {
+        const card = document.createElement("div");
+        card.className = "auto-preset-card";
+        card.setAttribute("data-id", p.id);
+        card.style.cssText = "background: #fff; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s ease;";
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <span style="font-size: 10px; font-weight: 700; background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px;">${p.tag}</span>
+                <i class="fa-solid fa-circle-check preset-check-icon" style="color: #cbd5e1; font-size: 14px;"></i>
+            </div>
+            <h5 style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #1e293b;">${p.name.split(" ")[0]}</h5>
+            <p style="margin: 0; font-size: 11px; color: #64748b; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.desc}</p>
+        `;
+        
+        card.addEventListener("click", () => {
+            selectAutoPreset(p.id);
+        });
+        
+        container.appendChild(card);
+    });
+}
+
+function selectAutoPreset(presetId) {
+    gSelectedAutoPresetId = presetId;
+    const p = AUTO_PATHWAY_PRESETS[presetId];
+    if (!p) return;
+    
+    // Highlight active card
+    document.querySelectorAll(".auto-preset-card").forEach(c => {
+        const checkIcon = c.querySelector(".preset-check-icon");
+        if (c.getAttribute("data-id") === presetId) {
+            c.style.borderColor = "#6366f1";
+            c.style.background = "#f5f3ff";
+            c.style.boxShadow = "0 2px 6px rgba(99,102,241,0.15)";
+            if (checkIcon) {
+                checkIcon.style.color = "#6366f1";
+            }
+        } else {
+            c.style.borderColor = "#e2e8f0";
+            c.style.background = "#fff";
+            c.style.boxShadow = "none";
+            if (checkIcon) {
+                checkIcon.style.color = "#cbd5e1";
+            }
+        }
+    });
+    
+    // Update detail box
+    const detailBox = document.getElementById("auto-preset-detail-box");
+    const titleEl = document.getElementById("auto-preset-detail-title");
+    const tagEl = document.getElementById("auto-preset-detail-tag");
+    const descEl = document.getElementById("auto-preset-detail-desc");
+    const stepsEl = document.getElementById("auto-preset-detail-steps");
+    
+    if (detailBox && titleEl && descEl && stepsEl) {
+        detailBox.style.display = "block";
+        titleEl.textContent = p.name;
+        if (tagEl) tagEl.textContent = p.tag;
+        descEl.textContent = p.desc;
+        stepsEl.textContent = p.reactionsSummary;
+    }
+}
+
+// ----------------------------------------------------------------------
+// 10-1. Reaction Text Parser & DAG Builder
+// ----------------------------------------------------------------------
+
+function parsePathwayTextToGraph(text) {
+    const lines = text.split("\n");
+    const nodesMap = {};
+    const arrows = [];
+    
+    function getOrCreateNode(label) {
+        const clean = label.trim().replace(/^\+/, "").replace(/\+$/, "").trim();
+        if (!clean) return null;
+        const id = "node_" + clean.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        if (!nodesMap[id]) {
+            nodesMap[id] = {
+                id: id,
+                label: clean,
+                shape: "round_box"
+            };
+        }
+        return nodesMap[id];
+    }
+    
+    lines.forEach(rawLine => {
+        let line = rawLine.trim();
+        if (!line || line.startsWith("#") || line.startsWith("//")) return;
+        
+        // Find reaction arrows: <->, <--> , ->, -->, →, ⇄, =>
+        const arrowRegex = /\s*(<->|<-->|⇄|->|-->|→|=>)\s*/;
+        const arrowMatch = line.search(arrowRegex);
+        if (arrowMatch === -1) return;
+        
+        // Extract gene symbols if in parentheses (...) or brackets [...] or after colon :
+        let geneSymbols = [];
+        const geneParenMatch = line.match(/[\(\[]([^\)\]]+)[\)\]]/);
+        if (geneParenMatch) {
+            geneSymbols = geneParenMatch[1].split(/[,/\s]+/).map(s => s.trim()).filter(s => s);
+            line = line.replace(geneParenMatch[0], "").trim();
+        } else if (line.includes(":")) {
+            const parts = line.split(":");
+            line = parts[0].trim();
+            geneSymbols = parts[1].split(/[,/\s]+/).map(s => s.trim()).filter(s => s);
+        }
+        
+        // Split by arrows
+        const segments = line.split(arrowRegex).filter(s => s && !s.match(arrowRegex));
+        if (segments.length < 2) return;
+        
+        // Handle chained reactions: A -> B -> C
+        for (let i = 0; i < segments.length - 1; i++) {
+            const subStr = segments[i].trim();
+            const prodStr = segments[i + 1].trim();
+            
+            // Multiple substrates: A + B -> C
+            const subs = subStr.split("+").map(s => s.trim()).filter(s => s);
+            const prods = prodStr.split("+").map(s => s.trim()).filter(s => s);
+            
+            subs.forEach(subName => {
+                const subNode = getOrCreateNode(subName);
+                if (!subNode) return;
+                
+                prods.forEach(prodName => {
+                    const prodNode = getOrCreateNode(prodName);
+                    if (!prodNode) return;
+                    
+                    const arrowId = `arr_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+                    arrows.push({
+                        id: arrowId,
+                        from: subNode.id,
+                        to: prodNode.id,
+                        direction: "forward",
+                        label: "",
+                        geneSymbols: [...geneSymbols]
+                    });
+                });
+            });
+        }
+    });
+    
+    return {
+        nodes: Object.values(nodesMap),
+        arrows: arrows
+    };
+}
+
+// ----------------------------------------------------------------------
+// 10-2. Sugiyama-style Hierarchical DAG Layout Engine
+// ----------------------------------------------------------------------
+
+function layoutPathwayDAG(nodes, arrows, direction = "TB") {
+    if (nodes.length === 0) return { nodes: [], arrows: [], width: 1024, height: 600 };
+    
+    const adj = {};
+    const inDegree = {};
+    nodes.forEach(n => {
+        adj[n.id] = [];
+        inDegree[n.id] = 0;
+    });
+    
+    arrows.forEach(a => {
+        if (adj[a.from] && inDegree[a.to] !== undefined) {
+            adj[a.from].push(a.to);
+            inDegree[a.to] = (inDegree[a.to] || 0) + 1;
+        }
+    });
+    
+    // Step 1: Assign Rank (Level) using BFS / Longest Path
+    const ranks = {};
+    const queue = [];
+    nodes.forEach(n => {
+        if (inDegree[n.id] === 0) {
+            ranks[n.id] = 0;
+            queue.push(n.id);
+        }
+    });
+    
+    // If graph has cycles or no 0-in-degree node, fallback first node to rank 0
+    if (queue.length === 0 && nodes.length > 0) {
+        ranks[nodes[0].id] = 0;
+        queue.push(nodes[0].id);
+    }
+    
+    const visited = new Set();
+    while (queue.length > 0) {
+        const curr = queue.shift();
+        if (visited.has(curr)) continue;
+        visited.add(curr);
+        
+        const currRank = ranks[curr] || 0;
+        (adj[curr] || []).forEach(nxt => {
+            ranks[nxt] = Math.max(ranks[nxt] || 0, currRank + 1);
+            queue.push(nxt);
+        });
+    }
+    
+    // Fill any disconnected components
+    nodes.forEach(n => {
+        if (ranks[n.id] === undefined) {
+            ranks[n.id] = 0;
+        }
+    });
+    
+    // Step 2: Group nodes by Rank
+    const rankGroups = {};
+    nodes.forEach(n => {
+        const r = ranks[n.id];
+        if (!rankGroups[r]) rankGroups[r] = [];
+        rankGroups[r].push(n);
+    });
+    
+    const sortedRanks = Object.keys(rankGroups).map(Number).sort((a, b) => a - b);
+    
+    // Step 3: Compute X, Y coordinates
+    const startX = 200;
+    const startY = 80;
+    const stepLevel = direction === "TB" ? 110 : 200;
+    const stepSibling = direction === "TB" ? 170 : 80;
+    
+    let maxCoordX = 800;
+    let maxCoordY = 500;
+    
+    const nodeLookup = {};
+    
+    sortedRanks.forEach(r => {
+        const group = rankGroups[r];
+        const count = group.length;
+        
+        group.forEach((node, idx) => {
+            const labelLen = node.label.length;
+            const w = Math.max(90, Math.min(150, labelLen * 9 + 24));
+            const h = 36;
+            
+            let x = 0;
+            let y = 0;
+            
+            if (direction === "TB") {
+                y = startY + r * stepLevel;
+                const offset = (idx - (count - 1) / 2) * stepSibling;
+                x = startX + 260 + offset;
+            } else {
+                x = startX + r * stepLevel;
+                const offset = (idx - (count - 1) / 2) * stepSibling;
+                y = startY + 200 + offset;
+            }
+            
+            node.x = Math.max(40, Math.round(x));
+            node.y = Math.max(40, Math.round(y));
+            node.w = w;
+            node.h = h;
+            
+            if (node.x + w > maxCoordX) maxCoordX = node.x + w;
+            if (node.y + h > maxCoordY) maxCoordY = node.y + h;
+            
+            nodeLookup[node.id] = node;
+        });
+    });
+    
+    // Step 4: Arrow Coordinates and Gene Offset Positioning
+    arrows.forEach(arrow => {
+        const fromNode = nodeLookup[arrow.from];
+        const toNode = nodeLookup[arrow.to];
+        if (!fromNode || !toNode) return;
+        
+        // Midpoint for genes
+        const midX = Math.round((fromNode.x + fromNode.w / 2 + toNode.x + toNode.w / 2) / 2);
+        const midY = Math.round((fromNode.y + fromNode.h / 2 + toNode.y + toNode.h / 2) / 2);
+        
+        if (arrow.geneSymbols && arrow.geneSymbols.length > 0) {
+            arrow.geneOffset = {
+                x: midX + 16,
+                y: midY - 10
+            };
+        }
+    });
+    
+    const canvasWidth = Math.max(1024, maxCoordX + 160);
+    const canvasHeight = Math.max(640, maxCoordY + 140);
+    
+    return {
+        nodes: nodes,
+        arrows: arrows,
+        width: canvasWidth,
+        height: canvasHeight
+    };
+}
+
+// ----------------------------------------------------------------------
+// 10-3. Full Generation Pipeline & Map Registry
+// ----------------------------------------------------------------------
+
+function generateAutoPathway(mapName, text, direction = "TB") {
+    try {
+        const parsed = parsePathwayTextToGraph(text);
+        if (!parsed.nodes || parsed.nodes.length === 0) {
+            alert("유효한 대사 반응이나 노드를 파싱할 수 없습니다. 문법을 확인해 주세요.");
+            return;
+        }
+        
+        const layoutResult = layoutPathwayDAG(parsed.nodes, parsed.arrows, direction);
+        const newMapId = `auto_map_${Date.now()}`;
+        
+        if (!pathwayMapsStore) pathwayMapsStore = {};
+        
+        // Register genes in custom gene store so RNA-seq log2fc badges render immediately
+        const customGeneList = [];
+        let geneIdx = 0;
+        layoutResult.arrows.forEach(arr => {
+            if (arr.geneSymbols && arr.geneSymbols.length > 0) {
+                arr.geneSymbols.forEach(sym => {
+                    const cleanSym = sym.trim().toUpperCase();
+                    if (cleanSym) {
+                        let repLog2fc = 0.0;
+                        let geneIsoforms = [];
+                        if (window.gGenes && window.gGenes.length > 0) {
+                            const match = window.gGenes.find(g => (g.gene_symbol && g.gene_symbol.toUpperCase() === cleanSym) || (g.locus_tag && g.locus_tag.toUpperCase() === cleanSym));
+                            if (match) {
+                                repLog2fc = parseFloat(match.log2fc) || 0.0;
+                                geneIsoforms = [match];
+                            }
+                        }
+                        
+                        const normX = Math.round((arr.geneOffset ? arr.geneOffset.x : 100) / layoutResult.width * 100);
+                        const normY = Math.round((arr.geneOffset ? arr.geneOffset.y : 100) / layoutResult.height * 100);
+                        
+                        customGeneList.push({
+                            id: `gene_${Date.now()}_${geneIdx++}`,
+                            symbol: cleanSym,
+                            x: normX,
+                            y: normY,
+                            arrowId: arr.id,
+                            rep_log2fc: repLog2fc,
+                            genes: geneIsoforms
+                        });
+                    }
+                });
+            }
+        });
+
+        pathwayMapsStore[newMapId] = {
+            name: mapName,
+            species: gCurrentSpecies || "sce",
+            width: layoutResult.width,
+            height: layoutResult.height,
+            nodes: layoutResult.nodes,
+            arrows: layoutResult.arrows,
+            zones: [],
+            customGenes: customGeneList
+        };
+        
+        // Persist
+        setGshCustomGenes(newMapId, customGeneList);
+        saveAllPathwayMaps();
+        
+        // Refresh UI & switch to new map
+        currentMapId = newMapId;
+        initializeMapDropdown();
+        selectAndLoadMap(newMapId);
+        
+        showGshToast(`🎉 '${mapName}' 맞춤형 대사경로가 자동으로 생성되었습니다! (${layoutResult.nodes.length}개 물질, ${layoutResult.arrows.length}개 반응)`);
+    } catch (err) {
+        console.error("Auto pathway generation failed:", err);
+        alert(`경로 생성 중 오류 발생: ${err.message}`);
+    }
+}
+
 /**
  * Multi-Species RNA-seq Analyzer Dashboard Logic
  */
@@ -9109,6 +9688,7 @@ function initGSHEditorBindings() {
     
     // Bind global keyboard shortcuts
     initGSHHotkeyBindings();
+    initAutoPathwayWizard();
     
     // Map dropdown change listener
     if (mapSelect) {
