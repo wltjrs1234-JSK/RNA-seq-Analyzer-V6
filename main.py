@@ -2497,6 +2497,16 @@ def get_target_modulators(payload: dict = None):
     }
 
 # ----------------------------------------------------------------------
+@app.get("/api/central_carbon_backbone")
+def get_central_carbon_backbone():
+    """Retrieve foundational central carbon metabolism backbone (Glycolysis, PPP, TCA, Fermentation)."""
+    backbone_path = os.path.join("data", "central_carbon_backbone.json")
+    if not os.path.exists(backbone_path):
+        return {"success": False, "message": "Central carbon backbone file not found."}
+    with open(backbone_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return {"success": True, "backbone": data}
+
 @app.get("/api/gsh_pathway_data")
 def get_gsh_pathway_data(session_id: str = None):
     """Retrieve expression data mapped onto the custom GSH pathway coordinates."""

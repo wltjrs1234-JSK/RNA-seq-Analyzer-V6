@@ -1772,23 +1772,36 @@
 
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
                         <span style="font-size: 11px; font-weight: 600; color: #475569;">빠른 템플릿 불러오기:</span>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="naringenin" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">나린게닌 (Naringenin)</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="bdo" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">2,3-부탄디올 (2,3-BDO)</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="naringenin" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">나린게닌 (Naringenin)</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="lycopene" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">라이코펜 (Lycopene)</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="succinate" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">숙신산 (Succinate)</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="isobutanol" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">이소부탄올 (Isobutanol)</button>
                     </div>
 
                     <div style="margin-bottom: 10px;">
                         <label for="auto-pathway-name" style="font-size: 12px; font-weight: 600; color: #1e293b; margin-bottom: 4px; display: block;">생성할 대사 경로 이름:</label>
-                        <input type="text" id="auto-pathway-name" class="input-text" placeholder="예: Naringenin Production Pathway" style="width: 100%; height: 32px; padding: 4px 8px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff;" />
+                        <input type="text" id="auto-pathway-name" class="input-text" placeholder="예: 2,3-Butanediol Production Pathway" style="width: 100%; height: 32px; padding: 4px 8px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff;" />
                     </div>
 
                     <div>
                         <label for="auto-pathway-textarea" style="font-size: 12px; font-weight: 600; color: #1e293b; margin-bottom: 4px; display: block;">반응식 입력:</label>
-                        <textarea id="auto-pathway-textarea" style="width: 100%; height: 160px; font-family: monospace; font-size: 12px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical; line-height: 1.5; background: #fff;" placeholder="예시:&#10;Glucose -> G6P (HXK1, HXK2)&#10;G6P -> F6P (PGI1)&#10;F6P -> F1,6BP (PFK1, PFK2)&#10;..."></textarea>
+                        <textarea id="auto-pathway-textarea" style="width: 100%; height: 160px; font-family: monospace; font-size: 12px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical; line-height: 1.5; background: #fff;" placeholder="예시:&#10;Pyruvate -> 2-Acetolactate (ILV2)&#10;2-Acetolactate -> Acetoin (ILV5, AlsD)&#10;Acetoin -> 2,3-Butanediol (BDH1, BDH2)"></textarea>
+                    </div>
+
+                    <div style="margin-top: 10px; padding: 8px 12px; background: #f1f5f9; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #334155; cursor: pointer;">
+                            <input type="checkbox" id="check-auto-include-backbone" checked>
+                            <i class="fa-solid fa-network-wired" style="color: #6366f1;"></i>
+                            중심 탄소 대사 (당 대사 Glycolysis + PPP + 발효 + TCA 사이클)와 자동 연계 통합
+                        </label>
+                        <span style="font-size: 11px; color: #64748b; padding-left: 20px;">
+                            💡 체크 시 전체 해당과정 및 TCA 사이클이 기본 뼈대로 깔리고, 입력한 타깃 물질이 전구체 노드(Pyruvate, Acetyl-CoA 등)와 자동 직결(Docking)됩니다.
+                        </span>
                     </div>
 
                     <div style="display: flex; gap: 16px; align-items: center; margin-top: 10px; font-size: 12px; color: #475569;">
+                        <span style="font-size: 11px; font-weight: 600; color: #475569;">타깃 영역 정렬 방향:</span>
                         <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
                             <input type="radio" name="auto-layout-direction" value="TB" checked> 위에서 아래로 (Top-Down)
                         </label>
@@ -1813,6 +1826,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Application JavaScript -->
-    <script src="app.js?v=30"></script>
+    <script src="app.js?v=31"></script>
 </body>
 </html>
