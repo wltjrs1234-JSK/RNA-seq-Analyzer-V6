@@ -1716,9 +1716,9 @@
         </div>
     </div>
 
-    <!-- 3. Full Auto Pathway Generator Wizard Modal -->
+        <!-- 3. Full Auto Pathway Generator Wizard Modal -->
     <div id="auto-pathway-wizard-modal" class="pathway-modal-overlay" style="display: none; z-index: 1100;">
-        <div class="pathway-modal-content" style="width: 720px; max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="pathway-modal-content" style="width: 780px; max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column;">
             <div class="pathway-modal-header" style="border-bottom: 1px solid var(--border-color); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center;">
                 <div class="pathway-modal-title" style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #1e293b;">
                     <i class="fa-solid fa-wand-magic-sparkles" style="color: #6366f1;"></i>
@@ -1729,18 +1729,97 @@
             
             <!-- Subtab Navigation -->
             <div style="display: flex; gap: 8px; padding: 10px 18px 0 18px; border-bottom: 1px solid var(--border-color); background: #f8fafc;">
-                <button type="button" class="btn-subtab active" id="btn-auto-tab-preset" style="padding: 8px 14px; font-size: 12px; font-weight: 600; border: none; background: none; border-bottom: 2px solid #6366f1; color: #6366f1; cursor: pointer;">
-                    <i class="fa-solid fa-book-bookmark" style="margin-right: 4px;"></i>대사공학 핵심 타깃 프리셋 (1-Click)
+                <button type="button" class="btn-subtab active" id="btn-auto-tab-search" style="padding: 8px 14px; font-size: 12px; font-weight: 600; border: none; background: none; border-bottom: 2px solid #6366f1; color: #6366f1; cursor: pointer;">
+                    <i class="fa-solid fa-magnifying-glass-chart" style="margin-right: 4px;"></i>🎯 타깃 물질 검색 & 생합성 경로 자동 도출
+                </button>
+                <button type="button" class="btn-subtab" id="btn-auto-tab-preset" style="padding: 8px 14px; font-size: 12px; font-weight: 600; border: none; background: none; border-bottom: 2px solid transparent; color: #64748b; cursor: pointer;">
+                    <i class="fa-solid fa-book-bookmark" style="margin-right: 4px;"></i>대사공학 핵심 타깃 프리셋
                 </button>
                 <button type="button" class="btn-subtab" id="btn-auto-tab-text" style="padding: 8px 14px; font-size: 12px; font-weight: 600; border: none; background: none; border-bottom: 2px solid transparent; color: #64748b; cursor: pointer;">
-                    <i class="fa-solid fa-paste" style="margin-right: 4px;"></i>논문 텍스트 / 반응식 붙여넣기 (Parser)
+                    <i class="fa-solid fa-paste" style="margin-right: 4px;"></i>논문 텍스트 / 반응식 직접 입력
                 </button>
             </div>
 
             <div class="pathway-modal-body" style="padding: 16px 18px; overflow-y: auto; flex: 1;">
                 
-                <!-- Tab 1: Bio-Engineering Curated Presets -->
-                <div id="auto-section-preset">
+                <!-- Tab 1: Smart Metabolite Search & Pathway Auto-Inference -->
+                <div id="auto-section-search">
+                    <div style="font-size: 12px; color: #475569; margin-bottom: 12px; line-height: 1.5; background: #eef2ff; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #6366f1;">
+                        💡 <strong>타깃 물질(NAM, GSH, Lycopene, Naringenin, Lysine, GABA 등)</strong>을 입력하시면, 시스템 생물학/대사공학 지식베이스에서 <strong>중심 대사 전구체(Pyruvate, Acetyl-CoA, α-KG 등)부터의 생합성 단계와 관여 효소</strong>를 자동으로 도출하여 중심 탄소 대사 백본에 직결(Docking)합니다.
+                    </div>
+
+                    <!-- Search Input Box -->
+                    <div style="position: relative; margin-bottom: 10px;">
+                        <input type="text" id="auto-search-metabolite-input" placeholder="생산하고자 하는 타깃 대사물질 입력 (예: NAM, GSH, Lycopene, Naringenin, Lysine, GABA...)" style="width: 100%; height: 40px; padding: 6px 14px 6px 38px; font-size: 13px; font-weight: 500; border: 2px solid #6366f1; border-radius: 8px; outline: none; background: #fff; box-shadow: 0 1px 3px rgba(99,102,241,0.15);" />
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 13px; color: #6366f1;"></i>
+                    </div>
+
+                    <!-- Quick Metabolite Suggestion Chips -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="font-size: 11px; font-weight: 600; color: #64748b; margin-bottom: 6px;">
+                            <i class="fa-solid fa-fire" style="color: #ef4444; margin-right: 4px;"></i>주요 타깃 대사물질 추천 (클릭 시 즉시 생합성 경로 도출):
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="auto-search-chips">
+                            <button type="button" class="btn-chip" data-target="gsh" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🧪 GSH (글루타치온)</button>
+                            <button type="button" class="btn-chip" data-target="nam" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">⚡ NAM (니코틴아미드 / NAD+)</button>
+                            <button type="button" class="btn-chip" data-target="bdo" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🏭 2,3-부탄디올 (2,3-BDO)</button>
+                            <button type="button" class="btn-chip" data-target="naringenin" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🌿 나린게닌 (플라보노이드)</button>
+                            <button type="button" class="btn-chip" data-target="lycopene" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🍅 라이코펜 (카로티노이드)</button>
+                            <button type="button" class="btn-chip" data-target="resveratrol" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🍇 레스베라트롤 (스틸벤)</button>
+                            <button type="button" class="btn-chip" data-target="succinate" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🔋 숙신산 (C4 플랫폼 유기산)</button>
+                            <button type="button" class="btn-chip" data-target="isobutanol" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">⛽ 이소부탄올 (고급 알코올)</button>
+                            <button type="button" class="btn-chip" data-target="lysine" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🥩 L-라이신 (아미노산)</button>
+                            <button type="button" class="btn-chip" data-target="gaba" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🧠 GABA (신경전달물질)</button>
+                            <button type="button" class="btn-chip" data-target="vanillin" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🍦 바닐린 (천연 향료)</button>
+                            <button type="button" class="btn-chip" data-target="beta_carotene" style="padding: 4px 10px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 20px; background: #fff; color: #334155; cursor: pointer; transition: all 0.15s ease;">🥕 베타카로틴</button>
+                        </div>
+                    </div>
+
+                    <!-- Auto-Inferred Pathway Result Box -->
+                    <div id="auto-inferred-card" style="background: #ffffff; border: 2px solid #818cf8; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(99,102,241,0.08);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <h4 id="inferred-target-title" style="margin: 0; font-size: 14px; font-weight: 700; color: #1e293b;"></h4>
+                                    <span id="inferred-target-badge" class="badge" style="background: #e0e7ff; color: #4338ca; font-size: 10px; padding: 2px 8px; border-radius: 12px; font-weight: 600;"></span>
+                                </div>
+                                <div style="font-size: 11px; color: #64748b;" id="inferred-target-desc"></div>
+                            </div>
+                            <span style="font-size: 11px; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 6px; font-weight: 600;">
+                                <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i>생합성 경로 자동 도출됨
+                            </span>
+                        </div>
+
+                        <!-- Docking Precursor Info -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; font-size: 12px;">
+                            <div style="font-weight: 600; color: #334155; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-plug" style="color: #6366f1;"></i>중심 탄소 대사 연계 지점 (Backbone Precursor):
+                                <span id="inferred-precursor-name" style="color: #4f46e5; font-weight: 700;"></span>
+                            </div>
+                            <div style="color: #64748b; font-size: 11px;" id="inferred-precursor-detail"></div>
+                        </div>
+
+                        <!-- Pathway Steps Flow -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 6px;">생합성 흐름 (Biosynthetic Flow):</div>
+                            <div id="inferred-flow-container" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 11px; background: #f1f5f9; padding: 8px 12px; border-radius: 6px;"></div>
+                        </div>
+
+                        <!-- Matched Enzymes / Genes -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">핵심 관여 효소 및 RNA-seq 연동 유전자:</div>
+                            <div id="inferred-genes-container" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                        </div>
+
+                        <!-- Metabolic Engineering Strategy Guide -->
+                        <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #92400e;">
+                            <strong>💡 대사공학 최적화 가이드:</strong> <span id="inferred-strategy-text"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Bio-Engineering Curated Presets -->
+                <div id="auto-section-preset" style="display: none;">
                     <div style="font-size: 12px; color: #475569; margin-bottom: 12px; line-height: 1.5; background: #eef2ff; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #6366f1;">
                         💡 <strong>대사공학 논문에서 검증된 대표 생산 경로</strong>를 1-클릭으로 자동 생성합니다. 중앙 대사 전구체(Glucose, Acetyl-CoA 등)부터 최종 타깃 산물까지의 유전자 발현량(Log2FC)이 즉시 매칭됩니다.
                     </div>
@@ -1761,7 +1840,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 2: Text / Reaction Custom Parser -->
+                <!-- Tab 3: Text / Reaction Custom Parser -->
                 <div id="auto-section-text" style="display: none;">
                     <div style="font-size: 12px; color: #475569; margin-bottom: 12px; line-height: 1.5; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #10b981;">
                         <strong>텍스트 파싱 문법:</strong> 한 줄에 반응을 하나씩 적거나 여러 단계를 이어 쓸 수 있습니다.<br/>
@@ -1772,6 +1851,8 @@
 
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
                         <span style="font-size: 11px; font-weight: 600; color: #475569;">빠른 템플릿 불러오기:</span>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="gsh" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">글루타치온 (GSH)</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="nam" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">니코틴아미드 (NAM)</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="bdo" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">2,3-부탄디올 (2,3-BDO)</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="naringenin" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">나린게닌 (Naringenin)</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-quick-template" data-preset="lycopene" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fff; cursor: pointer;">라이코펜 (Lycopene)</button>
@@ -1786,18 +1867,7 @@
 
                     <div>
                         <label for="auto-pathway-textarea" style="font-size: 12px; font-weight: 600; color: #1e293b; margin-bottom: 4px; display: block;">반응식 입력:</label>
-                        <textarea id="auto-pathway-textarea" style="width: 100%; height: 160px; font-family: monospace; font-size: 12px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical; line-height: 1.5; background: #fff;" placeholder="예시:&#10;Pyruvate -> 2-Acetolactate (ILV2)&#10;2-Acetolactate -> Acetoin (ILV5, AlsD)&#10;Acetoin -> 2,3-Butanediol (BDH1, BDH2)"></textarea>
-                    </div>
-
-                    <div style="margin-top: 10px; padding: 8px 12px; background: #f1f5f9; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 6px;">
-                        <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #334155; cursor: pointer;">
-                            <input type="checkbox" id="check-auto-include-backbone" checked>
-                            <i class="fa-solid fa-network-wired" style="color: #6366f1;"></i>
-                            중심 탄소 대사 (당 대사 Glycolysis + PPP + 발효 + TCA 사이클)와 자동 연계 통합
-                        </label>
-                        <span style="font-size: 11px; color: #64748b; padding-left: 20px;">
-                            💡 체크 시 전체 해당과정 및 TCA 사이클이 기본 뼈대로 깔리고, 입력한 타깃 물질이 전구체 노드(Pyruvate, Acetyl-CoA 등)와 자동 직결(Docking)됩니다.
-                        </span>
+                        <textarea id="auto-pathway-textarea" style="width: 100%; height: 140px; font-family: monospace; font-size: 12px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical; line-height: 1.5; background: #fff;" placeholder="예시:&#10;Pyruvate -> 2-Acetolactate (ILV2)&#10;2-Acetolactate -> Acetoin (ILV5, AlsD)&#10;Acetoin -> 2,3-Butanediol (BDH1, BDH2)"></textarea>
                     </div>
 
                     <div style="display: flex; gap: 16px; align-items: center; margin-top: 10px; font-size: 12px; color: #475569;">
@@ -1811,13 +1881,30 @@
                     </div>
                 </div>
 
+                <!-- Common Integration Option (Central Backbone Integration) -->
+                <div style="margin-top: 12px; padding: 10px 14px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 4px;">
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #1e293b; cursor: pointer;">
+                        <input type="checkbox" id="check-auto-include-backbone" checked>
+                        <i class="fa-solid fa-network-wired" style="color: #6366f1;"></i>
+                        중심 탄소 대사 (당 대사 Glycolysis + PPP + 발효 + TCA 사이클)와 자동 연계 통합 (추천)
+                    </label>
+                    <span style="font-size: 11px; color: #64748b; padding-left: 20px;">
+                        💡 체크 시 전체 해당과정 및 TCA 사이클이 기본 뼈대로 깔리고, 타깃 생합성 경로가 전구체 노드(Pyruvate, Acetyl-CoA, α-KG 등)와 스마트 직결(Docking)됩니다.
+                    </span>
+                </div>
+
             </div>
 
-            <div class="pathway-modal-footer" style="border-top: 1px solid var(--border-color); padding: 12px 18px; display: flex; justify-content: flex-end; gap: 8px; background: #f8fafc;">
-                <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-auto-pathway">취소</button>
-                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-auto-pathway" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none; font-weight: 600; padding: 6px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px; color: white; cursor: pointer;">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>맞춤형 Pathway 즉시 생성
-                </button>
+            <div class="pathway-modal-footer" style="border-top: 1px solid var(--border-color); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                <div style="font-size: 11px; color: #64748b;">
+                    <i class="fa-solid fa-circle-info" style="margin-right: 4px; color: #6366f1;"></i>선택된 타깃의 RNA-seq 발현량이 자동으로 오버레이됩니다.
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-auto-pathway">취소</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-submit-auto-pathway" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none; font-weight: 600; padding: 6px 16px; font-size: 12px; display: flex; align-items: center; gap: 6px; color: white; cursor: pointer; box-shadow: 0 2px 4px rgba(99,102,241,0.25);">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>맞춤형 Pathway 즉시 생성
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1826,6 +1913,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Application JavaScript -->
-    <script src="app.js?v=31"></script>
+    <script src="app.js?v=32"></script>
 </body>
 </html>
