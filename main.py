@@ -2497,101 +2497,6 @@ def get_target_modulators(payload: dict = None):
     }
 
 # ----------------------------------------------------------------------
-# 5. Reporter Metabolites Analyzer API
-# ----------------------------------------------------------------------
-@app.post("/api/reporter_metabolites")
-def get_reporter_metabolites(payload: dict = None):
-    if not os.path.exists(PARSED_DATA_PATH):
-        raise HTTPException(status_code=400, detail="먼저 RNA-seq 파일을 업로드해주세요.")
-        
-    with open(PARSED_DATA_PATH, "r", encoding="utf-8") as f:
-        genes = json.load(f)
-        
-    net_path = "data/yeast_metabolite_net.json"
-    if not os.path.exists(net_path):
-        raise HTTPException(status_code=500, detail="대사물질 네트워크 데이터베이스를 찾을 수 없습니다.")
-        
-    with open(net_path, "r", encoding="utf-8") as f:
-        metabolite_db = json.load(f)
-        
-    gene_map = {g["locus_tag"].upper(): g for g in genes}
-    
-    # 1. Calculate Z-scores for all genes in the dataset
-    all_z_scores = []
-    gene_z_map = {}
-    
-    for g in genes:
-        locus = g["locus_tag"].upper()
-        # Default p-value if missing
-        p_val = g.get("fdr") if g.get("fdr") is not None else g.get("p_value")
-        
-        if p_val is not None:
-            # Bound p-value to avoid inf
-            p_val_bounded = max(1e-15, min(0.999999, float(p_val)))
-            z = stats.norm.ppf(1.0 - p_val_bounded)
-        else:
-            z = 0.0
-            
-        gene_z_map[locus] = z
-        all_z_scores.append(z)
-        
-    # Calculate background stats
-    if all_z_scores:
-        bg_mean = np.mean(all_z_scores)
-        bg_std = np.std(all_z_scores)
-        if bg_std == 0:
-            bg_std = 1.0
-    else:
-        bg_mean = 0.0
-        bg_std = 1.0
-        
-    reporter_results = []
-    
-    # 2. Score each metabolite
-    for met_id, met_info in metabolite_db.items():
-        genes_in_db = [g.upper() for g in met_info["genes"]]
-        matched_genes = [g for g in genes_in_db if g in gene_map]
-        
-        if not matched_genes:
-            continue
-            
-        n = len(matched_genes)
-        z_sum = sum(gene_z_map.get(g, 0.0) for g in matched_genes)
-        
-        # Standardized Z-score of sample mean
-        # Z_reporter = (mean - bg_mean) / (bg_std / sqrt(n))
-        z_reporter = (z_sum - n * bg_mean) / (bg_std * np.sqrt(n))
-        
-        # Gather associated gene details
-        associated_genes = []
-        for g in matched_genes:
-            g_info = gene_map[g]
-            associated_genes.append({
-                "locus_tag": g_info["locus_tag"],
-                "gene_symbol": g_info["gene_symbol"],
-                "wt_val": g_info.get("wt_val", 0.0),
-                "mutant_val": g_info.get("mutant_val", 0.0),
-                "log2fc": g_info.get("log2fc", 0.0),
-                "p_value": g_info.get("fdr") if g_info.get("fdr") is not None else g_info.get("p_value", 1.0)
-            })
-            
-        # Sort associated genes by log2fc (extreme changes first)
-        associated_genes.sort(key=lambda x: abs(x["log2fc"]), reverse=True)
-        
-        reporter_results.append({
-            "metabolite_id": met_id,
-            "name": met_info["name"],
-            "compartment": met_info["compartment"],
-            "score": round(float(z_reporter), 3),
-            "gene_count": n,
-            "genes": associated_genes
-        })
-        
-    # Sort metabolites by Reporter Score (descending)
-    reporter_results.sort(key=lambda x: x["score"], reverse=True)
-    
-    return {"success": True, "results": reporter_results}
-
 @app.get("/api/gsh_pathway_data")
 def get_gsh_pathway_data(session_id: str = None):
     """Retrieve expression data mapped onto the custom GSH pathway coordinates."""
@@ -2972,8 +2877,8 @@ def get_yeast_ppi_data():
     return interactions
 
 @app.get("/api/network")
-def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", interaction_type: str = "all", session_id: str = None, species: str = None):
-    """Query PPI Network for top DEGs using BioGRID, STRING-DB, or Hybrid Local Cache with Fallback."""
+def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", interaction_type: str = "all", target_gene: str = None, depth: int = 1, session_id: str = None, species: str = None):
+    """Query PPI Network for top DEGs or Target-centered Ego Subnetwork using BioGRID, STRING-DB, or Hybrid Local Cache."""
     dataset_genes = get_session_genes(session_id)
     if not dataset_genes:
         raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
@@ -2981,74 +2886,108 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
     sp = species or get_session_species(session_id)
     tax_id = 511145 if sp == "eco" else (196627 if sp == "cgl" else 4932)
     
-    degs = [g for g in dataset_genes if g.get("locus_tag")]
+    all_dataset_map = {g["locus_tag"].upper(): g for g in dataset_genes if g.get("locus_tag")}
+    symbol_to_locus = {g.get("gene_symbol", "").upper(): g["locus_tag"].upper() for g in dataset_genes if g.get("gene_symbol") and g.get("locus_tag")}
     
-    # Split Upregulated and Downregulated DEGs
-    up_degs = [g for g in degs if g.get("log2fc", 0) > 0]
-    down_degs = [g for g in degs if g.get("log2fc", 0) < 0]
+    # Check if Target-centered Subnetwork Mode
+    is_target_mode = bool(target_gene and target_gene.strip())
+    seed_locus = None
+    seed_symbol = None
     
-    up_sorted = sorted(up_degs, key=lambda x: abs(x.get("log2fc", 0)), reverse=True)
-    down_sorted = sorted(down_degs, key=lambda x: abs(x.get("log2fc", 0)), reverse=True)
-    
-    half = limit // 2
-    if len(up_sorted) < half:
-        selected_up = up_sorted
-        selected_down = down_sorted[:(limit - len(selected_up))]
-    elif len(down_sorted) < (limit - half):
-        selected_down = down_sorted
-        selected_up = up_sorted[:(limit - len(selected_down))]
+    if is_target_mode:
+        q_target = target_gene.strip().upper()
+        if q_target in all_dataset_map:
+            seed_locus = q_target
+            seed_symbol = all_dataset_map[q_target].get("gene_symbol", q_target)
+        elif q_target in symbol_to_locus:
+            seed_locus = symbol_to_locus[q_target]
+            seed_symbol = q_target
+        else:
+            seed_locus = q_target
+            seed_symbol = q_target
+            
+        locus_tags = {seed_locus}
+        top_degs = [all_dataset_map[seed_locus]] if seed_locus in all_dataset_map else []
     else:
-        selected_up = up_sorted[:half]
-        selected_down = down_sorted[:(limit - half)]
+        degs = [g for g in dataset_genes if g.get("locus_tag")]
+        up_degs = [g for g in degs if g.get("log2fc", 0) > 0]
+        down_degs = [g for g in degs if g.get("log2fc", 0) < 0]
         
-    top_degs = selected_up + selected_down
-    top_degs = sorted(top_degs, key=lambda x: abs(x.get("log2fc", 0)), reverse=True)
-    
-    if not top_degs:
-        return {"success": True, "nodes": [], "edges": []}
+        up_sorted = sorted(up_degs, key=lambda x: abs(x.get("log2fc", 0)), reverse=True)
+        down_sorted = sorted(down_degs, key=lambda x: abs(x.get("log2fc", 0)), reverse=True)
         
-    locus_tags = set(g["locus_tag"].upper() for g in top_degs)
+        half = limit // 2
+        if len(up_sorted) < half:
+            selected_up = up_sorted
+            selected_down = down_sorted[:(limit - len(selected_up))]
+        elif len(down_sorted) < (limit - half):
+            selected_down = down_sorted
+            selected_up = up_sorted[:(limit - len(selected_down))]
+        else:
+            selected_up = up_sorted[:half]
+            selected_down = down_sorted[:(limit - half)]
+            
+        top_degs = selected_up + selected_down
+        top_degs = sorted(top_degs, key=lambda x: abs(x.get("log2fc", 0)), reverse=True)
+        
+        if not top_degs:
+            return {"success": True, "nodes": [], "edges": []}
+            
+        locus_tags = set(g["locus_tag"].upper() for g in top_degs)
+        
     fc_map = {g["locus_tag"].upper(): g.get("log2fc", 0.0) for g in top_degs}
     symbol_map = {g["locus_tag"].upper(): g.get("gene_symbol", g["locus_tag"]) for g in top_degs}
     desc_map = {g["locus_tag"].upper(): g.get("description", "") for g in top_degs}
     
     query_identifiers = set()
     alias_to_locus = {}
-    for g in top_degs:
-        tag = g["locus_tag"].upper()
-        sym = g.get("gene_symbol", "").upper()
-        query_identifiers.add(tag)
-        alias_to_locus[tag] = tag
-        if sym:
-            query_identifiers.add(sym)
-            alias_to_locus[sym] = tag
-        if tag.startswith("NCGL"):
-            cgl = "CGL" + tag[4:]
-            cg = "CG" + tag[4:]
-            query_identifiers.add(cgl)
-            query_identifiers.add(cg)
-            alias_to_locus[cgl] = tag
-            alias_to_locus[cg] = tag
-        elif tag.startswith("CGL"):
-            ncgl = "NCGL" + tag[3:]
-            cg = "CG" + tag[3:]
-            query_identifiers.add(ncgl)
-            query_identifiers.add(cg)
-            alias_to_locus[ncgl] = tag
-            alias_to_locus[cg] = tag
+    
+    if is_target_mode:
+        query_identifiers.add(seed_locus)
+        alias_to_locus[seed_locus] = seed_locus
+        if seed_symbol:
+            query_identifiers.add(seed_symbol)
+            alias_to_locus[seed_symbol] = seed_locus
+    else:
+        for g in top_degs:
+            tag = g["locus_tag"].upper()
+            sym = g.get("gene_symbol", "").upper()
+            query_identifiers.add(tag)
+            alias_to_locus[tag] = tag
+            if sym:
+                query_identifiers.add(sym)
+                alias_to_locus[sym] = tag
+            if tag.startswith("NCGL"):
+                cgl = "CGL" + tag[4:]
+                cg = "CG" + tag[4:]
+                query_identifiers.add(cgl)
+                query_identifiers.add(cg)
+                alias_to_locus[cgl] = tag
+                alias_to_locus[cg] = tag
+            elif tag.startswith("CGL"):
+                ncgl = "NCGL" + tag[3:]
+                cg = "CG" + tag[3:]
+                query_identifiers.add(ncgl)
+                query_identifiers.add(cg)
+                alias_to_locus[ncgl] = tag
+                alias_to_locus[cg] = tag
     
     raw_edges = []
     fetched_from_string = False
     
     # 1. Try STRING API if requested
     if source == "string":
-        url = "https://string-db.org/api/json/network"
+        api_endpoint = "interaction_partners" if is_target_mode else "network"
+        url = f"https://string-db.org/api/json/{api_endpoint}"
         params = {
             "identifiers": "\n".join(list(query_identifiers)),
             "species": tax_id,
             "required_score": score,
             "caller_identity": "yeast_rnaseq_analyzer"
         }
+        if is_target_mode:
+            params["limit"] = min(limit, 30)
+            
         try:
             r = requests.post(url, data=params, timeout=8, verify=False)
             if r.status_code == 200:
@@ -3079,47 +3018,94 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
     if not fetched_from_string:
         ppi_db = get_yeast_ppi_data()
         
-        # Also query all dataset genes map for locus matching
-        all_dataset_map = {g["locus_tag"].upper(): g for g in dataset_genes}
-        
-        for item in ppi_db:
-            s_locus = item["source"].upper()
-            t_locus = item["target"].upper()
-            s_type = item.get("type", "physical")
-            s_db = item.get("db", "BioGRID")
-            sc = item.get("score", 500)
+        # When in Target mode, collect 1-hop and optional 2-hop edges
+        if is_target_mode:
+            hop1_nodes = {seed_locus}
+            # 1-hop scan
+            for item in ppi_db:
+                s_locus = item["source"].upper()
+                t_locus = item["target"].upper()
+                s_type = item.get("type", "physical")
+                s_db = item.get("db", "BioGRID")
+                sc = item.get("score", 500)
+                
+                if sc < score: continue
+                if source == "biogrid" and s_db != "BioGRID": continue
+                if interaction_type == "physical" and s_type != "physical": continue
+                if interaction_type == "genetic" and s_type != "genetic": continue
+                
+                if s_locus == seed_locus or t_locus == seed_locus:
+                    raw_edges.append({
+                        "source": s_locus,
+                        "target": t_locus,
+                        "score": sc,
+                        "type": s_type,
+                        "db": s_db
+                    })
+                    hop1_nodes.add(s_locus)
+                    hop1_nodes.add(t_locus)
             
-            # Filtering
-            if sc < score:
-                continue
-            if source == "biogrid" and s_db != "BioGRID":
-                continue
-            if interaction_type == "physical" and s_type != "physical":
-                continue
-            if interaction_type == "genetic" and s_type != "genetic":
-                continue
+            # 2-hop scan if depth == 2
+            if depth >= 2 and len(hop1_nodes) < 60:
+                for item in ppi_db:
+                    s_locus = item["source"].upper()
+                    t_locus = item["target"].upper()
+                    s_type = item.get("type", "physical")
+                    s_db = item.get("db", "BioGRID")
+                    sc = item.get("score", 500)
+                    
+                    if sc < (score + 50): continue
+                    if (s_locus in hop1_nodes and t_locus not in hop1_nodes) or (t_locus in hop1_nodes and s_locus not in hop1_nodes):
+                        if len(raw_edges) < limit:
+                            raw_edges.append({
+                                "source": s_locus,
+                                "target": t_locus,
+                                "score": sc,
+                                "type": s_type,
+                                "db": s_db
+                            })
+        else:
+            for item in ppi_db:
+                s_locus = item["source"].upper()
+                t_locus = item["target"].upper()
+                s_type = item.get("type", "physical")
+                s_db = item.get("db", "BioGRID")
+                sc = item.get("score", 500)
                 
-            # Check if both ends match top DEGs or dataset genes
-            if s_locus in locus_tags or t_locus in locus_tags:
-                raw_edges.append({
-                    "source": s_locus,
-                    "target": t_locus,
-                    "score": sc,
-                    "type": s_type,
-                    "db": s_db
-                })
+                if sc < score: continue
+                if source == "biogrid" and s_db != "BioGRID": continue
+                if interaction_type == "physical" and s_type != "physical": continue
+                if interaction_type == "genetic" and s_type != "genetic": continue
                 
-                # Make sure node info is populated in maps
-                for node_loc in [s_locus, t_locus]:
-                    if node_loc not in fc_map and node_loc in all_dataset_map:
-                        g_obj = all_dataset_map[node_loc]
-                        fc_map[node_loc] = g_obj.get("log2fc", 0.0)
-                        symbol_map[node_loc] = g_obj.get("gene_symbol", node_loc)
-                        desc_map[node_loc] = g_obj.get("description", "")
-                        
+                if s_locus in locus_tags or t_locus in locus_tags:
+                    raw_edges.append({
+                        "source": s_locus,
+                        "target": t_locus,
+                        "score": sc,
+                        "type": s_type,
+                        "db": s_db
+                    })
+                    
+    # Populate missing node information from all_dataset_map
+    for edge in raw_edges:
+        for node_loc in [edge["source"], edge["target"]]:
+            if node_loc not in fc_map and node_loc in all_dataset_map:
+                g_obj = all_dataset_map[node_loc]
+                fc_map[node_loc] = g_obj.get("log2fc", 0.0)
+                symbol_map[node_loc] = g_obj.get("gene_symbol", node_loc)
+                desc_map[node_loc] = g_obj.get("description", "")
+                
     # Build Nodes & Edges Output
     nodes = {}
     edges = []
+    
+    # Calculate degree count for each node
+    degrees = {}
+    for edge in raw_edges:
+        l1 = edge["source"]
+        l2 = edge["target"]
+        degrees[l1] = degrees.get(l1, 0) + 1
+        degrees[l2] = degrees.get(l2, 0) + 1
     
     for edge in raw_edges:
         l1 = edge["source"]
@@ -3127,11 +3113,14 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
         
         for l in [l1, l2]:
             if l not in nodes:
+                is_seed = bool(is_target_mode and (l == seed_locus or l == seed_symbol))
                 nodes[l] = {
                     "id": l,
                     "label": symbol_map.get(l, l),
                     "log2fc": fc_map.get(l, 0.0),
-                    "desc": desc_map.get(l, "")
+                    "desc": desc_map.get(l, ""),
+                    "degree": degrees.get(l, 0),
+                    "is_seed": is_seed
                 }
                 
         edges.append({
@@ -3144,6 +3133,9 @@ def get_ppi_network(limit: int = 50, score: int = 400, source: str = "hybrid", i
         
     return {
         "success": True,
+        "is_target_mode": is_target_mode,
+        "target_gene": seed_symbol or target_gene,
+        "seed_locus": seed_locus,
         "source_used": "STRING-DB API" if fetched_from_string else "Local Yeast PPI Database (BioGRID/STRING)",
         "nodes": list(nodes.values()),
         "edges": edges
@@ -3187,165 +3179,6 @@ def export_network_excel(payload: dict):
         'Access-Control-Expose-Headers': 'Content-Disposition'
     }
     return StreamingResponse(output, headers=headers, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-
-@app.get("/api/gsea_terms")
-def get_gsea_terms(session_id: str = None, species: str = None):
-    """Retrieve suitable GO terms for GSEA analysis with sufficient gene size."""
-    if not species:
-        species = get_session_species(session_id)
-    df_go = get_go_data(species)
-    if df_go.empty:
-        return {"terms": []}
-        
-    counts = df_go.groupby(["goid", "term_name", "aspect"]).size().reset_index(name="count")
-    filtered = counts[(counts["count"] >= 5) & (counts["count"] <= 1500)]
-    
-    terms = []
-    for _, row in filtered.iterrows():
-        aspect_name = "Biological Process" if row["aspect"] == "P" else ("Molecular Function" if row["aspect"] == "F" else "Cellular Component")
-        terms.append({
-            "term_id": row["goid"],
-            "name": row["term_name"],
-            "aspect": aspect_name,
-            "count": int(row["count"])
-        })
-        
-    terms = sorted(terms, key=lambda x: x["count"], reverse=True)
-    return {"terms": terms}
-
-@app.get("/api/gsea_run/{term_id}")
-def run_gsea_analysis(term_id: str, session_id: str = None, species: str = None):
-    """Run GSEA enrichment score calculation, leading edge gene extraction, and strain engineering insights."""
-    if not species:
-        species = get_session_species(session_id)
-        
-    genes = get_session_genes(session_id)
-    if not genes:
-        raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
-        
-    df_go = get_go_data(species)
-    if df_go.empty:
-        raise HTTPException(status_code=500, detail="GO 데이터를 로드하지 못했습니다.")
-        
-    term_rows = df_go[df_go["goid"] == term_id]
-    term_name = term_rows["term_name"].iloc[0] if not term_rows.empty else term_id
-    term_genes = set(str(t).strip().upper() for t in term_rows["locus_tag"])
-    
-    ranked_genes = sorted(genes, key=lambda x: x["log2fc"], reverse=True)
-    N = len(ranked_genes)
-    
-    hits = [idx for idx, g in enumerate(ranked_genes) if str(g["locus_tag"]).strip().upper() in term_genes]
-    NH = len(hits)
-    
-    if NH == 0:
-        return {"success": False, "detail": "이 GO 범주에 해당하는 업로드된 유전자가 없습니다."}
-        
-    hit_weights = [abs(ranked_genes[idx]["log2fc"]) for idx in hits]
-    sum_hit_weights = sum(hit_weights)
-    if sum_hit_weights == 0:
-        hit_weights = [1.0] * NH
-        sum_hit_weights = float(NH)
-        
-    es_profile = []
-    current_es = 0.0
-    max_es = 0.0
-    max_idx = 0
-    min_es = 0.0
-    min_idx = 0
-    
-    hit_set = set(hits)
-    
-    for i in range(N):
-        if i in hit_set:
-            hit_pos = hits.index(i)
-            current_es += hit_weights[hit_pos] / sum_hit_weights
-        else:
-            current_es -= 1.0 / (N - NH)
-            
-        if current_es > max_es:
-            max_es = current_es
-            max_idx = i
-        if current_es < min_es:
-            min_es = current_es
-            min_idx = i
-            
-        if i in hit_set or i % 10 == 0 or i == N - 1:
-            es_profile.append({
-                "rank": i + 1,
-                "gene": ranked_genes[i]["gene_symbol"] or ranked_genes[i]["locus_tag"],
-                "locus": ranked_genes[i]["locus_tag"],
-                "log2fc": ranked_genes[i]["log2fc"],
-                "es": float(current_es)
-            })
-            
-    # Calculate NES and Peak Index
-    is_positive = abs(max_es) >= abs(min_es)
-    peak_es = max_es if is_positive else min_es
-    peak_idx = max_idx if is_positive else min_idx
-    
-    # Normalized ES approximation
-    mean_hit_log2fc = np.mean([ranked_genes[idx]["log2fc"] for idx in hits])
-    nes = float(peak_es * (1.2 + abs(mean_hit_log2fc) * 0.4))
-    
-    # Compute P-value & FDR approximation based on permutation distance
-    pval = max(0.0001, round(float(np.exp(-abs(nes) * 2.8)), 4))
-    fdr = max(0.0001, round(float(pval * 1.25), 4))
-    if fdr > 1.0: fdr = 1.0
-    
-    # Extract Leading Edge Genes (Core Genes driving the enrichment)
-    leading_edge_genes = []
-    if is_positive:
-        # Leading edge: from rank 0 to peak_idx
-        le_indices = [idx for idx in hits if idx <= peak_idx]
-    else:
-        # Leading edge: from peak_idx to N-1
-        le_indices = [idx for idx in hits if idx >= peak_idx]
-        
-    for idx in le_indices:
-        g = ranked_genes[idx]
-        rec_action = "과발현 / 발현 강화 (Overexpression)" if is_positive else "유전자 결실 / 억제 (Knockout / Repression)"
-        leading_edge_genes.append({
-            "rank": idx + 1,
-            "locus_tag": g["locus_tag"],
-            "gene_symbol": g["gene_symbol"] or g["locus_tag"],
-            "log2fc": g["log2fc"],
-            "description": g["description"] or "-",
-            "recommended_action": rec_action
-        })
-        
-    status_tag = "Activated (전사적 활성화)" if nes > 0 else "Suppressed (전사적 억제)"
-    status_color = "success" if nes > 0 else "danger"
-    
-    if nes > 0:
-        insight_text = f"이 기능 경로는 전사 수준에서 <b>통합 활성화(NES: +{nes:.2f}, FDR: {fdr:.4f})</b>되어 있습니다. 이 경로의 핵심 기여 유전자 <b>{len(leading_edge_genes)}개(Leading Edge)</b>를 과발현(Overexpression)하거나 강한 프로모터로 교체하면 반응 속도(Flux)를 극대화할 수 있습니다."
-    else:
-        insight_text = f"이 기능 경로는 전사 수준에서 <b>통합 억제(NES: {nes:.2f}, FDR: {fdr:.4f})</b>되어 있습니다. 노폐물 생성 방지 또는 타깃 대사 흐름 집중을 위해 핵심 유전자 <b>{len(leading_edge_genes)}개(Leading Edge)</b>의 결실(Knockout) 또는 RNAi/CRISPRi 억제를 검토할 수 있습니다."
-        
-    barcode_ranks = [{
-        "rank": idx + 1,
-        "symbol": ranked_genes[idx]["gene_symbol"] or ranked_genes[idx]["locus_tag"],
-        "locus": ranked_genes[idx]["locus_tag"],
-        "log2fc": ranked_genes[idx]["log2fc"]
-    } for idx in hits]
-    
-    return {
-        "success": True,
-        "term_id": term_id,
-        "term_name": term_name,
-        "nes": round(nes, 4),
-        "pvalue": pval,
-        "fdr": fdr,
-        "status_tag": status_tag,
-        "status_color": status_color,
-        "peak_rank": peak_idx + 1,
-        "peak_es": round(peak_es, 4),
-        "total_hits": NH,
-        "leading_edge_count": len(leading_edge_genes),
-        "es_profile": es_profile,
-        "barcode_ranks": barcode_ranks,
-        "leading_edge_genes": leading_edge_genes,
-        "insight_text": insight_text
-    }
 
 @app.post("/api/domain_enrichment")
 def run_domain_enrichment(payload: dict):
@@ -3473,17 +3306,6 @@ def generate_report(payload: dict = Body(...)):
         top_up = up_deg.sort_values(by="log2fc", ascending=False).head(10)
         top_down = down_deg.sort_values(by="log2fc", ascending=True).head(10)
         
-        # Collect GSEA Leading Edge Targets
-        df_go = get_go_data(species)
-        counts = df_go.groupby(["goid", "term_name", "aspect"]).size().reset_index(name="count")
-        filtered_terms = counts[(counts["count"] >= 5) & (counts["count"] <= 1500)].head(5)
-        
-        gsea_summary_list = []
-        for _, r in filtered_terms.iterrows():
-            g_res = run_gsea_analysis(r["goid"], session_id=session_id, species=species)
-            if g_res.get("success"):
-                gsea_summary_list.append(g_res)
-                
         # Image base64 strings if provided from client
         volcano_img = payload.get("volcano_img", "")
         pca_img = payload.get("pca_img", "")
@@ -3799,27 +3621,34 @@ def generate_report(payload: dict = Body(...)):
             </table>
         </div>
 
-        <!-- Section 2: GSEA Pathway & Strain Engineering Targets -->
+        <!-- Section 2: Metabolic Engineering Key Targets -->
         <div class="section-card">
             <div class="section-header">
-                <i class="fa-solid fa-bullseye" style="color: #10b981;"></i> 2. GSEA 농축 분석 & 🎯 핵심 균주 개량 타깃 (Leading Edge Targets)
+                <i class="fa-solid fa-bullseye" style="color: #10b981;"></i> 2. 대사공학 개량 추천 타깃 (Top Metabolic Engineering Targets)
             </div>
+            <p style="font-size: 13px; color: #475569; margin-bottom: 12px;">
+                RNA-Seq 유의 발현 차이(DEG) 분석을 바탕으로 선별된 핵심 과발현(OE) 및 결손(KO) 추천 유전자 후보입니다.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px;">
+                    <strong style="color: #b91c1c; font-size: 13px;"><i class="fa-solid fa-arrow-up"></i> 과발현(OE) 추천 후보</strong>
+                    <ul style="font-size: 12px; color: #374151; margin: 8px 0 0 18px; padding: 0;">
 """
-        if gsea_summary_list:
-            for g in gsea_summary_list:
-                status_color = "#10b981" if g["nes"] > 0 else "#ef4444"
-                html_code += f"""
-            <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong>{g['term_name']} (<code>{g['term_id']}</code>)</strong>
-                    <span style="background: {status_color}; color: white; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">
-                        {g['status_tag']} (NES: {g['nes']:+.2f}, FDR: {g['fdr']:.4f})
-                    </span>
+        for _, r in top_up.head(5).iterrows():
+            sym = r.get("gene_symbol") or r["locus_tag"]
+            html_code += f"<li><b>{sym}</b> ({r['locus_tag']}): Log2FC +{r['log2fc']:.2f}</li>\n"
+        html_code += """                    </ul>
                 </div>
-                <p style="font-size: 12px; color: #475569; margin-top: 6px;">{g['insight_text']}</p>
-            </div>
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px;">
+                    <strong style="color: #1d4ed8; font-size: 13px;"><i class="fa-solid fa-arrow-down"></i> 결손(KO) / 억제 추천 후보</strong>
+                    <ul style="font-size: 12px; color: #374151; margin: 8px 0 0 18px; padding: 0;">
 """
-        html_code += """
+        for _, r in top_down.head(5).iterrows():
+            sym = r.get("gene_symbol") or r["locus_tag"]
+            html_code += f"<li><b>{sym}</b> ({r['locus_tag']}): Log2FC {r['log2fc']:.2f}</li>\n"
+        html_code += """                    </ul>
+                </div>
+            </div>
         </div>
 
         <!-- Footnote -->

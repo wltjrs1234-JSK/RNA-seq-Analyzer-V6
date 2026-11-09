@@ -190,8 +190,6 @@ function switchTab(tabId) {
         renderPCAPlot();
     } else if (tabId === 'network-tab') {
         renderNetworkGraph();
-    } else if (tabId === 'gsea-tab') {
-        loadGSEATerms();
     } else if (tabId === 'motif-tab') {
         renderMotifLogoPlaceholder();
     } else if (tabId === 'custom-pathway-tab') {
@@ -1127,14 +1125,6 @@ function resetOtherAnalysisViews() {
     if (netDetails) {
         netDetails.innerHTML = '<p class="text-center text-muted" style="margin-top: 100px;">네트워크에서 유전자 노드를 클릭하시면 상세 기능 설명이 여기에 표시됩니다.</p>';
     }
-    
-    // Reset GSEA view
-    const gseaList = document.getElementById("gsea-terms-list");
-    if (gseaList) {
-        gseaList.innerHTML = '<p class="text-center text-muted" style="padding: 20px 0;">데이터 분석 대기 중...</p>';
-    }
-    const gseaBanner = document.getElementById("gsea-dashboard-banner");
-    if (gseaBanner) gseaBanner.style.display = "none";
 }
 
 function finalizeDataLoading() {
@@ -1393,6 +1383,43 @@ function initControls() {
     const netExportBtn = document.getElementById("btn-export-network-excel");
     if (netExportBtn) {
         netExportBtn.addEventListener("click", exportNetworkToExcel);
+    }
+    
+    // Target Ego-Network Controls
+    const btnRunTargetNet = document.getElementById("btn-run-target-network");
+    const targetNetInput = document.getElementById("network-target-input");
+    const btnNetClearTarget = document.getElementById("btn-net-clear-target");
+    const btnResetNetView = document.getElementById("btn-reset-network-view");
+    const netDepthSelect = document.getElementById("network-depth-select");
+
+    if (btnRunTargetNet) {
+        btnRunTargetNet.addEventListener("click", () => {
+            const val = targetNetInput ? targetNetInput.value.trim() : "";
+            gNetTargetGene = val || null;
+            renderNetworkGraph();
+        });
+    }
+    if (targetNetInput) {
+        targetNetInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                gNetTargetGene = targetNetInput.value.trim() || null;
+                renderNetworkGraph();
+            }
+        });
+    }
+    if (btnNetClearTarget) {
+        btnNetClearTarget.addEventListener("click", resetNetworkTargetView);
+    }
+    if (btnResetNetView) {
+        btnResetNetView.addEventListener("click", resetNetworkTargetView);
+    }
+    if (netDepthSelect) {
+        netDepthSelect.addEventListener("change", () => {
+            if (gNetTargetGene || (targetNetInput && targetNetInput.value.trim())) {
+                renderNetworkGraph();
+            }
+        });
     }
     
     // Volcano Toggle buttons
@@ -3188,6 +3215,147 @@ function exportNetworkToExcel() {
     .catch(err => alert("네트워크 엑셀 다운로드 중 오류 발생: " + err.message));
 }
 
+let gNetTargetGene = null;
+
+function focusTargetNetwork(geneSymbol) {
+    if (!geneSymbol) return;
+    gNetTargetGene = geneSymbol;
+    const input = document.getElementById("network-target-input");
+    if (input) input.value = geneSymbol;
+    renderNetworkGraph();
+}
+
+function resetNetworkTargetView() {
+    gNetTargetGene = null;
+    const input = document.getElementById("network-target-input");
+    if (input) input.value = "";
+    renderNetworkGraph();
+}
+
+function renderTopHubsChips() {
+    const hubBox = document.getElementById("network-top-hubs-container");
+    if (!hubBox || !gNetworkCurrentData || !gNetworkCurrentData.nodes) return;
+    
+    // Sort nodes by degree descending
+    const sorted = [...gNetworkCurrentData.nodes].sort((a, b) => (b.degree || 0) - (a.degree || 0));
+    const topHubs = sorted.slice(0, 6);
+    if (topHubs.length === 0) return;
+    
+    let html = `
+        <div style="font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+            <span><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> 핵심 허브 유전자 (Top Degree)</span>
+            <span style="font-size: 10px; color: #94a3b8;">클릭 시 포커스</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+    `;
+    
+    topHubs.forEach(h => {
+        const deg = h.degree || 0;
+        const color = h.log2fc >= 0 ? '#ef4444' : '#3b82f6';
+        html += `
+            <button type="button" class="btn btn-outline-secondary btn-sm net-hub-chip" data-id="${h.id}" data-label="${h.label}" style="font-size: 11px; padding: 2px 7px; border-radius: 12px; background: #fff; border-color: #cbd5e1; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${color};"></span>
+                <strong>${h.label}</strong>
+                <span style="font-size: 10px; color: #64748b; background: #f1f5f9; padding: 1px 4px; border-radius: 6px;">k=${deg}</span>
+            </button>
+        `;
+    });
+    html += `</div>`;
+    hubBox.innerHTML = html;
+    
+    hubBox.querySelectorAll(".net-hub-chip").forEach(btn => {
+        btn.onclick = () => {
+            const geneId = btn.getAttribute("data-id");
+            if (cyInstance) {
+                const targetNode = cyInstance.getElementById(geneId);
+                if (targetNode && targetNode.length > 0) {
+                    cyInstance.nodes().unselect();
+                    targetNode.select();
+                    cyInstance.animate({
+                        center: { eles: targetNode },
+                        zoom: 1.5,
+                        duration: 400
+                    });
+                    showNetworkNodeDetails(targetNode.data());
+                }
+            }
+        };
+    });
+}
+
+function showNetworkNodeDetails(nodeData) {
+    const detailsPanel = document.getElementById("network-node-details");
+    if (!detailsPanel) return;
+    const nodeGene = { locus_tag: nodeData.id, gene_symbol: nodeData.label };
+    const uUrl = getUniprotUrl(nodeGene);
+    const deg = nodeData.degree || 0;
+    const isSeed = nodeData.is_seed || false;
+    
+    detailsPanel.innerHTML = `
+        <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <span style="font-size: 11px; font-weight: 600; color: #6366f1; text-transform: uppercase;">ORF Name (Systematic ID)</span>
+                <h5 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 2px 0;">${nodeData.id}</h5>
+            </div>
+            <a href="${uUrl}" target="_blank" rel="noopener noreferrer" class="uniprot-badge-btn" title="UniProt에서 상세 단백질 정보 보기">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> UniProt DB
+            </a>
+        </div>
+        <div style="margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 600; color: #64748b;">Gene Symbol</span>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                <span style="font-size: 15px; font-weight: 700; color: #1e293b;">${nodeData.label}</span>
+                ${isSeed ? '<span style="background: #f59e0b; color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;"><i class="fa-solid fa-bullseye"></i> Seed Target</span>' : ''}
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+            <div style="background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <span style="font-size: 10px; font-weight: 600; color: #64748b; display: block;">Log2 Fold Change</span>
+                <span style="font-size: 13px; font-weight: 700; color: ${nodeData.log2fc >= 0 ? '#ef4444' : '#3b82f6'};">
+                    ${nodeData.log2fc >= 0 ? '+' : ''}${typeof nodeData.log2fc === 'number' ? nodeData.log2fc.toFixed(3) : nodeData.log2fc}
+                </span>
+            </div>
+            <div style="background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <span style="font-size: 10px; font-weight: 600; color: #64748b; display: block;">연결 차수 (Degree)</span>
+                <span style="font-size: 13px; font-weight: 700; color: #0284c7;">
+                    <i class="fa-solid fa-circle-nodes"></i> ${deg}개 파트너
+                </span>
+            </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+            <span style="font-size: 11px; font-weight: 600; color: #64748b;">Gene Description</span>
+            <p style="font-size: 12px; line-height: 1.5; color: #475569; margin: 2px 0; max-height: 130px; overflow-y: auto; background: #fafafa; padding: 6px 8px; border-radius: 4px; border: 1px solid #f1f5f9;">
+                ${nodeData.desc || '설명 정보 없음'}
+            </p>
+        </div>
+        <div style="border-top: 1px solid #f1f5f9; padding-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+            <button type="button" id="btn-focus-ego-net" class="btn btn-primary btn-sm" style="width: 100%; font-size: 11px; justify-content: center; background: #6366f1; border-color: #6366f1;">
+                <i class="fa-solid fa-crosshairs"></i> 이 유전자 중심 서브망 재구성
+            </button>
+            <button type="button" id="btn-net-reg-target" class="btn btn-secondary btn-sm" style="width: 100%; font-size: 11px; justify-content: center;">
+                <i class="fa-solid fa-star" style="color: #f59e0b;"></i> 맞춤 대사경로 타깃 후보로 등록
+            </button>
+        </div>
+        <div id="network-top-hubs-container" style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #cbd5e1;"></div>
+    `;
+
+    const btnFocus = document.getElementById("btn-focus-ego-net");
+    if (btnFocus) {
+        btnFocus.onclick = () => {
+            focusTargetNetwork(nodeData.label || nodeData.id);
+        };
+    }
+    const btnReg = document.getElementById("btn-net-reg-target");
+    if (btnReg) {
+        btnReg.onclick = () => {
+            const sym = nodeData.label || nodeData.id;
+            const strat = (nodeData.log2fc >= 0) ? "OE" : "KO";
+            registerCandidateAsTarget(sym, strat, `PPI 네트워크 발굴 (연결 차수: ${deg})`);
+        };
+    }
+    renderTopHubsChips();
+}
+
 function renderNetworkGraph() {
     const limit = document.getElementById("network-limit") ? document.getElementById("network-limit").value : 50;
     const score = document.getElementById("network-score") ? document.getElementById("network-score").value : 400;
@@ -3195,6 +3363,21 @@ function renderNetworkGraph() {
     const type = document.getElementById("network-type") ? document.getElementById("network-type").value : 'all';
     const container = document.getElementById("cy-network");
     
+    const targetInput = document.getElementById("network-target-input");
+    const depthSelect = document.getElementById("network-depth-select");
+    const btnReset = document.getElementById("btn-reset-network-view");
+    const btnClearTarget = document.getElementById("btn-net-clear-target");
+    
+    const targetGene = gNetTargetGene !== null ? gNetTargetGene : (targetInput ? targetInput.value.trim() : "");
+    const depth = depthSelect ? depthSelect.value : 1;
+    
+    if (targetInput && gNetTargetGene !== null) {
+        targetInput.value = gNetTargetGene;
+    }
+    
+    if (btnReset) btnReset.style.display = targetGene ? "inline-flex" : "none";
+    if (btnClearTarget) btnClearTarget.style.display = targetGene ? "block" : "none";
+
     const titleEl = document.getElementById("network-tab-title");
     
     if (gNetworkMode === 'string') {
@@ -3202,10 +3385,15 @@ function renderNetworkGraph() {
             let srcLabel = "하이브리드 (BioGRID + STRING)";
             if (source === "biogrid") srcLabel = "BioGRID (실험 검증 PPI)";
             else if (source === "string") srcLabel = "STRING-DB API";
-            titleEl.innerHTML = `단백질 상호작용 네트워크 <span style="font-size: 13px; font-weight: 500; color: #6366f1;">[${srcLabel}]</span>`;
+            
+            if (targetGene) {
+                titleEl.innerHTML = `🎯 타깃 중심 서브네트워크: <span style="font-weight: 700; color: #6366f1;">${targetGene}</span> <span style="font-size: 12px; color: #64748b;">(${depth}-Hop 이웃, ${srcLabel})</span>`;
+            } else {
+                titleEl.innerHTML = `단백질 상호작용 네트워크 <span style="font-size: 13px; font-weight: 500; color: #6366f1;">[${srcLabel}]</span>`;
+            }
         }
         
-        container.innerHTML = `<div style="text-align: center; padding-top: 200px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 10px;">PPI 상호작용 네트워크 불러오는 중...</p></div>`;
+        container.innerHTML = `<div style="text-align: center; padding-top: 200px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 10px;">${targetGene ? `타깃 '${targetGene}' 중심 서브네트워크 추출 중...` : 'PPI 상호작용 네트워크 불러오는 중...'}</p></div>`;
         
         const params = new URLSearchParams({
             limit: limit,
@@ -3215,6 +3403,11 @@ function renderNetworkGraph() {
             species: gCurrentSpecies || 'sce',
             session_id: gActiveSessionId || ''
         });
+        
+        if (targetGene) {
+            params.append("target_gene", targetGene);
+            params.append("depth", depth);
+        }
 
         fetch(`${API_URL}/api/network?${params.toString()}`)
         .then(r => r.json())
@@ -3229,7 +3422,11 @@ function renderNetworkGraph() {
             gNetworkCurrentData = { nodes: nodes, edges: edges };
             
             if (nodes.length === 0) {
-                container.innerHTML = `<div class="text-center text-muted" style="padding-top: 200px;">상위 DEG 유전자들에 매칭되는 상호작용 노드가 없습니다.</div>`;
+                container.innerHTML = `<div class="text-center text-muted" style="padding-top: 200px;">
+                    <i class="fa-solid fa-circle-nodes fa-2x" style="color: #cbd5e1; margin-bottom: 10px;"></i>
+                    <p>${targetGene ? `'${targetGene}'와 연결된 상호작용 파트너를 찾을 수 없습니다.` : '상위 DEG 유전자들에 매칭되는 상호작용 노드가 없습니다.'}</p>
+                    ${targetGene ? `<button class="btn btn-secondary btn-sm" onclick="resetNetworkTargetView()" style="margin-top: 8px;">전체망으로 복귀</button>` : ''}
+                </div>`;
                 return;
             }
             
@@ -3238,6 +3435,10 @@ function renderNetworkGraph() {
             
             nodes.forEach(n => {
                 let color = '#cbd5e1';
+                let borderCol = '#94a3b8';
+                let borderWidth = '2px';
+                let nodeSize = 46;
+                
                 if (n.log2fc > 0) {
                     const intensity = Math.min(n.log2fc / 2.0, 1.0);
                     color = `rgb(${255}, ${Math.round(255 - 200 * intensity)}, ${Math.round(255 - 200 * intensity)})`;
@@ -3246,13 +3447,25 @@ function renderNetworkGraph() {
                     color = `rgb(${Math.round(255 - 200 * intensity)}, ${Math.round(255 - 200 * intensity)}, ${255})`;
                 }
                 
+                // Highlight target seed node with prominent gold emblem styling
+                if (n.is_seed) {
+                    borderCol = '#f59e0b';
+                    borderWidth = '4.5px';
+                    nodeSize = 58;
+                }
+                
                 elements.push({
                     data: {
                         id: n.id,
                         label: n.label,
                         log2fc: n.log2fc,
                         desc: n.desc,
-                        bg: color
+                        degree: n.degree || 0,
+                        is_seed: n.is_seed || false,
+                        bg: color,
+                        borderCol: borderCol,
+                        borderWidth: borderWidth,
+                        nodeSize: `${nodeSize}px`
                     }
                 });
             });
@@ -3291,15 +3504,15 @@ function renderNetworkGraph() {
                         style: {
                             'label': 'data(label)',
                             'background-color': 'data(bg)',
-                            'border-width': '2px',
-                            'border-color': '#1e293b',
+                            'border-width': 'data(borderWidth)',
+                            'border-color': 'data(borderCol)',
                             'color': '#0f172a',
                             'font-size': '12px',
                             'font-weight': 'bold',
                             'text-valign': 'center',
                             'text-halign': 'center',
-                            'width': '50px',
-                            'height': '50px',
+                            'width': 'data(nodeSize)',
+                            'height': 'data(nodeSize)',
                             'overlay-padding': '4px',
                             'text-outline-width': '2px',
                             'text-outline-color': '#ffffff'
@@ -3326,37 +3539,19 @@ function renderNetworkGraph() {
             });
             
             const detailsPanel = document.getElementById("network-node-details");
-            cyInstance.on('tap', 'node', function(evt){
-                const nodeData = evt.target.data();
-                const nodeGene = { locus_tag: nodeData.id, gene_symbol: nodeData.label };
-                const uUrl = getUniprotUrl(nodeGene);
+            if (detailsPanel) {
                 detailsPanel.innerHTML = `
-                    <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-                        <div>
-                            <span style="font-size: 11px; font-weight: 600; color: #6366f1; text-transform: uppercase;">ORF Name (Systematic ID)</span>
-                            <h5 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 2px 0;">${nodeData.id}</h5>
-                        </div>
-                        <a href="${uUrl}" target="_blank" rel="noopener noreferrer" class="uniprot-badge-btn" title="UniProt에서 상세 단백질 정보 보기">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i> UniProt DB
-                        </a>
+                    <div style="text-align: center; padding: 20px 8px; color: #64748b;">
+                        <i class="fa-solid fa-circle-nodes fa-2x" style="color: #6366f1; opacity: 0.6; margin-bottom: 8px;"></i>
+                        <p style="font-size: 12px; margin: 0 0 10px 0;">유전자 노드를 클릭하면 상호작용 상세 정보 및 타깃 서브망 재구성이 가능합니다.</p>
                     </div>
-                    <div style="margin-bottom: 10px;">
-                        <span style="font-size: 11px; font-weight: 600; color: #64748b;">Gene Symbol</span>
-                        <p style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 2px 0;">${nodeData.label}</p>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <span style="font-size: 11px; font-weight: 600; color: #64748b;">Log2 Fold Change</span>
-                        <p style="font-size: 14px; font-weight: 700; color: ${nodeData.log2fc >= 0 ? '#ef4444' : '#3b82f6'}; margin: 2px 0;">
-                            ${nodeData.log2fc >= 0 ? '+' : ''}${nodeData.log2fc.toFixed(4)}
-                        </p>
-                    </div>
-                    <div>
-                        <span style="font-size: 11px; font-weight: 600; color: #64748b;">Gene Description</span>
-                        <p style="font-size: 13px; line-height: 1.5; color: #475569; margin: 2px 0; max-height: 200px; overflow-y: auto;">
-                            ${nodeData.desc || '정보 없음'}
-                        </p>
-                    </div>
+                    <div id="network-top-hubs-container" style="border-top: 1px dashed #cbd5e1; padding-top: 10px;"></div>
                 `;
+                renderTopHubsChips();
+            }
+            
+            cyInstance.on('tap', 'node', function(evt){
+                showNetworkNodeDetails(evt.target.data());
             });
         })
         .catch(err => {
@@ -3684,244 +3879,6 @@ function highlightTFInNetwork(tfName) {
             cyInstance.fit();
             alert(`전사인자 "${tfName}"가 현재 가시 노드 내에 포함되어 있지 않습니다.`);
         }
-    });
-}
-
-// ----------------------------------------------------------------------
-// 12. GSEA Enrichment Score Plot
-// ----------------------------------------------------------------------
-let gGseaTerms = [];
-function loadGSEATerms() {
-    const listContainer = document.getElementById("gsea-terms-list");
-    listContainer.innerHTML = `<div style="text-align: center; padding-top: 40px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin"></i><p style="font-size: 12px; margin-top: 6px;">유전자 범주 불러오는 중...</p></div>`;
-    
-    fetch(`${API_URL}/api/gsea_terms`)
-    .then(r => r.json())
-    .then(data => {
-        gGseaTerms = data.terms || [];
-        renderGSEAList(gGseaTerms);
-        
-        const searchInput = document.getElementById("gsea-search");
-        searchInput.replaceWith(searchInput.cloneNode(true));
-        document.getElementById("gsea-search").addEventListener("input", (e) => {
-            const val = e.target.value.toLowerCase();
-            const filtered = gGseaTerms.filter(t => t.name.toLowerCase().includes(val) || t.term_id.toLowerCase().includes(val));
-            renderGSEAList(filtered);
-        });
-    })
-    .catch(err => {
-        listContainer.innerHTML = `<p class="text-center text-danger" style="padding: 20px;">범주 로드 실패: ${err.message}</p>`;
-    });
-}
-
-function renderGSEAList(terms) {
-    const listContainer = document.getElementById("gsea-terms-list");
-    listContainer.innerHTML = "";
-    if (terms.length === 0) {
-        listContainer.innerHTML = `<p class="text-center text-muted" style="padding: 20px 0;">검색 결과가 없습니다.</p>`;
-        return;
-    }
-    
-    terms.forEach(t => {
-        const div = document.createElement("div");
-        div.className = "kegg-item";
-        div.style.padding = "10px 12px";
-        div.style.borderBottom = "1px solid #f1f5f9";
-        div.innerHTML = `
-            <div style="font-weight: 600; font-size: 13px; color: #0f172a;">${t.name}</div>
-            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 4px; color: #64748b;">
-                <span><code>${t.term_id}</code></span>
-                <span>${t.count} genes</span>
-            </div>
-        `;
-        div.addEventListener("click", () => {
-            const items = listContainer.querySelectorAll(".kegg-item");
-            items.forEach(i => i.classList.remove("active"));
-            div.classList.add("active");
-            
-            runGSEAAnalysis(t.term_id, t.name);
-        });
-        listContainer.appendChild(div);
-    });
-}
-
-function runGSEAAnalysis(termId, termName) {
-    const runningDiv = document.getElementById("gsea-running-plot");
-    const barcodeDiv = document.getElementById("gsea-barcode-plot");
-    const bannerDiv = document.getElementById("gsea-dashboard-banner");
-    const leCard = document.getElementById("gsea-leading-edge-card");
-    
-    runningDiv.innerHTML = `<div style="text-align: center; padding-top: 100px; color: #64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 8px;">GSEA Running Enrichment Score 계산 중...</p></div>`;
-    barcodeDiv.innerHTML = "";
-    
-    fetch(`${API_URL}/api/gsea_run/${termId}`)
-    .then(r => r.json())
-    .then(data => {
-        if (!data.success) {
-            runningDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 100px;">GSEA 계산 실패: ${data.detail}</div>`;
-            return;
-        }
-        
-        // 1. Render Dashboard Banner & Strain Engineering Insights
-        if (bannerDiv) {
-            bannerDiv.style.display = "block";
-            document.getElementById("gsea-banner-title").textContent = data.term_name || termName;
-            document.getElementById("gsea-banner-id").textContent = data.term_id || termId;
-            
-            const isPos = data.nes > 0;
-            const statusBg = isPos ? '#10b981' : '#ef4444';
-            
-            document.getElementById("gsea-badges").innerHTML = `
-                <span class="badge" style="background: ${statusBg}; color: #ffffff; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
-                    ${isPos ? '🟢' : '🔴'} ${data.status_tag || (isPos ? 'Activated' : 'Suppressed')}
-                </span>
-                <span class="badge" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
-                    NES: ${data.nes > 0 ? '+' : ''}${data.nes.toFixed(2)}
-                </span>
-                <span class="badge" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
-                    FDR: ${data.fdr.toFixed(4)}
-                </span>
-                <span class="badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px;">
-                    🎯 Leading Edge: ${data.leading_edge_count} genes
-                </span>
-            `;
-            
-            document.getElementById("gsea-insight-text").innerHTML = data.insight_text || "분석 완료";
-        }
-        
-        const profile = data.es_profile || [];
-        const barcodes = data.barcode_ranks || [];
-        
-        const traceES = {
-            x: profile.map(p => p.rank),
-            y: profile.map(p => p.es),
-            mode: 'lines',
-            type: 'scatter',
-            name: 'Enrichment Score',
-            line: { color: data.nes > 0 ? '#10b981' : '#ef4444', width: 3.5 }
-        };
-        
-        const traceZero = {
-            x: [0, profile.length ? profile[profile.length - 1].rank : 1000],
-            y: [0, 0],
-            mode: 'lines',
-            name: 'Zero Line',
-            line: { color: '#cbd5e1', dash: 'dash', width: 1.5 },
-            showlegend: false
-        };
-        
-        const peakAnnotation = {
-            x: data.peak_rank,
-            y: data.peak_es,
-            text: `🎯 Peak ES: ${data.peak_es.toFixed(4)} (Rank ${data.peak_rank})`,
-            showarrow: true,
-            arrowhead: 2,
-            arrowsize: 1,
-            arrowwidth: 1.5,
-            arrowcolor: data.nes > 0 ? '#10b981' : '#ef4444',
-            ax: 0,
-            ay: data.nes > 0 ? -35 : 35,
-            font: { family: 'Inter, sans-serif', size: 11, color: '#0f172a' },
-            bgcolor: 'rgba(255,255,255,0.9)',
-            bordercolor: data.nes > 0 ? '#10b981' : '#ef4444',
-            borderwidth: 1,
-            borderpad: 4
-        };
-        
-        const runningLayout = {
-            title: {
-                text: `GSEA Running Score for "${termName}"`,
-                font: { size: 14, color: '#0f172a', family: 'Inter, sans-serif' }
-            },
-            xaxis: { title: 'Ranked Gene List Index', showgrid: false },
-            yaxis: { title: 'Enrichment Score (ES)', gridcolor: '#e2e8f0' },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            margin: { l: 60, r: 20, t: 40, b: 40 },
-            hovermode: 'closest',
-            annotations: [peakAnnotation]
-        };
-        
-        runningDiv.innerHTML = "";
-        Plotly.newPlot('gsea-running-plot', [traceES, traceZero], runningLayout, {responsive: true});
-        
-        const barcodeX = barcodes.map(b => b.rank);
-        
-        const traceBarcode = {
-            x: barcodeX,
-            y: Array(barcodeX.length).fill(1.0),
-            type: 'bar',
-            name: 'Hit',
-            width: 3.0,
-            marker: { color: barcodes.map(b => b.log2fc >= 0 ? '#ef4444' : '#3b82f6'), opacity: 0.8 },
-            showlegend: false
-        };
-        
-        const barcodeLayout = {
-            title: {
-                text: 'Gene Hits in Ranked List (Red: Log2FC > 0, Blue: Log2FC < 0)',
-                font: { size: 11, color: '#64748b', family: 'Inter, sans-serif' }
-            },
-            xaxis: { title: 'Ranked Index', showgrid: false, range: [0, profile.length ? profile[profile.length - 1].rank : 1000] },
-            yaxis: { showgrid: false, showticklabels: false, range: [0, 1.2] },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            margin: { l: 60, r: 20, t: 30, b: 30 }
-        };
-        
-        barcodeDiv.innerHTML = "";
-        Plotly.newPlot('gsea-barcode-plot', [traceBarcode], barcodeLayout, {responsive: true});
-        
-        // 2. Render Leading Edge Core Genes Table
-        if (leCard) {
-            leCard.style.display = "block";
-            const tbody = document.querySelector("#table-gsea-leading-edge tbody");
-            tbody.innerHTML = "";
-            
-            const leGenes = data.leading_edge_genes || [];
-            if (leGenes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Leading Edge 유전자가 없습니다.</td></tr>`;
-            } else {
-                leGenes.forEach(g => {
-                    const tr = document.createElement("tr");
-                    const isUp = g.log2fc >= 0;
-                    const actionBadge = isUp 
-                        ? `<span style="background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">⚡ ${g.recommended_action}</span>`
-                        : `<span style="background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">✂️ ${g.recommended_action}</span>`;
-                        
-                    tr.innerHTML = `
-                        <td><strong>${g.rank}</strong></td>
-                        <td><code>${g.locus_tag}</code></td>
-                        <td><strong>${g.gene_symbol}</strong></td>
-                        <td style="color: ${isUp ? '#ef4444' : '#3b82f6'}; font-weight: 600;">${g.log2fc >= 0 ? '+' : ''}${g.log2fc.toFixed(2)}</td>
-                        <td style="color: #475569;">${g.description}</td>
-                        <td>${actionBadge}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-            
-            // Export CSV listener
-            const btnExport = document.getElementById("btn-export-gsea-le");
-            if (btnExport) {
-                btnExport.onclick = () => {
-                    let csv = "Rank,Locus Tag,Gene Symbol,Log2FC,Description,Recommended Action\n";
-                    leGenes.forEach(g => {
-                        csv += `"${g.rank}","${g.locus_tag}","${g.gene_symbol}","${g.log2fc}","${g.description.replace(/"/g, '""')}","${g.recommended_action}"\n`;
-                    });
-                    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `GSEA_Leading_Edge_${data.term_id}_${data.term_name.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                };
-            }
-        }
-    })
-    .catch(err => {
-        runningDiv.innerHTML = `<div class="text-center text-danger" style="padding-top: 100px;">오류: ${err.message}</div>`;
     });
 }
 
@@ -4297,14 +4254,14 @@ function initAdvancedAnalysisBindings() {
     const candidateArea = document.getElementById("subtab-candidate-area");
 
     const resetSubtabs = () => {
-        [subtabTfBtn, subtabBottleneckBtn, subtabStressBtn, subtabReporterBtn, subtabCandidateBtn].forEach(btn => {
+        [subtabTfBtn, subtabBottleneckBtn, subtabStressBtn, subtabCandidateBtn].forEach(btn => {
             if (btn) {
                 btn.classList.remove("active");
                 btn.style.color = "var(--text-muted)";
                 btn.style.borderColor = "var(--border-color)";
             }
         });
-        [tfArea, bottleneckArea, stressArea, reporterArea, candidateArea].forEach(area => {
+        [tfArea, bottleneckArea, stressArea, candidateArea].forEach(area => {
             if (area) area.style.display = "none";
         });
     };
@@ -4340,15 +4297,7 @@ function initAdvancedAnalysisBindings() {
         });
     }
 
-    if (subtabReporterBtn) {
-        subtabReporterBtn.addEventListener("click", () => {
-            resetSubtabs();
-            subtabReporterBtn.classList.add("active");
-            subtabReporterBtn.style.color = "var(--text-primary)";
-            subtabReporterBtn.style.borderColor = "var(--primary-color)";
-            if (reporterArea) reporterArea.style.display = "block";
-        });
-    }
+
 
     if (subtabCandidateBtn) {
         subtabCandidateBtn.addEventListener("click", () => {
@@ -4371,8 +4320,7 @@ function initAdvancedAnalysisBindings() {
     const btnRunStress = document.getElementById("btn-run-stress-prediction");
     if (btnRunStress) btnRunStress.addEventListener("click", runStressSpectrumPrediction);
 
-    const btnRunReporter = document.getElementById("btn-run-reporter");
-    if (btnRunReporter) btnRunReporter.addEventListener("click", runReporterMetaboliteAnalysis);
+
 
     // Candidate Target & Bypass Enzyme Finder bindings
     initCandidateTargetFinderBindings();
@@ -4717,128 +4665,6 @@ function renderStressRadarChart() {
     chartDiv.appendChild(myPlot);
 
     Plotly.newPlot(myPlot, traces, layout, {responsive: true});
-}
-
-// 4) Reporter Metabolites Analysis
-function runReporterMetaboliteAnalysis() {
-    const chartDiv = document.getElementById("reporter-score-chart");
-    chartDiv.innerHTML = `<div style="text-align:center; padding-top:150px; color:#64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">리포터 대사물질 스캔 중...</p></div>`;
-
-    fetch(`${API_URL}/api/reporter_metabolites`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("리포터 분석 API 실패");
-        return res.json();
-    })
-    .then(data => {
-        if (!data.success || data.results.length === 0) {
-            chartDiv.innerHTML = `<div style="text-align:center; padding-top:150px; color:#ef4444;">유의한 리포터 대사물질을 탐지하지 못했습니다.</div>`;
-            return;
-        }
-
-        const results = data.results;
-        // Take top 15 metabolites for better readability
-        const topResults = results.slice(0, 15);
-        const metNames = topResults.map(r => `${r.name} (${r.compartment})`);
-        const scores = topResults.map(r => r.score);
-        
-        // Dynamic colors based on significance score (threshold 1.5)
-        const colors = scores.map(s => s >= 1.5 ? 'rgba(139, 92, 246, 0.85)' : 'rgba(148, 163, 184, 0.85)');
-
-        const trace = {
-            x: scores,
-            y: metNames,
-            type: 'bar',
-            orientation: 'h',
-            marker: {
-                color: colors,
-                line: { color: 'rgba(0, 0, 0, 0.1)', width: 1 }
-            },
-            text: scores.map(s => `${s}`),
-            textposition: 'auto',
-            customdata: topResults
-        };
-
-        const layout = {
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            xaxis: {
-                title: 'Reporter Score (Z-score)',
-                gridcolor: '#e2e8f0',
-                zerolinecolor: '#cbd5e1'
-            },
-            yaxis: {
-                autorange: 'reversed',
-                gridcolor: '#e2e8f0'
-            },
-            margin: { l: 150, r: 30, t: 10, b: 60 }
-        };
-
-        chartDiv.innerHTML = "";
-        const myPlot = document.createElement("div");
-        myPlot.style.width = "100%";
-        myPlot.style.height = "100%";
-        chartDiv.appendChild(myPlot);
-
-        Plotly.newPlot(myPlot, [trace], layout, {responsive: true});
-
-        myPlot.on('plotly_click', function(clickData) {
-            const point = clickData.points[0];
-            const metData = point.customdata;
-            displayReporterDetailTable(metData);
-        });
-
-        // Default load the first one
-        displayReporterDetailTable(topResults[0]);
-    })
-    .catch(err => {
-        console.error(err);
-        chartDiv.innerHTML = `<div style="text-align:center; padding-top:150px; color:#ef4444;">오류 발생: ${err.message}</div>`;
-    });
-}
-
-function displayReporterDetailTable(metData) {
-    const desc = document.getElementById("reporter-selected-desc");
-    const body = document.getElementById("reporter-detail-body");
-
-    if (!metData) {
-        desc.textContent = "조회된 데이터가 없습니다.";
-        body.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px 0;">조회된 상세 정보가 없습니다.</td></tr>`;
-        return;
-    }
-
-    // Compartment class matching
-    let compClass = 'badge-comp-cytosol';
-    if (metData.compartment === 'mitochondria') {
-        compClass = 'badge-comp-mitochondria';
-    } else if (metData.compartment === 'extracellular') {
-        compClass = 'badge-comp-extracellular';
-    }
-
-    desc.innerHTML = `선택된 대사물질: <strong>${metData.name}</strong> <span class="badge-compartment ${compClass}">${metData.compartment}</span> (연관 유전자: ${metData.gene_count}개)`;
-
-    body.innerHTML = "";
-    metData.genes.forEach(g => {
-        const fc = parseFloat(g.log2fc).toFixed(3);
-        const pVal = parseFloat(g.p_value).toExponential(3);
-        
-        let fcColor = 'var(--text-primary)';
-        if (g.log2fc >= 0.8) fcColor = 'var(--up-red)';
-        else if (g.log2fc <= -0.8) fcColor = 'var(--down-blue)';
-
-        const tr = document.createElement("tr");
-        tr.style.borderBottom = "1px solid var(--border-color)";
-        tr.innerHTML = `
-            <td style="padding: 8px; font-weight: 600;">${g.gene_symbol}</td>
-            <td style="padding: 8px; color: #64748b;">${g.locus_tag}</td>
-            <td style="padding: 8px; text-align: right; color: ${fcColor}; font-weight: 500;">${g.log2fc >= 0 ? '+' : ''}${fc}</td>
-            <td style="padding: 8px; text-align: right; color: #64748b;">${pVal}</td>
-        `;
-        body.appendChild(tr);
-    });
 }
 
 // 5) Candidate Target & Bypass Enzyme Finder
