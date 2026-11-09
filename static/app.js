@@ -8170,6 +8170,25 @@ window.addEventListener("keydown", (e) => {
     const activeEl = document.activeElement;
     const isInput = activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.tagName === "SELECT" || activeEl.isContentEditable);
     
+    // F11: Pathway Fullscreen toggle when on custom pathway tab
+    if (e.key === "F11" || e.code === "F11") {
+        const customTab = document.getElementById("custom-pathway-tab");
+        if ((customTab && customTab.classList.contains("active")) || (typeof isPathwayFullscreen === "function" && isPathwayFullscreen())) {
+            e.preventDefault();
+            togglePathwayFullscreen();
+            return;
+        }
+    }
+
+    // Escape: Exit pathway fullscreen mode
+    if (e.key === "Escape" || e.code === "Escape") {
+        if (typeof isPathwayFullscreen === "function" && isPathwayFullscreen()) {
+            e.preventDefault();
+            togglePathwayFullscreen(false);
+            return;
+        }
+    }
+
     if (e.code === "Space" || e.key === " ") {
         if (isInput) return;
         gshSpacePressed = true;
@@ -8253,11 +8272,22 @@ function initGSHZoomPan() {
     const btnIn = document.getElementById("btn-zoom-in");
     const btnOut = document.getElementById("btn-zoom-out");
     const btnReset = document.getElementById("btn-zoom-reset");
+    const btnFs = document.getElementById("btn-pathway-fullscreen");
     const btnSync = document.getElementById("btn-refresh-gsh-pathway");
     
     if (btnIn) btnIn.addEventListener("click", () => adjustZoom(0.25));
     if (btnOut) btnOut.addEventListener("click", () => adjustZoom(-0.25));
     if (btnReset) btnReset.addEventListener("click", () => resetGSHZoom());
+    if (btnFs) btnFs.addEventListener("click", () => togglePathwayFullscreen());
+
+    // Double-click canvas background to toggle fullscreen mode
+    wrapper.addEventListener("dblclick", (e) => {
+        // Only toggle fullscreen if double-clicked on empty background
+        const targetTag = e.target.tagName ? e.target.tagName.toLowerCase() : "";
+        if (targetTag === "svg" || e.target.id === "gsh-pathway-content" || e.target.id === "gsh-pathway-viewport" || e.target.classList.contains("gsh-pathway-wrapper")) {
+            togglePathwayFullscreen();
+        }
+    });
     if (btnSync) {
         btnSync.addEventListener("click", () => {
             if (confirm("현재 활성화된 대사 경로 레이아웃 및 커스텀 노드를 기본값으로 완전히 리셋하시겠습니까?")) {
@@ -8706,15 +8736,149 @@ function adjustZoom(amount) {
     applyTransform();
 }
 
-function resetGSHZoom() {
-    gshZoomScale = 1.0;
-    gshZoomPanX = 0;
-    gshZoomPanY = 0;
+function fitGSHPathwayToScreen() {
+    const wrapper = document.querySelector(".gsh-pathway-wrapper");
+    if (!wrapper) return;
+    const currentMap = pathwayMapsStore[currentMapId] || {};
+    const mapW = currentMap.width || 1024;
+    const mapH = currentMap.height || 580;
+    const isFs = isPathwayFullscreen();
+    const pad = isFs ? 60 : 30;
+    const availW = Math.max(100, wrapper.clientWidth - pad * 2);
+    const availH = Math.max(100, wrapper.clientHeight - pad * 2);
+    const scale = Math.min(availW / mapW, availH / mapH);
+    gshZoomScale = Math.max(0.4, Math.min(3.5, Number(scale.toFixed(3))));
+    
+    // SVG 가운데 정렬
+    gshZoomPanX = Math.round((wrapper.clientWidth - mapW * gshZoomScale) / 2);
+    gshZoomPanY = Math.round((wrapper.clientHeight - mapH * gshZoomScale) / 2);
     applyTransform();
     
-    const wrapper = document.querySelector(".gsh-pathway-wrapper");
     if (wrapper) wrapper.style.cursor = isGshEditMode ? "default" : "grab";
 }
+
+function resetGSHZoom() {
+    fitGSHPathwayToScreen();
+}
+
+function isPathwayFullscreen() {
+    const wrapper = document.querySelector(".gsh-pathway-wrapper");
+    return Boolean(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement ||
+        (wrapper && wrapper.classList.contains("gsh-pathway-fullscreen-active"))
+    );
+}
+
+function updateFullscreenUI(isFullscreen) {
+    const btnToggle = document.getElementById("btn-toggle-pathway-fullscreen");
+    const iconHeader = document.getElementById("pathway-fullscreen-icon");
+    const textHeader = document.getElementById("pathway-fullscreen-text");
+    const iconInner = document.getElementById("inner-fullscreen-icon");
+    const btnInner = document.getElementById("btn-pathway-fullscreen");
+    const hudEl = document.getElementById("gsh-fullscreen-hud");
+    const hudTitle = document.getElementById("gsh-fs-map-title");
+    const currentMap = pathwayMapsStore[currentMapId];
+
+    if (isFullscreen) {
+        if (iconHeader) {
+            iconHeader.className = "fa-solid fa-compress";
+            iconHeader.style.color = "#ef4444";
+        }
+        if (textHeader) textHeader.textContent = "화면 복귀";
+        if (btnToggle) btnToggle.title = "전체화면 모드 종료 (Esc / F11)";
+        if (iconInner) iconInner.className = "fa-solid fa-compress";
+        if (btnInner) btnInner.title = "전체화면 모드 종료 (Esc / F11)";
+        if (hudEl) hudEl.style.display = "flex";
+        if (hudTitle) hudTitle.textContent = currentMap?.name || "대사 경로 전체화면 모드";
+    } else {
+        if (iconHeader) {
+            iconHeader.className = "fa-solid fa-expand";
+            iconHeader.style.color = "#0284c7";
+        }
+        if (textHeader) textHeader.textContent = "전체화면";
+        if (btnToggle) btnToggle.title = "대사 경로 전체화면 모드 (단축키: F11 / 더블클릭)";
+        if (iconInner) iconInner.className = "fa-solid fa-expand";
+        if (btnInner) btnInner.title = "전체화면 모드 (단축키: F11 / 더블클릭)";
+        if (hudEl) hudEl.style.display = "none";
+    }
+
+    // Sync HUD FC toggle button label/state
+    const hudFcBtn = document.getElementById("btn-fs-toggle-fc");
+    if (hudFcBtn) {
+        if (typeof showGshFcValues !== "undefined" && showGshFcValues) {
+            hudFcBtn.style.background = "rgba(16, 185, 129, 0.3)";
+            hudFcBtn.style.borderColor = "rgba(16, 185, 129, 0.6)";
+            hudFcBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>Log2FC 표시 중</span>';
+        } else {
+            hudFcBtn.style.background = "rgba(255, 255, 255, 0.15)";
+            hudFcBtn.style.borderColor = "rgba(255, 255, 255, 0.25)";
+            hudFcBtn.innerHTML = '<i class="fa-solid fa-calculator"></i><span>Log2FC 표시</span>';
+        }
+    }
+
+    // Smoothly re-fit zoom and center after layout transition
+    setTimeout(() => {
+        fitGSHPathwayToScreen();
+    }, 60);
+    setTimeout(() => {
+        fitGSHPathwayToScreen();
+    }, 240);
+}
+
+function togglePathwayFullscreen(forceState) {
+    const wrapper = document.querySelector(".gsh-pathway-wrapper");
+    if (!wrapper) return;
+    
+    const currentlyFullscreen = isPathwayFullscreen();
+    const targetState = (forceState !== undefined) ? forceState : !currentlyFullscreen;
+
+    if (targetState) {
+        // Enter Fullscreen
+        wrapper.classList.add("gsh-pathway-fullscreen-active");
+        const requestMethod = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.mozRequestFullScreen || wrapper.msRequestFullscreen;
+        if (requestMethod) {
+            requestMethod.call(wrapper).catch(() => {
+                // Ignore API denial; fallback class already applied
+            });
+        }
+        updateFullscreenUI(true);
+        showGshToast("🖥️ 대사 경로 전체화면 모드로 전환되었습니다. (Esc로 종료)");
+    } else {
+        // Exit Fullscreen
+        wrapper.classList.remove("gsh-pathway-fullscreen-active");
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            const exitMethod = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+            if (exitMethod) {
+                exitMethod.call(document).catch(() => {});
+            }
+        }
+        updateFullscreenUI(false);
+    }
+}
+
+// Global Fullscreen Change Event Listeners
+function onPathwayFullscreenChange() {
+    const isFs = Boolean(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+    );
+    const wrapper = document.querySelector(".gsh-pathway-wrapper");
+    if (wrapper) {
+        if (!isFs && wrapper.classList.contains("gsh-pathway-fullscreen-active")) {
+            wrapper.classList.remove("gsh-pathway-fullscreen-active");
+        }
+    }
+    updateFullscreenUI(isPathwayFullscreen());
+}
+document.addEventListener("fullscreenchange", onPathwayFullscreenChange);
+document.addEventListener("webkitfullscreenchange", onPathwayFullscreenChange);
+document.addEventListener("mozfullscreenchange", onPathwayFullscreenChange);
+document.addEventListener("MSFullscreenChange", onPathwayFullscreenChange);
 
 function applyTransform() {
     const viewport = document.getElementById("gsh-pathway-viewport");
@@ -9219,6 +9383,7 @@ function initGSHEditorBindings() {
             btnToggleFcVal.style.color = showGshFcValues ? "#2563eb" : "#475569";
             btnToggleFcVal.style.borderColor = showGshFcValues ? "#93c5fd" : "#cbd5e1";
             renderGSHPathway();
+            updateFullscreenUI(isPathwayFullscreen());
             showGshToast(showGshFcValues ? "🔢 유전자 캡슐 내 Log2FC 수치가 표시됩니다." : "유전자 캡슐 내 Log2FC 수치를 숨겼습니다.");
         });
     }
@@ -9243,6 +9408,39 @@ function initGSHEditorBindings() {
     const btnExportSvg = document.getElementById("btn-export-pathway-svg");
     if (btnExportSvg) {
         btnExportSvg.addEventListener("click", () => exportCustomPathwayImage("svg"));
+    }
+
+    // Pathway Fullscreen Buttons (Header & Floating HUD)
+    const btnToggleFs = document.getElementById("btn-toggle-pathway-fullscreen");
+    if (btnToggleFs) {
+        btnToggleFs.addEventListener("click", () => togglePathwayFullscreen());
+    }
+
+    const btnFsExit = document.getElementById("btn-fs-exit");
+    if (btnFsExit) {
+        btnFsExit.addEventListener("click", () => togglePathwayFullscreen(false));
+    }
+
+    const btnFsToggleFc = document.getElementById("btn-fs-toggle-fc");
+    if (btnFsToggleFc) {
+        btnFsToggleFc.addEventListener("click", () => {
+            if (btnToggleFcVal) btnToggleFcVal.click();
+        });
+    }
+
+    const btnFsZoomIn = document.getElementById("btn-fs-zoom-in");
+    if (btnFsZoomIn) {
+        btnFsZoomIn.addEventListener("click", () => adjustZoom(0.25));
+    }
+
+    const btnFsZoomOut = document.getElementById("btn-fs-zoom-out");
+    if (btnFsZoomOut) {
+        btnFsZoomOut.addEventListener("click", () => adjustZoom(-0.25));
+    }
+
+    const btnFsZoomReset = document.getElementById("btn-fs-zoom-reset");
+    if (btnFsZoomReset) {
+        btnFsZoomReset.addEventListener("click", () => fitGSHPathwayToScreen());
     }
 
     // Undo / Redo Toolbar Button Handlers
