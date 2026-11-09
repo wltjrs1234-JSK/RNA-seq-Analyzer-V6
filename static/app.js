@@ -6280,7 +6280,7 @@ function getNodesMap() {
     return map;
 }
 
-// Calculate the optimized intersection path for arrows between nodes (Supports curves, straight lines, and free anchors)
+// Calculate the optimized intersection path for arrows between nodes (Supports curves, straight lines, orthogonal/waypoints, and free anchors)
 function calculateArrowPath(arrow, nodesMap) {
     const fromNode = arrow.from ? nodesMap[arrow.from] : null;
     const toNode = arrow.to ? nodesMap[arrow.to] : null;
@@ -6289,6 +6289,78 @@ function calculateArrowPath(arrow, nodesMap) {
     let p1 = fromNode ? { x: fromNode.x + fromNode.w / 2, y: fromNode.y + fromNode.h / 2 } : (arrow.fromCoords || { x: 100, y: 100 });
     let p2 = toNode ? { x: toNode.x + toNode.w / 2, y: toNode.y + toNode.h / 2 } : (arrow.toCoords || { x: 200, y: 200 });
     
+    const hasWaypoints = Array.isArray(arrow.waypoints) && arrow.waypoints.length > 0;
+    
+    // 1. Multi-waypoint (bent / polyline) arrow path calculation
+    if (hasWaypoints) {
+        const rawPts = [p1, ...arrow.waypoints.map(w => ({ x: Number(w.x), y: Number(w.y) })), p2];
+        
+        // Adjust start point along the first segment (rawPts[0] -> rawPts[1])
+        const fDx = rawPts[1].x - rawPts[0].x;
+        const fDy = rawPts[1].y - rawPts[0].y;
+        const fDist = Math.hypot(fDx, fDy) || 1;
+        const fUx = fDx / fDist;
+        const fUy = fDy / fDist;
+        const startMargin = arrow.direction === 'both' ? 11 : (fromNode ? 2 : 0);
+        const startX = fromNode ? p1.x + fUx * (fromNode.w / 2 + startMargin) : p1.x + fUx * startMargin;
+        const startY = fromNode ? p1.y + fUy * (fromNode.h / 2 + startMargin) : p1.y + fUy * startMargin;
+        
+        // Adjust end point along the last segment (rawPts[n-2] -> rawPts[n-1])
+        const lastPrev = rawPts[rawPts.length - 2];
+        const lDx = p2.x - lastPrev.x;
+        const lDy = p2.y - lastPrev.y;
+        const lDist = Math.hypot(lDx, lDy) || 1;
+        const lUx = lDx / lDist;
+        const lUy = lDy / lDist;
+        const endMargin = arrow.direction === 'none' ? 0 : 10;
+        const endX = toNode ? p2.x - lUx * (toNode.w / 2 + endMargin) : p2.x - lUx * endMargin;
+        const endY = toNode ? p2.y - lUy * (toNode.h / 2 + endMargin) : p2.y - lUy * endMargin;
+        
+        const pts = [{ x: startX, y: startY }, ...arrow.waypoints.map(w => ({ x: Number(w.x), y: Number(w.y) })), { x: endX, y: endY }];
+        
+        // Find midpoint of the longest segment for placing the "+유전자 / +꺾임" toolbar
+        let bestLen = -1;
+        let midX = (startX + endX) / 2;
+        let midY = (startY + endY) / 2;
+        for (let i = 0; i < pts.length - 1; i++) {
+            const segLen = Math.hypot(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y);
+            if (segLen > bestLen) {
+                bestLen = segLen;
+                midX = (pts[i].x + pts[i + 1].x) / 2;
+                midY = (pts[i].y + pts[i + 1].y) / 2;
+            }
+        }
+        
+        arrow._calculated = { startX, startY, endX, endY, cx: midX, cy: midY, midX, midY, ux: lUx, uy: lUy, nx: -lUy, ny: lUx };
+        
+        // Build smooth rounded-corner polyline SVG path
+        const cmds = [`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`];
+        for (let i = 1; i < pts.length - 1; i++) {
+            const prev = pts[i - 1];
+            const curr = pts[i];
+            const next = pts[i + 1];
+            const v1x = curr.x - prev.x;
+            const v1y = curr.y - prev.y;
+            const v2x = next.x - curr.x;
+            const v2y = next.y - curr.y;
+            const len1 = Math.hypot(v1x, v1y);
+            const len2 = Math.hypot(v2x, v2y);
+            const r = Math.min(7, len1 / 3, len2 / 3);
+            if (r > 1.2) {
+                const pBeforeX = curr.x - (v1x / len1) * r;
+                const pBeforeY = curr.y - (v1y / len1) * r;
+                const pAfterX = curr.x + (v2x / len2) * r;
+                const pAfterY = curr.y + (v2y / len2) * r;
+                cmds.push(`L ${pBeforeX.toFixed(1)} ${pBeforeY.toFixed(1)}`);
+                cmds.push(`Q ${curr.x.toFixed(1)} ${curr.y.toFixed(1)} ${pAfterX.toFixed(1)} ${pAfterY.toFixed(1)}`);
+            } else {
+                cmds.push(`L ${curr.x.toFixed(1)} ${curr.y.toFixed(1)}`);
+            }
+        }
+        cmds.push(`L ${pts[pts.length - 1].x.toFixed(1)} ${pts[pts.length - 1].y.toFixed(1)}`);
+        return cmds.join(" ");
+    }
+
     const dx = p2.x - p1.x;
     const dy = p2.y - p1.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -6309,12 +6381,12 @@ function calculateArrowPath(arrow, nodesMap) {
     p2 = { x: p2.x + nx * pOffset, y: p2.y + ny * pOffset };
     
     // Auto-calculate border offset boundary with clear margins to avoid overlapping arrowheads
-    let startMargin = 2;
-    let endMargin = 12;
+    let startMargin = fromNode ? 2 : 0;
+    let endMargin = arrow.direction === 'none' ? 0 : 11;
     
     if (arrow.direction === 'both') {
-        startMargin = 13;
-        endMargin = 13;
+        startMargin = 12;
+        endMargin = 12;
     }
     
     let startX = fromNode ? p1.x + ux * (fromNode.w / 2 + startMargin) : p1.x + ux * startMargin;
@@ -6332,34 +6404,25 @@ function calculateArrowPath(arrow, nodesMap) {
     if (arrow.type === 'orthogonal') {
         const adx = Math.abs(endX - startX);
         const ady = Math.abs(endY - startY);
-        const r = Math.min(10, adx / 3, ady / 3);
+        const r = Math.min(8, adx / 3, ady / 3);
         arrow._calculated = { startX, startY, endX, endY, cx, cy, midX, midY, ux, uy, nx, ny };
         if (adx < 2 || ady < 2) {
             return `M ${startX.toFixed(1)} ${startY.toFixed(1)} L ${endX.toFixed(1)} ${endY.toFixed(1)}`;
         }
-        if (adx >= ady) {
-            const sx = endX > startX ? 1 : -1;
-            const sy = endY > startY ? 1 : -1;
-            return [
-                `M ${startX.toFixed(1)} ${startY.toFixed(1)}`,
-                `L ${(cx - sx * r).toFixed(1)} ${startY.toFixed(1)}`,
-                `Q ${cx.toFixed(1)} ${startY.toFixed(1)} ${cx.toFixed(1)} ${(startY + sy * r).toFixed(1)}`,
-                `L ${cx.toFixed(1)} ${(endY - sy * r).toFixed(1)}`,
-                `Q ${cx.toFixed(1)} ${endY.toFixed(1)} ${(cx + sx * r).toFixed(1)} ${endY.toFixed(1)}`,
-                `L ${endX.toFixed(1)} ${endY.toFixed(1)}`
-            ].join(" ");
-        } else {
-            const sx = endX > startX ? 1 : -1;
-            const sy = endY > startY ? 1 : -1;
-            return [
-                `M ${startX.toFixed(1)} ${startY.toFixed(1)}`,
-                `L ${startX.toFixed(1)} ${(cy - sy * r).toFixed(1)}`,
-                `Q ${startX.toFixed(1)} ${cy.toFixed(1)} ${(startX + sx * r).toFixed(1)} ${cy.toFixed(1)}`,
-                `L ${(endX - sx * r).toFixed(1)} ${cy.toFixed(1)}`,
-                `Q ${endX.toFixed(1)} ${cy.toFixed(1)} ${endX.toFixed(1)} ${(cy + sy * r).toFixed(1)}`,
-                `L ${endX.toFixed(1)} ${endY.toFixed(1)}`
-            ].join(" ");
-        }
+        // Single L-bend corner at (startX, p2.y) when vertical-first, keeping end arrowhead horizontal/vertical
+        const cornerX = startX;
+        const cornerY = p2.y;
+        const endOrthX = toNode ? p2.x - Math.sign(p2.x - cornerX) * (toNode.w / 2 + endMargin) : p2.x - Math.sign(p2.x - cornerX) * endMargin;
+        const sx = endOrthX > cornerX ? 1 : -1;
+        const sy = cornerY > startY ? 1 : -1;
+        arrow._calculated.midX = cornerX;
+        arrow._calculated.midY = cornerY;
+        return [
+            `M ${startX.toFixed(1)} ${startY.toFixed(1)}`,
+            `L ${cornerX.toFixed(1)} ${(cornerY - sy * r).toFixed(1)}`,
+            `Q ${cornerX.toFixed(1)} ${cornerY.toFixed(1)} ${(cornerX + sx * r).toFixed(1)} ${cornerY.toFixed(1)}`,
+            `L ${endOrthX.toFixed(1)} ${cornerY.toFixed(1)}`
+        ].join(" ");
     }
 
     // If straight line
@@ -6763,12 +6826,14 @@ function renderGSHPathway() {
             if (arrow.direction === 'both') {
                 path.setAttribute("marker-start", "url(#arrowhead-start)");
                 path.setAttribute("marker-end", "url(#arrowhead)");
-            } else {
+            } else if (arrow.direction !== 'none') {
                 path.setAttribute("marker-end", "url(#arrowhead)");
             }
             
             path.setAttribute("stroke", "#475569");
-            path.setAttribute("stroke-width", "1.6");
+            path.setAttribute("stroke-width", "1.65");
+            path.setAttribute("stroke-linejoin", "round");
+            path.setAttribute("stroke-linecap", "round");
             if (arrow.dashed) {
                 path.setAttribute("stroke-dasharray", "5, 4");
             }
@@ -6809,7 +6874,7 @@ function renderGSHPathway() {
                 });
             }
             
-            // If arrow is selected and edit mode is active, render start & end anchor drag handles
+            // If arrow is selected and edit mode is active, render start & end anchor drag handles + waypoint handles
             if (isGshEditMode && selectedArrows.has(arrow.id)) {
                 const fromNode = arrow.from ? nodesMap[arrow.from] : null;
                 const toNode = arrow.to ? nodesMap[arrow.to] : null;
@@ -6846,8 +6911,17 @@ function renderGSHPathway() {
                             const correctedDx = dx / gshZoomScale;
                             const correctedDy = dy / gshZoomScale;
                             
-                            const newX = Math.round(startPtX + correctedDx);
-                            const newY = Math.round(startPtY + correctedDy);
+                            let newX = Math.round(startPtX + correctedDx);
+                            let newY = Math.round(startPtY + correctedDy);
+                            
+                            // Snap to adjacent waypoint if present
+                            if (enableGshSmartSnap && !mvEvent.altKey && Array.isArray(arrow.waypoints) && arrow.waypoints.length > 0) {
+                                const adj = type === 'start' ? arrow.waypoints[0] : arrow.waypoints[arrow.waypoints.length - 1];
+                                if (adj) {
+                                    if (Math.abs(newX - adj.x) < 7) newX = adj.x;
+                                    if (Math.abs(newY - adj.y) < 7) newY = adj.y;
+                                }
+                            }
                             
                             // Transform to absolute coordinate free arrow
                             arrow.from = null;
@@ -6884,6 +6958,76 @@ function renderGSHPathway() {
                 
                 createAnchor(pStart, 'start');
                 createAnchor(pEnd, 'end');
+                
+                // Render draggable intermediate waypoint (corner) handles
+                if (Array.isArray(arrow.waypoints) && arrow.waypoints.length > 0) {
+                    arrow.waypoints.forEach((wp, wpIdx) => {
+                        const wpCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        wpCircle.setAttribute("cx", wp.x);
+                        wpCircle.setAttribute("cy", wp.y);
+                        wpCircle.setAttribute("r", "6");
+                        wpCircle.setAttribute("fill", "#f59e0b");
+                        wpCircle.setAttribute("stroke", "#ffffff");
+                        wpCircle.setAttribute("stroke-width", "2");
+                        wpCircle.setAttribute("style", "cursor: move; pointer-events: auto;");
+                        wpCircle.setAttribute("title", "드래그하여 꺾임 위치 이동 / 우클릭 또는 Shift+클릭 시 꺾임점 삭제");
+                        
+                        wpCircle.addEventListener("mousedown", (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            if (e.button === 2 || e.shiftKey) {
+                                arrow.waypoints.splice(wpIdx, 1);
+                                saveAllPathwayMaps();
+                                pushGshHistory();
+                                renderGSHPathway();
+                                showGshToast("꺾임점이 삭제되었습니다.");
+                                return;
+                            }
+                            if (e.button !== 0) return;
+                            
+                            let isDraggingWp = true;
+                            const startMouseX = e.clientX;
+                            const startMouseY = e.clientY;
+                            const startWpX = wp.x;
+                            const startWpY = wp.y;
+                            
+                            const prevPt = wpIdx === 0 ? pStart : arrow.waypoints[wpIdx - 1];
+                            const nextPt = wpIdx === arrow.waypoints.length - 1 ? pEnd : arrow.waypoints[wpIdx + 1];
+                            
+                            const handleWpMove = (mvEvent) => {
+                                if (!isDraggingWp) return;
+                                const dx = (mvEvent.clientX - startMouseX) / gshZoomScale;
+                                const dy = (mvEvent.clientY - startMouseY) / gshZoomScale;
+                                let nx = Math.round(startWpX + dx);
+                                let ny = Math.round(startWpY + dy);
+                                
+                                if (enableGshSmartSnap && !mvEvent.altKey) {
+                                    if (prevPt && Math.abs(nx - prevPt.x) < 7) nx = prevPt.x;
+                                    else if (nextPt && Math.abs(nx - nextPt.x) < 7) nx = nextPt.x;
+                                    if (prevPt && Math.abs(ny - prevPt.y) < 7) ny = prevPt.y;
+                                    else if (nextPt && Math.abs(ny - nextPt.y) < 7) ny = nextPt.y;
+                                }
+                                
+                                arrow.waypoints[wpIdx].x = nx;
+                                arrow.waypoints[wpIdx].y = ny;
+                                renderGSHPathway();
+                            };
+                            
+                            const handleWpUp = () => {
+                                isDraggingWp = false;
+                                document.removeEventListener("mousemove", handleWpMove);
+                                document.removeEventListener("mouseup", handleWpUp);
+                                saveAllPathwayMaps();
+                                pushGshHistory();
+                            };
+                            
+                            document.addEventListener("mousemove", handleWpMove);
+                            document.addEventListener("mouseup", handleWpUp);
+                        });
+                        
+                        g.appendChild(wpCircle);
+                    });
+                }
 
                 // Curved arrow interactive curvature control handle
                 if (arrow.type === 'curved' && arrow._calculated) {
@@ -6932,21 +7076,45 @@ function renderGSHPathway() {
                     g.appendChild(curveCircle);
                 }
 
-                // Quick "+ 유전자" badge on selected arrow
+                // Quick "+유전자" and "+꺾임" badges on selected arrow
                 if (arrow._calculated) {
                     const foBtn = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
-                    foBtn.setAttribute("x", (arrow._calculated.midX - 35).toFixed(1));
-                    foBtn.setAttribute("y", (arrow._calculated.midY - 26).toFixed(1));
-                    foBtn.setAttribute("width", "72");
-                    foBtn.setAttribute("height", "24");
+                    foBtn.setAttribute("x", (arrow._calculated.midX - 66).toFixed(1));
+                    foBtn.setAttribute("y", (arrow._calculated.midY - 28).toFixed(1));
+                    foBtn.setAttribute("width", "140");
+                    foBtn.setAttribute("height", "26");
                     foBtn.setAttribute("style", "overflow: visible; pointer-events: auto;");
                     
                     const btnDiv = document.createElement("div");
                     btnDiv.className = "arrow-gene-add-btn";
-                    btnDiv.innerHTML = `<button style="background: linear-gradient(135deg, #ec4899, #f43f5e); color: white; border: none; border-radius: 12px; font-size: 10px; font-weight: 700; padding: 2px 8px; cursor: pointer; display: flex; align-items: center; gap: 3px; box-shadow: 0 2px 5px rgba(236,72,153,0.4);"><i class="fa-solid fa-plus"></i>유전자</button>`;
-                    btnDiv.addEventListener("click", (e) => {
+                    btnDiv.style.display = "inline-flex";
+                    btnDiv.style.gap = "4px";
+                    btnDiv.innerHTML = `
+                        <button class="act-add-gene" style="background: linear-gradient(135deg, #ec4899, #f43f5e); color: white; border: none; border-radius: 12px; font-size: 10px; font-weight: 700; padding: 2px 7px; cursor: pointer; display: flex; align-items: center; gap: 3px; box-shadow: 0 2px 5px rgba(236,72,153,0.4); white-space: nowrap;"><i class="fa-solid fa-plus"></i>유전자</button>
+                        <button class="act-add-bend" title="화살표에 직각 꺾임점(Waypoint)을 추가합니다" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; border-radius: 12px; font-size: 10px; font-weight: 700; padding: 2px 7px; cursor: pointer; display: flex; align-items: center; gap: 3px; box-shadow: 0 2px 5px rgba(245,158,11,0.4); white-space: nowrap;"><i class="fa-solid fa-turn-up"></i>+꺾임</button>
+                    `;
+                    btnDiv.querySelector(".act-add-gene").addEventListener("click", (e) => {
                         e.stopPropagation();
                         openGeneSearchModal(arrow.id);
+                    });
+                    btnDiv.querySelector(".act-add-bend").addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        if (!Array.isArray(arrow.waypoints)) arrow.waypoints = [];
+                        if (arrow.waypoints.length === 0) {
+                            // Create a clean orthogonal L-bend waypoint
+                            arrow.waypoints.push({ x: Math.round(pStart.x), y: Math.round(pEnd.y) });
+                        } else {
+                            const lastWp = arrow.waypoints[arrow.waypoints.length - 1];
+                            arrow.waypoints.push({
+                                x: Math.round((lastWp.x + pEnd.x) / 2),
+                                y: Math.round((lastWp.y + pEnd.y) / 2)
+                            });
+                        }
+                        arrow.type = "orthogonal";
+                        saveAllPathwayMaps();
+                        pushGshHistory();
+                        renderGSHPathway();
+                        showGshToast("📐 주황색 꺾임 핸들을 드래그하여 원하는 경로로 조절하세요 (우클릭 시 꺾임 삭제).");
                     });
                     foBtn.appendChild(btnDiv);
                     g.appendChild(foBtn);
@@ -8932,8 +9100,22 @@ function initGSHEditorBindings() {
             if (!isGshEditMode || selectedArrows.size === 0) return;
             const currentMap = pathwayMapsStore[currentMapId];
             if (!currentMap || !currentMap.arrows) return;
+            const nodesMap = getNodesMap();
             currentMap.arrows.forEach(a => {
-                if (selectedArrows.has(a.id)) a.type = e.target.value;
+                if (selectedArrows.has(a.id)) {
+                    a.type = e.target.value;
+                    if (e.target.value === 'orthogonal') {
+                        if (!Array.isArray(a.waypoints) || a.waypoints.length === 0) {
+                            const fN = a.from ? nodesMap[a.from] : null;
+                            const tN = a.to ? nodesMap[a.to] : null;
+                            const p1 = a.fromCoords || (fN ? { x: fN.x + fN.w / 2, y: fN.y + fN.h / 2 } : { x: 100, y: 100 });
+                            const p2 = a.toCoords || (tN ? { x: tN.x + tN.w / 2, y: tN.y + tN.h / 2 } : { x: 200, y: 200 });
+                            a.waypoints = [{ x: Math.round(p1.x), y: Math.round(p2.y) }];
+                        }
+                    } else if (e.target.value === 'straight' || e.target.value === 'curved') {
+                        delete a.waypoints;
+                    }
+                }
             });
             saveAllPathwayMaps();
             pushGshHistory();
