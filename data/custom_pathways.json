@@ -620,7 +620,21 @@
           "y": 405.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 659,
+          "startY": 405.2,
+          "endX": 717,
+          "endY": 405.2,
+          "cx": 688,
+          "cy": 405.2,
+          "midX": 688,
+          "midY": 405.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786343079635",
@@ -635,7 +649,21 @@
           "y": 406.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 819,
+          "startY": 406.2,
+          "endX": 881,
+          "endY": 406.2,
+          "cx": 850,
+          "cy": 406.2,
+          "midX": 850,
+          "midY": 406.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786343114432",
@@ -650,7 +678,21 @@
           "y": 505.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 932.3812898208679,
+          "startY": 424.37463924503396,
+          "endX": 830.712261074793,
+          "endY": 498.15216452979627,
+          "cx": 881.5467754478304,
+          "cy": 461.2634018874151,
+          "midX": 881.5467754478304,
+          "midY": 461.2634018874151,
+          "ux": -0.8093550895660787,
+          "uy": 0.5873196225169774,
+          "nx": -0.5873196225169774,
+          "ny": -0.8093550895660787
+        }
       },
       {
         "id": "arrow_1786343117382",
@@ -665,7 +707,21 @@
           "y": 426.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 728.3962343447732,
+          "startY": 501.005037354929,
+          "endX": 637.6225939313608,
+          "endY": 433.36977587042566,
+          "cx": 683.0094141380671,
+          "cy": 467.18740661267736,
+          "midX": 683.0094141380671,
+          "midY": 467.18740661267736,
+          "ux": -0.8018828276133995,
+          "uy": -0.597481322535474,
+          "nx": 0.597481322535474,
+          "ny": -0.8018828276133995
+        }
       },
       {
         "id": "arrow_1786343149828",
@@ -680,7 +736,21 @@
           "y": 345.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 952.6256342551479,
+          "startY": 387.03496211714395,
+          "endX": 1001.2461944691124,
+          "endY": 352.1902272971361,
+          "cx": 976.9359143621302,
+          "cy": 369.61259470714003,
+          "midX": 976.9359143621302,
+          "midY": 369.61259470714003,
+          "ux": 0.8128171275739655,
+          "uy": -0.5825189414280086,
+          "nx": 0.5825189414280086,
+          "ny": 0.8128171275739655
+        }
       },
       {
         "id": "arrow_1786343151662",
@@ -695,7 +765,21 @@
           "y": 392.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1010.6291330940819,
+          "startY": 346.3601402336644,
+          "endX": 1065.2252014355083,
+          "endY": 385.23915859801343,
+          "cx": 1037.9271672647951,
+          "cy": 365.7996494158389,
+          "midX": 1037.9271672647951,
+          "midY": 365.7996494158389,
+          "ux": 0.8145665470409791,
+          "uy": 0.5800701168322124,
+          "nx": -0.5800701168322124,
+          "ny": 0.8145665470409791
+        }
       },
       {
         "id": "arrow_1786343155141",
@@ -710,7 +794,21 @@
           "y": 474.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1073.4382623811139,
+          "startY": 423.4493900951088,
+          "endX": 1019.3704257133163,
+          "endY": 466.7036594293469,
+          "cx": 1046.404344047215,
+          "cy": 445.07652476222785,
+          "midX": 1046.404344047215,
+          "midY": 445.07652476222785,
+          "ux": -0.7808688094430304,
+          "uy": 0.6246950475544243,
+          "nx": -0.6246950475544243,
+          "ny": -0.7808688094430304
+        }
       },
       {
         "id": "arrow_1786343156800",
@@ -725,7 +823,21 @@
           "y": 422.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1005.3358994113244,
+          "startY": 463.0905996075495,
+          "endX": 953.9846035320542,
+          "endY": 428.85640235470277,
+          "cx": 979.6602514716892,
+          "cy": 445.9735009811261,
+          "midX": 979.6602514716892,
+          "midY": 445.9735009811261,
+          "ux": -0.8320502943378436,
+          "uy": -0.5547001962252291,
+          "nx": 0.5547001962252291,
+          "ny": -0.8320502943378436
+        }
       },
       {
         "id": "arrow_1786343159965",
@@ -740,7 +852,21 @@
           "y": 466.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1049.5115154326106,
+          "startY": 499.86418051644546,
+          "endX": 1020.9309074043359,
+          "endY": 474.21491690132706,
+          "cx": 1035.2212114184733,
+          "cy": 487.0395487088863,
+          "midX": 1035.2212114184733,
+          "midY": 487.0395487088863,
+          "ux": -0.7442422836946572,
+          "uy": -0.6679097417772564,
+          "nx": 0.6679097417772564,
+          "ny": -0.7442422836946572
+        }
       },
       {
         "id": "arrow_1786343161551",
@@ -755,7 +881,21 @@
           "y": 508.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1006.5684361032456,
+          "startY": 469.59664770415066,
+          "endX": 975.5893833805266,
+          "endY": 499.82011377509605,
+          "cx": 991.078909741886,
+          "cy": 484.70838073962335,
+          "midX": 991.078909741886,
+          "midY": 484.70838073962335,
+          "ux": -0.7157819483772108,
+          "uy": 0.6983238520753277,
+          "nx": -0.6983238520753277,
+          "ny": -0.7157819483772108
+        }
       },
       {
         "id": "arrow_1786343166648",
@@ -770,7 +910,21 @@
           "y": 350.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 961.524588158338,
+          "startY": 306.4944616438719,
+          "endX": 1003.852471049972,
+          "endY": 342.43323013676866,
+          "cx": 982.6885296041551,
+          "cy": 324.4638458903203,
+          "midX": 982.6885296041551,
+          "midY": 324.4638458903203,
+          "ux": 0.7622940791690036,
+          "uy": 0.6472308219359464,
+          "nx": -0.6472308219359464,
+          "ny": 0.7622940791690036
+        }
       },
       {
         "id": "arrow_1786343167987",
@@ -785,7 +939,21 @@
           "y": 296.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1009.4707119918576,
+          "startY": 341.84463796828805,
+          "endX": 1050.1757280488544,
+          "endY": 304.3321721902714,
+          "cx": 1029.823220020356,
+          "cy": 323.0884050792797,
+          "midX": 1029.823220020356,
+          "midY": 323.0884050792797,
+          "ux": 0.7353559959288023,
+          "uy": -0.6776810158559551,
+          "nx": 0.6776810158559551,
+          "ny": 0.7353559959288023
+        }
       },
       {
         "id": "arrow_1786343301550",
@@ -800,7 +968,21 @@
           "y": 531.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 865.8276058886024,
+          "startY": 478.0207329549252,
+          "endX": 885.0343646683858,
+          "endY": 520.2756022704488,
+          "cx": 875.4309852784941,
+          "cy": 499.14816761268696,
+          "midX": 875.4309852784941,
+          "midY": 499.14816761268696,
+          "ux": 0.41380294430118364,
+          "uy": 0.9103664774626049,
+          "nx": -0.9103664774626049,
+          "ny": 0.41380294430118364
+        }
       },
       {
         "id": "arrow_1786343305381",
@@ -815,7 +997,21 @@
           "y": 471.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 664.1465214635532,
+          "startY": 456.95141021747844,
+          "endX": 640.1208712186808,
+          "endY": 466.6915386951294,
+          "cx": 652.133696341117,
+          "cy": 461.8214744563039,
+          "midX": 652.133696341117,
+          "midY": 461.8214744563039,
+          "ux": -0.9267392682234049,
+          "uy": 0.3757051087392182,
+          "nx": -0.3757051087392182,
+          "ny": -0.9267392682234049
+        }
       },
       {
         "id": "arrow_1786343536822",
@@ -830,7 +1026,21 @@
           "y": 268.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 353,
+          "startY": 216.2,
+          "endX": 353,
+          "endY": 256.2,
+          "cx": 353,
+          "cy": 236.2,
+          "midX": 353,
+          "midY": 236.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343538639",
@@ -845,7 +1055,21 @@
           "y": 371.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 353,
+          "startY": 302.2,
+          "endX": 353,
+          "endY": 359.2,
+          "cx": 353,
+          "cy": 330.7,
+          "midX": 353,
+          "midY": 330.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343540275",
@@ -860,7 +1084,21 @@
           "y": 479.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 354,
+          "startY": 409.2,
+          "endX": 354,
+          "endY": 467.2,
+          "cx": 354,
+          "cy": 438.2,
+          "midX": 354,
+          "midY": 438.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343542039",
@@ -875,7 +1113,21 @@
           "y": 582.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 354,
+          "startY": 516.2,
+          "endX": 354,
+          "endY": 570.2,
+          "cx": 354,
+          "cy": 543.2,
+          "midX": 354,
+          "midY": 543.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343544233",
@@ -890,7 +1142,21 @@
           "y": 268.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 194,
+          "startY": 216.2,
+          "endX": 194,
+          "endY": 256.2,
+          "cx": 194,
+          "cy": 236.2,
+          "midX": 194,
+          "midY": 236.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343546025",
@@ -905,7 +1171,21 @@
           "y": 369.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 196,
+          "startY": 305.2,
+          "endX": 196,
+          "endY": 357.2,
+          "cx": 196,
+          "cy": 331.2,
+          "midX": 196,
+          "midY": 331.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343547866",
@@ -920,7 +1200,21 @@
           "y": 478.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 196,
+          "startY": 406.2,
+          "endX": 196,
+          "endY": 466.2,
+          "cx": 196,
+          "cy": 436.2,
+          "midX": 196,
+          "midY": 436.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343549659",
@@ -935,7 +1229,21 @@
           "y": 577.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 195,
+          "startY": 516.2,
+          "endX": 195,
+          "endY": 565.2,
+          "cx": 195,
+          "cy": 540.7,
+          "midX": 195,
+          "midY": 540.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343553637",
@@ -950,7 +1258,21 @@
           "y": 671.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 205.48091062816306,
+          "startY": 613.5442111855634,
+          "endX": 260.1145362310217,
+          "endY": 663.1347328866198,
+          "cx": 232.7977234295924,
+          "cy": 638.3394720360916,
+          "midX": 232.7977234295924,
+          "midY": 638.3394720360916,
+          "ux": 0.7404553140815252,
+          "uy": 0.6721055927816921,
+          "nx": -0.6721055927816921,
+          "ny": 0.7404553140815252
+        }
       },
       {
         "id": "arrow_1786343556726",
@@ -965,7 +1287,21 @@
           "y": 674.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 343.5112364136044,
+          "startY": 614.5355085113255,
+          "endX": 285.9325815183733,
+          "endY": 666.1869489320475,
+          "cx": 314.72190896598886,
+          "cy": 640.3612287216865,
+          "midX": 314.72190896598886,
+          "midY": 640.3612287216865,
+          "ux": -0.744381793197777,
+          "uy": 0.6677542556627116,
+          "nx": -0.6677542556627116,
+          "ny": -0.744381793197777
+        }
       },
       {
         "id": "arrow_1786343622836",
@@ -980,7 +1316,21 @@
           "y": 688.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 231,
+          "startY": 688.2,
+          "endX": 157,
+          "endY": 688.2,
+          "cx": 194,
+          "cy": 688.2,
+          "midX": 194,
+          "midY": 688.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786343627907",
@@ -995,7 +1345,21 @@
           "y": 761.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 98,
+          "startY": 696.2,
+          "endX": 98,
+          "endY": 749.2,
+          "cx": 98,
+          "cy": 722.7,
+          "midX": 98,
+          "midY": 722.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343630524",
@@ -1010,7 +1374,21 @@
           "y": 775.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 138,
+          "startY": 775.2,
+          "endX": 215,
+          "endY": 775.2,
+          "cx": 176.5,
+          "cy": 775.2,
+          "midX": 176.5,
+          "midY": 775.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786343633037",
@@ -1025,7 +1403,21 @@
           "y": 697.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 275,
+          "startY": 765.2,
+          "endX": 275,
+          "endY": 709.2,
+          "cx": 275,
+          "cy": 737.2,
+          "midX": 275,
+          "midY": 737.2,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343662767",
@@ -1040,7 +1432,21 @@
           "y": 681.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 446,
+          "startY": 681.2,
+          "endX": 321,
+          "endY": 681.2,
+          "cx": 383.5,
+          "cy": 681.2,
+          "midX": 383.5,
+          "midY": 681.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786343664449",
@@ -1055,7 +1461,21 @@
           "y": 693.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 311,
+          "startY": 693.2,
+          "endX": 434,
+          "endY": 693.2,
+          "cx": 372.5,
+          "cy": 693.2,
+          "midX": 372.5,
+          "midY": 693.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786343725987",
@@ -1070,7 +1490,21 @@
           "y": 409.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 498,
+          "startY": 666.2,
+          "endX": 498,
+          "endY": 421.2,
+          "cx": 498,
+          "cy": 543.7,
+          "midX": 498,
+          "midY": 543.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343728525",
@@ -1085,7 +1519,21 @@
           "y": 411.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 496,
+          "startY": 411.2,
+          "endX": 561,
+          "endY": 411.2,
+          "cx": 528.5,
+          "cy": 411.2,
+          "midX": 528.5,
+          "midY": 411.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786343731045",
@@ -1100,7 +1548,21 @@
           "y": 397.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 564,
+          "startY": 397.2,
+          "endX": 488,
+          "endY": 397.2,
+          "cx": 526,
+          "cy": 397.2,
+          "midX": 526,
+          "midY": 397.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786343732719",
@@ -1115,7 +1577,21 @@
           "y": 668.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 477,
+          "startY": 402.2,
+          "endX": 477,
+          "endY": 656.2,
+          "cx": 477,
+          "cy": 529.2,
+          "midX": 477,
+          "midY": 529.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343854886",
@@ -1130,7 +1606,21 @@
           "y": 750.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 428,
+          "startY": 750.2,
+          "endX": 605,
+          "endY": 750.2,
+          "cx": 516.5,
+          "cy": 750.2,
+          "midX": 516.5,
+          "midY": 750.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786343858172",
@@ -1145,7 +1635,21 @@
           "y": 499.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 607,
+          "startY": 749.2,
+          "endX": 607,
+          "endY": 511.2,
+          "cx": 607,
+          "cy": 630.2,
+          "midX": 607,
+          "midY": 630.2,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343886485",
@@ -1160,7 +1664,21 @@
           "y": 685.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 369,
+          "startY": 746.2,
+          "endX": 369,
+          "endY": 697.2,
+          "cx": 369,
+          "cy": 721.7,
+          "midX": 369,
+          "midY": 721.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343902131",
@@ -1175,7 +1693,21 @@
           "y": 762.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 384,
+          "startY": 822.2,
+          "endX": 384,
+          "endY": 774.2,
+          "cx": 384,
+          "cy": 798.2,
+          "midX": 384,
+          "midY": 798.2,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786343904237",
@@ -1190,7 +1722,21 @@
           "y": 839.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 384,
+          "startY": 900.2,
+          "endX": 384,
+          "endY": 851.2,
+          "cx": 384,
+          "cy": 875.7,
+          "midX": 384,
+          "midY": 875.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344036800",
@@ -1205,7 +1751,21 @@
           "y": 663.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1067.572631823017,
+          "startY": 714.7990645670352,
+          "endX": 1023.5642090618979,
+          "endY": 671.6056125977888,
+          "cx": 1045.5684204424574,
+          "cy": 693.202338582412,
+          "midX": 1045.5684204424574,
+          "midY": 693.202338582412,
+          "ux": -0.7136840884914969,
+          "uy": -0.7004677164823951,
+          "nx": 0.7004677164823951,
+          "ny": -0.7136840884914969
+        }
       },
       {
         "id": "arrow_1786344039784",
@@ -1220,7 +1780,21 @@
           "y": 742.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1069,
+          "startY": 833.2,
+          "endX": 1069,
+          "endY": 754.2,
+          "cx": 1069,
+          "cy": 793.7,
+          "midX": 1069,
+          "midY": 793.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344044919",
@@ -1235,7 +1809,21 @@
           "y": 859.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 994.3113733108925,
+          "startY": 933.6899337632148,
+          "endX": 1051.131760134645,
+          "endY": 868.2603974207118,
+          "cx": 1022.7215667227688,
+          "cy": 900.9751655919633,
+          "midX": 1022.7215667227688,
+          "midY": 900.9751655919633,
+          "ux": 0.655686655446243,
+          "uy": -0.7550331183926435,
+          "nx": 0.7550331183926435,
+          "ny": 0.655686655446243
+        }
       },
       {
         "id": "arrow_1786344049173",
@@ -1250,7 +1838,21 @@
           "y": 946.6
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 877.2,
+          "startY": 946.6,
+          "endX": 943.2,
+          "endY": 946.6,
+          "cx": 910.2,
+          "cy": 946.6,
+          "midX": 910.2,
+          "midY": 946.6,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344056274",
@@ -1265,7 +1867,21 @@
           "y": 940.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 772.1469246887267,
+          "startY": 861.8384638410381,
+          "endX": 820.11845186764,
+          "endY": 930.3692169537716,
+          "cx": 796.1326882781834,
+          "cy": 896.1038403974048,
+          "midX": 796.1326882781834,
+          "midY": 896.1038403974048,
+          "ux": 0.5734623443633283,
+          "uy": 0.8192319205190405,
+          "nx": -0.8192319205190405,
+          "ny": 0.5734623443633283
+        }
       },
       {
         "id": "arrow_1786344059185",
@@ -1280,7 +1896,21 @@
           "y": 861.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 813.8163881497835,
+          "startY": 938.5878390316017,
+          "endX": 764.101671101299,
+          "endY": 870.87296581039,
+          "cx": 788.9590296255412,
+          "cy": 904.7304024209959,
+          "midX": 788.9590296255412,
+          "midY": 904.7304024209959,
+          "ux": -0.5918059251082509,
+          "uy": -0.8060804841991693,
+          "nx": 0.8060804841991693,
+          "ny": -0.5918059251082509
+        }
       },
       {
         "id": "arrow_1786344063322",
@@ -1295,7 +1925,21 @@
           "y": 739.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 749,
+          "startY": 830.2,
+          "endX": 749,
+          "endY": 751.2,
+          "cx": 749,
+          "cy": 790.7,
+          "midX": 749,
+          "midY": 790.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344065074",
@@ -1310,7 +1954,21 @@
           "y": 830.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 759,
+          "startY": 738.2,
+          "endX": 759,
+          "endY": 818.2,
+          "cx": 759,
+          "cy": 778.2,
+          "midX": 759,
+          "midY": 778.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344068624",
@@ -1325,7 +1983,21 @@
           "y": 717.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 818.4690274584184,
+          "startY": 660.4869044552426,
+          "endX": 760.1858352494897,
+          "endY": 709.4785732685449,
+          "cx": 789.3274313539541,
+          "cy": 684.9827388618937,
+          "midX": 789.3274313539541,
+          "midY": 684.9827388618937,
+          "ux": -0.7654862707908162,
+          "uy": 0.6434522276212657,
+          "nx": -0.6434522276212657,
+          "ny": -0.7654862707908162
+        }
       },
       {
         "id": "arrow_1786344071123",
@@ -1340,7 +2012,21 @@
           "y": 662.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 762.5458565946186,
+          "startY": 715.9310132432236,
+          "endX": 818.7248604322882,
+          "endY": 669.813920540659,
+          "cx": 790.6353585134534,
+          "cy": 692.8724668919413,
+          "midX": 790.6353585134534,
+          "midY": 692.8724668919413,
+          "ux": 0.7729282973093136,
+          "uy": -0.6344933783882424,
+          "nx": 0.6344933783882424,
+          "ny": 0.7729282973093136
+        }
       },
       {
         "id": "arrow_1786344075686",
@@ -1355,7 +2041,21 @@
           "y": 650.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 865,
+          "startY": 650.2,
+          "endX": 930,
+          "endY": 650.2,
+          "cx": 897.5,
+          "cy": 650.2,
+          "midX": 897.5,
+          "midY": 650.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344078231",
@@ -1370,7 +2070,21 @@
           "y": 641.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 942,
+          "startY": 641.2,
+          "endX": 873,
+          "endY": 641.2,
+          "cx": 907.5,
+          "cy": 641.2,
+          "midX": 907.5,
+          "midY": 641.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344117813",
@@ -1385,7 +2099,21 @@
           "y": 947.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 665,
+          "startY": 947.2,
+          "endX": 777,
+          "endY": 947.2,
+          "cx": 721,
+          "cy": 947.2,
+          "midX": 721,
+          "midY": 947.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344259968",
@@ -1400,7 +2128,21 @@
           "y": 671.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1106.36463650072,
+          "startY": 714.7378894635143,
+          "endX": 1138.81218099568,
+          "endY": 679.9726632189145,
+          "cx": 1122.5884087482,
+          "cy": 697.3552763412144,
+          "midX": 1122.5884087482,
+          "midY": 697.3552763412144,
+          "ux": 0.682318250360011,
+          "uy": -0.731055268242869,
+          "nx": 0.731055268242869,
+          "ny": 0.682318250360011
+        }
       },
       {
         "id": "arrow_1786344262940",
@@ -1415,7 +2157,21 @@
           "y": 540.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1136.3108164944113,
+          "startY": 681.1291783134214,
+          "endX": 924.1351010335324,
+          "endY": 546.6249301194715,
+          "cx": 1030.2229587639717,
+          "cy": 613.8770542164465,
+          "midX": 1030.2229587639717,
+          "midY": 613.8770542164465,
+          "ux": -0.8445917527943646,
+          "uy": -0.5354108432892847,
+          "nx": 0.5354108432892847,
+          "ny": -0.8445917527943646
+        }
       },
       {
         "id": "arrow_1786344387832",
@@ -1430,7 +2186,21 @@
           "y": 100.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 821,
+          "startY": 240.2,
+          "endX": 821,
+          "endY": 112.2,
+          "cx": 821,
+          "cy": 176.2,
+          "midX": 821,
+          "midY": 176.2,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344389455",
@@ -1445,7 +2215,21 @@
           "y": 243.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 858,
+          "startY": 110.2,
+          "endX": 858,
+          "endY": 231.2,
+          "cx": 858,
+          "cy": 170.7,
+          "midX": 858,
+          "midY": 170.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344639387",
@@ -1460,7 +2244,21 @@
           "y": 831.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1291,
+          "startY": 735.2,
+          "endX": 1291,
+          "endY": 819.2,
+          "cx": 1291,
+          "cy": 777.2,
+          "midX": 1291,
+          "midY": 777.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344643875",
@@ -1475,7 +2273,21 @@
           "y": 845.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1402,
+          "startY": 845.2,
+          "endX": 1344,
+          "endY": 845.2,
+          "cx": 1373,
+          "cy": 845.2,
+          "midX": 1373,
+          "midY": 845.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344647315",
@@ -1490,7 +2302,21 @@
           "y": 843.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1557,
+          "startY": 843.2,
+          "endX": 1494,
+          "endY": 843.2,
+          "cx": 1525.5,
+          "cy": 843.2,
+          "midX": 1525.5,
+          "midY": 843.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344658586",
@@ -1505,7 +2331,21 @@
           "y": 842.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1704,
+          "startY": 842.2,
+          "endX": 1643,
+          "endY": 842.2,
+          "cx": 1673.5,
+          "cy": 842.2,
+          "midX": 1673.5,
+          "midY": 842.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344662827",
@@ -1520,7 +2360,21 @@
           "y": 739.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1440,
+          "startY": 837.2,
+          "endX": 1440,
+          "endY": 751.2,
+          "cx": 1440,
+          "cy": 794.2,
+          "midX": 1440,
+          "midY": 794.2,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344671577",
@@ -1535,7 +2389,21 @@
           "y": 732.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1401,
+          "startY": 732.2,
+          "endX": 1340,
+          "endY": 732.2,
+          "cx": 1370.5,
+          "cy": 732.2,
+          "midX": 1370.5,
+          "midY": 732.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344676420",
@@ -1550,7 +2418,21 @@
           "y": 724.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1325,
+          "startY": 724.2,
+          "endX": 1388,
+          "endY": 724.2,
+          "cx": 1356.5,
+          "cy": 724.2,
+          "midX": 1356.5,
+          "midY": 724.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344682028",
@@ -1565,7 +2447,21 @@
           "y": 635.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1433,
+          "startY": 719.2,
+          "endX": 1433,
+          "endY": 647.2,
+          "cx": 1433,
+          "cy": 683.2,
+          "midX": 1433,
+          "midY": 683.2,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344683403",
@@ -1580,7 +2476,21 @@
           "y": 720.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1444,
+          "startY": 631.2,
+          "endX": 1444,
+          "endY": 708.2,
+          "cx": 1444,
+          "cy": 669.7,
+          "midX": 1444,
+          "midY": 669.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344687705",
@@ -1595,7 +2505,21 @@
           "y": 830.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1739,
+          "startY": 736.2,
+          "endX": 1739,
+          "endY": 818.2,
+          "cx": 1739,
+          "cy": 777.2,
+          "midX": 1739,
+          "midY": 777.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344691843",
@@ -1610,7 +2534,21 @@
           "y": 713.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1738,
+          "startY": 631.2,
+          "endX": 1738,
+          "endY": 701.2,
+          "cx": 1738,
+          "cy": 666.2,
+          "midX": 1738,
+          "midY": 666.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344696913",
@@ -1625,7 +2563,21 @@
           "y": 606.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1737,
+          "startY": 525.2,
+          "endX": 1737,
+          "endY": 594.2,
+          "cx": 1737,
+          "cy": 559.7,
+          "midX": 1737,
+          "midY": 559.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344700081",
@@ -1640,7 +2592,21 @@
           "y": 511.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1629,
+          "startY": 511.2,
+          "endX": 1689,
+          "endY": 511.2,
+          "cx": 1659,
+          "cy": 511.2,
+          "midX": 1659,
+          "midY": 511.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344701267",
@@ -1655,7 +2621,21 @@
           "y": 520.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1700,
+          "startY": 520.2,
+          "endX": 1636,
+          "endY": 520.2,
+          "cx": 1668,
+          "cy": 520.2,
+          "midX": 1668,
+          "midY": 520.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344704749",
@@ -1670,7 +2650,21 @@
           "y": 502.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1657.585786437627,
+          "startY": 439.6142135623731,
+          "endX": 1603.4852813742386,
+          "endY": 493.7147186257614,
+          "cx": 1630.5355339059329,
+          "cy": 466.6644660940673,
+          "midX": 1630.5355339059329,
+          "midY": 466.6644660940673,
+          "ux": -0.7071067811865475,
+          "uy": 0.7071067811865475,
+          "nx": -0.7071067811865475,
+          "ny": -0.7071067811865475
+        }
       },
       {
         "id": "arrow_1786344706487",
@@ -1685,7 +2679,21 @@
           "y": 499.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1658.6147822445157,
+          "startY": 443.3800331786846,
+          "endX": 1725.3113065329053,
+          "endY": 492.11980092789224,
+          "cx": 1691.9630443887104,
+          "cy": 467.7499170532884,
+          "midX": 1691.9630443887104,
+          "midY": 467.7499170532884,
+          "ux": 0.8073911222578979,
+          "uy": 0.59001658934231,
+          "nx": -0.59001658934231,
+          "ny": 0.8073911222578979
+        }
       },
       {
         "id": "arrow_1786344710979",
@@ -1700,7 +2708,21 @@
           "y": 511.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1554,
+          "startY": 511.2,
+          "endX": 1486,
+          "endY": 511.2,
+          "cx": 1520,
+          "cy": 511.2,
+          "midX": 1520,
+          "midY": 511.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344712430",
@@ -1715,7 +2737,21 @@
           "y": 520.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1473,
+          "startY": 520.2,
+          "endX": 1541,
+          "endY": 520.2,
+          "cx": 1507,
+          "cy": 520.2,
+          "midX": 1507,
+          "midY": 520.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344717584",
@@ -1730,7 +2766,21 @@
           "y": 510.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1434,
+          "startY": 400.2,
+          "endX": 1434,
+          "endY": 498.2,
+          "cx": 1434,
+          "cy": 449.2,
+          "midX": 1434,
+          "midY": 449.2,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344718907",
@@ -1745,7 +2795,21 @@
           "y": 401.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1448,
+          "startY": 504.2,
+          "endX": 1448,
+          "endY": 413.2,
+          "cx": 1448,
+          "cy": 458.7,
+          "midX": 1448,
+          "midY": 458.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344722586",
@@ -1760,7 +2824,21 @@
           "y": 416.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1659,
+          "startY": 347.2,
+          "endX": 1659,
+          "endY": 404.2,
+          "cx": 1659,
+          "cy": 375.7,
+          "midX": 1659,
+          "midY": 375.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344723937",
@@ -1775,7 +2853,21 @@
           "y": 324.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1659,
+          "startY": 247.2,
+          "endX": 1659,
+          "endY": 312.2,
+          "cx": 1659,
+          "cy": 279.7,
+          "midX": 1659,
+          "midY": 279.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344725257",
@@ -1790,7 +2882,21 @@
           "y": 227.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1658.9705914151164,
+          "startY": 161.19978377209515,
+          "endX": 1658.1764515093025,
+          "endY": 215.20129736742905,
+          "cx": 1658.5735214622096,
+          "cy": 188.2005405697621,
+          "midX": 1658.5735214622096,
+          "midY": 188.2005405697621,
+          "ux": -0.014704292441876156,
+          "uy": 0.9998918860475786,
+          "nx": -0.9998918860475786,
+          "ny": -0.014704292441876156
+        }
       },
       {
         "id": "arrow_1786344727676",
@@ -1805,7 +2911,21 @@
           "y": 140.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1659,
+          "startY": 80.2,
+          "endX": 1659,
+          "endY": 128.2,
+          "cx": 1659,
+          "cy": 104.19999999999999,
+          "midX": 1659,
+          "midY": 104.19999999999999,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344731405",
@@ -1820,7 +2940,21 @@
           "y": 233.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1618,
+          "startY": 233.2,
+          "endX": 1535,
+          "endY": 233.2,
+          "cx": 1576.5,
+          "cy": 233.2,
+          "midX": 1576.5,
+          "midY": 233.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344732885",
@@ -1835,7 +2969,21 @@
           "y": 232.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1446,
+          "startY": 232.2,
+          "endX": 1356,
+          "endY": 232.2,
+          "cx": 1401,
+          "cy": 232.2,
+          "midX": 1401,
+          "midY": 232.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344747446",
@@ -1850,7 +2998,21 @@
           "y": 1029.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1290,
+          "startY": 854.2,
+          "endX": 1290,
+          "endY": 1017.2,
+          "cx": 1290,
+          "cy": 935.7,
+          "midX": 1290,
+          "midY": 935.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344750341",
@@ -1865,7 +3027,21 @@
           "y": 1018.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1289,
+          "startY": 1018.2,
+          "endX": 903,
+          "endY": 1018.2,
+          "cx": 1096,
+          "cy": 1018.2,
+          "midX": 1096,
+          "midY": 1018.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344752173",
@@ -1880,7 +3056,21 @@
           "y": 945.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 900,
+          "startY": 1014.2,
+          "endX": 900,
+          "endY": 957.2,
+          "cx": 900,
+          "cy": 985.7,
+          "midX": 900,
+          "midY": 985.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344757550",
@@ -1895,7 +3085,21 @@
           "y": 1060.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1441,
+          "startY": 857.2,
+          "endX": 1441,
+          "endY": 1048.2,
+          "cx": 1441,
+          "cy": 952.7,
+          "midX": 1441,
+          "midY": 952.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344760075",
@@ -1910,7 +3114,21 @@
           "y": 1048.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1439,
+          "startY": 1048.2,
+          "endX": 842,
+          "endY": 1048.2,
+          "cx": 1140.5,
+          "cy": 1048.2,
+          "midX": 1140.5,
+          "midY": 1048.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344761916",
@@ -1925,7 +3143,21 @@
           "y": 955.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 839,
+          "startY": 1046.2,
+          "endX": 839,
+          "endY": 967.2,
+          "cx": 839,
+          "cy": 1006.7,
+          "midX": 839,
+          "midY": 1006.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344773622",
@@ -1940,7 +3172,21 @@
           "y": 728.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1783,
+          "startY": 728.2,
+          "endX": 1808,
+          "endY": 728.2,
+          "cx": 1795.5,
+          "cy": 728.2,
+          "midX": 1795.5,
+          "midY": 728.2,
+          "ux": 1,
+          "uy": 0,
+          "nx": 0,
+          "ny": 1
+        }
       },
       {
         "id": "arrow_1786344776266",
@@ -1955,7 +3201,21 @@
           "y": 1090.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1810,
+          "startY": 729.2,
+          "endX": 1810,
+          "endY": 1078.2,
+          "cx": 1810,
+          "cy": 903.7,
+          "midX": 1810,
+          "midY": 903.7,
+          "ux": 0,
+          "uy": 1,
+          "nx": -1,
+          "ny": 0
+        }
       },
       {
         "id": "arrow_1786344790491",
@@ -1970,7 +3230,21 @@
           "y": 1077.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 1807,
+          "startY": 1077.2,
+          "endX": 392,
+          "endY": 1077.2,
+          "cx": 1099.5,
+          "cy": 1077.2,
+          "midX": 1099.5,
+          "midY": 1077.2,
+          "ux": -1,
+          "uy": 0,
+          "nx": 0,
+          "ny": -1
+        }
       },
       {
         "id": "arrow_1786344792849",
@@ -1985,7 +3259,21 @@
           "y": 923.2
         },
         "type": "straight",
-        "direction": "forward"
+        "direction": "forward",
+        "_calculated": {
+          "startX": 383,
+          "startY": 1078.2,
+          "endX": 383,
+          "endY": 935.2,
+          "cx": 383,
+          "cy": 1006.7,
+          "midX": 383,
+          "midY": 1006.7,
+          "ux": 0,
+          "uy": -1,
+          "nx": 1,
+          "ny": 0
+        }
       }
     ],
     "customGenes": [

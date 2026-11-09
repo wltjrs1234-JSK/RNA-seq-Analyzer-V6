@@ -4288,21 +4288,23 @@ function initAdvancedAnalysisBindings() {
     const subtabBottleneckBtn = document.getElementById("btn-subtab-bottleneck");
     const subtabStressBtn = document.getElementById("btn-subtab-stress");
     const subtabReporterBtn = document.getElementById("btn-subtab-reporter");
+    const subtabCandidateBtn = document.getElementById("btn-subtab-candidate");
 
     const tfArea = document.getElementById("subtab-tf-area");
     const bottleneckArea = document.getElementById("subtab-bottleneck-area");
     const stressArea = document.getElementById("subtab-stress-area");
     const reporterArea = document.getElementById("subtab-reporter-area");
+    const candidateArea = document.getElementById("subtab-candidate-area");
 
     const resetSubtabs = () => {
-        [subtabTfBtn, subtabBottleneckBtn, subtabStressBtn, subtabReporterBtn].forEach(btn => {
+        [subtabTfBtn, subtabBottleneckBtn, subtabStressBtn, subtabReporterBtn, subtabCandidateBtn].forEach(btn => {
             if (btn) {
                 btn.classList.remove("active");
                 btn.style.color = "var(--text-muted)";
                 btn.style.borderColor = "var(--border-color)";
             }
         });
-        [tfArea, bottleneckArea, stressArea, reporterArea].forEach(area => {
+        [tfArea, bottleneckArea, stressArea, reporterArea, candidateArea].forEach(area => {
             if (area) area.style.display = "none";
         });
     };
@@ -4348,6 +4350,17 @@ function initAdvancedAnalysisBindings() {
         });
     }
 
+    if (subtabCandidateBtn) {
+        subtabCandidateBtn.addEventListener("click", () => {
+            resetSubtabs();
+            subtabCandidateBtn.classList.add("active");
+            subtabCandidateBtn.style.color = "var(--text-primary)";
+            subtabCandidateBtn.style.borderColor = "var(--primary-color)";
+            if (candidateArea) candidateArea.style.display = "block";
+            populateCandidateCategories();
+        });
+    }
+
     // Action button listeners
     const btnRunTf = document.getElementById("btn-run-tf-analysis");
     if (btnRunTf) btnRunTf.addEventListener("click", runTFActivityAnalysis);
@@ -4360,6 +4373,9 @@ function initAdvancedAnalysisBindings() {
 
     const btnRunReporter = document.getElementById("btn-run-reporter");
     if (btnRunReporter) btnRunReporter.addEventListener("click", runReporterMetaboliteAnalysis);
+
+    // Candidate Target & Bypass Enzyme Finder bindings
+    initCandidateTargetFinderBindings();
 
     // Toggle WT / Mutant traces in stress radar chart
     const btnToggleWT = document.getElementById("btn-stress-toggle-wt");
@@ -4823,6 +4839,635 @@ function displayReporterDetailTable(metData) {
         `;
         body.appendChild(tr);
     });
+}
+
+// 5) Candidate Target & Bypass Enzyme Finder
+let gCandidateScanMode = "reference";
+let gLastCandidateScanData = null;
+
+function initCandidateTargetFinderBindings() {
+    const modeBtns = document.querySelectorAll(".cand-mode-btn");
+    const panelRef = document.getElementById("cand-panel-reference");
+    const panelAct = document.getElementById("cand-panel-activity");
+    const onlySwitchChk = document.getElementById("cand-only-on-switch");
+
+    modeBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            gCandidateScanMode = btn.getAttribute("data-mode") || "reference";
+            modeBtns.forEach(b => {
+                b.classList.remove("active");
+                b.style.background = "#ffffff";
+                b.style.color = "#475569";
+                b.style.borderColor = "#cbd5e1";
+            });
+            btn.classList.add("active");
+            btn.style.background = "#eef2ff";
+            btn.style.color = "#4338ca";
+            btn.style.borderColor = "#6366f1";
+
+            if (panelRef) panelRef.style.display = (gCandidateScanMode === "reference") ? "block" : "none";
+            if (panelAct) panelAct.style.display = (gCandidateScanMode === "activity") ? "block" : "none";
+            if (gCandidateScanMode === "on_off" && onlySwitchChk) {
+                onlySwitchChk.checked = true;
+            }
+        });
+    });
+
+    // Reference preset buttons
+    document.querySelectorAll(".cand-preset-ref").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const genes = btn.getAttribute("data-genes") || "";
+            const input = document.getElementById("cand-ref-genes-input");
+            if (input) input.value = genes;
+            runCandidateTargetScan();
+        });
+    });
+
+    // Quick activity buttons
+    document.querySelectorAll(".cand-quick-act").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const goid = btn.getAttribute("data-goid") || "GO:0016791";
+            const select = document.getElementById("cand-activity-select");
+            if (select) select.value = goid;
+            runCandidateTargetScan();
+        });
+    });
+
+    const btnRun = document.getElementById("btn-run-candidate-scan");
+    if (btnRun) {
+        btnRun.addEventListener("click", runCandidateTargetScan);
+    }
+
+    const btnExportCsv = document.getElementById("btn-export-cand-csv");
+    if (btnExportCsv) {
+        btnExportCsv.addEventListener("click", exportCandidateTargetsToCSV);
+    }
+}
+
+function populateCandidateCategories() {
+    const select = document.getElementById("cand-activity-select");
+    if (!select) return;
+
+    const sidParam = gActiveSessionId ? `?session_id=${encodeURIComponent(gActiveSessionId)}&species=${encodeURIComponent(gCurrentSpecies || 'sce')}` : `?species=${encodeURIComponent(gCurrentSpecies || 'sce')}`;
+    fetch(`${API_URL}/api/candidate_targets/categories${sidParam}`)
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) return;
+
+        const ctrlName = data.control_name || "WT";
+        const treatName = data.treated_name || "Mutant";
+        const groupLabel = document.getElementById("cand-chart-group-label");
+        if (groupLabel) groupLabel.textContent = `${ctrlName} vs ${treatName}`;
+        const thWt = document.getElementById("cand-th-wt");
+        if (thWt) thWt.textContent = `${ctrlName} 발현량 (백분위)`;
+        const thMut = document.getElementById("cand-th-mut");
+        if (thMut) thMut.textContent = `${treatName} 발현량 (백분위)`;
+
+        const curVal = select.value || "GO:0016791";
+        select.innerHTML = "";
+
+        const optAll = document.createElement("option");
+        optAll.value = "all";
+        optAll.textContent = "🌐 전체 유전자 / 키워드 자유 검색";
+        select.appendChild(optAll);
+
+        if (data.mol_functions && data.mol_functions.length > 0) {
+            const grpF = document.createElement("optgroup");
+            grpF.label = "🧪 분자 기능 / 효소 활성 (GO Molecular Function)";
+            data.mol_functions.forEach(item => {
+                const opt = document.createElement("option");
+                opt.value = item.goid;
+                opt.textContent = `${item.goid} - ${item.name} (${item.count}개 유전자)`;
+                grpF.appendChild(opt);
+            });
+            select.appendChild(grpF);
+        }
+
+        if (data.bio_processes && data.bio_processes.length > 0) {
+            const grpP = document.createElement("optgroup");
+            grpP.label = "🔄 생물학적 대사 과정 (GO Biological Process)";
+            data.bio_processes.forEach(item => {
+                const opt = document.createElement("option");
+                opt.value = item.goid;
+                opt.textContent = `${item.goid} - ${item.name} (${item.count}개 유전자)`;
+                grpP.appendChild(opt);
+            });
+            select.appendChild(grpP);
+        }
+
+        // Restore selection if available
+        if ([...select.options].some(o => o.value === curVal)) {
+            select.value = curVal;
+        } else if ([...select.options].some(o => o.value === "GO:0016791")) {
+            select.value = "GO:0016791";
+        }
+    })
+    .catch(err => console.error("Failed to load candidate categories:", err));
+}
+
+function runCandidateTargetScan() {
+    const chartDiv = document.getElementById("cand-scatter-chart");
+    const tbody = document.getElementById("cand-results-tbody");
+    const banner = document.getElementById("cand-ref-diagnostic-banner");
+
+    const refGenes = document.getElementById("cand-ref-genes-input") ? document.getElementById("cand-ref-genes-input").value.trim() : "";
+    const actGoid = document.getElementById("cand-activity-select") ? document.getElementById("cand-activity-select").value : "all";
+    const direction = document.getElementById("cand-direction-select") ? document.getElementById("cand-direction-select").value : "up";
+    const wtMax = parseFloat(document.getElementById("cand-wt-max-input")?.value) || 5.0;
+    const mutMin = parseFloat(document.getElementById("cand-mut-min-input")?.value) || 10.0;
+    const minFc = parseFloat(document.getElementById("cand-min-fc-input")?.value) || 0.5;
+    const keyword = document.getElementById("cand-keyword-input") ? document.getElementById("cand-keyword-input").value.trim() : "";
+    const onlyOnSwitch = document.getElementById("cand-only-on-switch") ? document.getElementById("cand-only-on-switch").checked : false;
+
+    if (gCandidateScanMode === "reference" && !refGenes) {
+        showGshToast("기준(Reference) 유전자를 1개 이상 입력해주세요 (예: ISN1, SDT1, PHO8).");
+        return;
+    }
+
+    if (chartDiv) {
+        chartDiv.innerHTML = `<div style="text-align:center; color:#64748b;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">유전체 기능 주석(GO/EC/도메인) 및 On/Off 발현 전환 스캔 중...</p></div>`;
+    }
+    if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:45px 0; color:#64748b;"><i class="fa-solid fa-spinner fa-spin"></i> 후보 유전자 랭킹 연산 중...</td></tr>`;
+    }
+
+    fetch(`${API_URL}/api/candidate_targets`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            session_id: gActiveSessionId,
+            species: gCurrentSpecies || "sce",
+            mode: gCandidateScanMode,
+            reference_genes: refGenes,
+            activity_goid: actGoid,
+            keyword: keyword,
+            direction: direction,
+            only_on_switch: onlyOnSwitch,
+            wt_max_cutoff: wtMax,
+            mut_min_cutoff: mutMin,
+            min_abs_log2fc: minFc
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("타겟 후보 발굴 API 호출 실패");
+        return res.json();
+    })
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.detail || "결과를 생성하지 못했습니다.");
+        }
+        gLastCandidateScanData = data;
+
+        const ctrlName = data.control_name || "WT";
+        const treatName = data.treated_name || "Mutant";
+        const groupLabel = document.getElementById("cand-chart-group-label");
+        if (groupLabel) groupLabel.textContent = `${ctrlName} vs ${treatName}`;
+        const thWt = document.getElementById("cand-th-wt");
+        if (thWt) thWt.textContent = `${ctrlName} 발현량 (백분위)`;
+        const thMut = document.getElementById("cand-th-mut");
+        if (thMut) thMut.textContent = `${treatName} 발현량 (백분위)`;
+
+        // Render Reference Diagnostic Banner if in reference mode
+        renderCandidateRefBanner(data);
+
+        // Render Scatter Plot
+        renderCandidateScatterChart(data, wtMax, mutMin);
+
+        // Render Table
+        renderCandidateResultsTable(data);
+
+        // Auto-select #1 candidate in detail box
+        if (data.candidates && data.candidates.length > 0) {
+            renderCandidateDetailBox(data.candidates[0], ctrlName, treatName);
+        } else if (data.reference_profiles && data.reference_profiles.length > 0) {
+            renderCandidateDetailBox(data.reference_profiles[0], ctrlName, treatName);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        if (chartDiv) chartDiv.innerHTML = `<div style="text-align:center; color:#ef4444;">오류: ${err.message}</div>`;
+        if (tbody) tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#ef4444; padding:40px 0;">분석 실패: ${err.message}</td></tr>`;
+        if (banner) banner.style.display = "none";
+    });
+}
+
+function renderCandidateRefBanner(data) {
+    const banner = document.getElementById("cand-ref-diagnostic-banner");
+    const refContainer = document.getElementById("cand-ref-genes-badges");
+    const funcContainer = document.getElementById("cand-shared-func-badges");
+    if (!banner || !refContainer || !funcContainer) return;
+
+    if (data.mode !== "reference" || !data.reference_profiles || data.reference_profiles.length === 0) {
+        banner.style.display = "none";
+        return;
+    }
+
+    banner.style.display = "block";
+    refContainer.innerHTML = "";
+    funcContainer.innerHTML = "";
+
+    const ctrlName = data.control_name || "WT";
+    const treatName = data.treated_name || "Mutant";
+
+    data.reference_profiles.forEach(ref => {
+        const fc = ref.log2fc;
+        const fcSign = fc > 0 ? "+" : "";
+        const fcColor = fc >= 0.8 ? "#dc2626" : (fc <= -0.8 ? "#2563eb" : "#475569");
+        const pill = document.createElement("div");
+        pill.style.cssText = "background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:6px 10px; font-size:11px; display:flex; align-items:center; gap:8px; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,0.03);";
+        pill.title = "클릭하여 우측 패널에서 상세 정보 확인";
+        pill.innerHTML = `
+            <span style="background:#e0e7ff; color:#3730a3; font-weight:700; padding:1px 6px; border-radius:4px; font-size:10px;">REF</span>
+            <strong>${ref.gene_symbol}</strong> <code style="font-size:10px; color:#64748b;">(${ref.locus_tag})</code>
+            <span style="color:#334155;">${ctrlName}: <b>${ref.wt_val}</b> → ${treatName}: <b>${ref.mutant_val}</b></span>
+            <span style="font-weight:700; color:${fcColor};">(${fcSign}${fc} Log2FC)</span>
+        `;
+        pill.addEventListener("click", () => renderCandidateDetailBox(ref, ctrlName, treatName));
+        refContainer.appendChild(pill);
+    });
+
+    if (data.shared_functions && data.shared_functions.length > 0) {
+        data.shared_functions.forEach(sf => {
+            const badge = document.createElement("span");
+            badge.style.cssText = "background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:4px 9px; border-radius:6px; font-size:11px; font-weight:600;";
+            badge.innerHTML = `<i class="fa-solid fa-bolt" style="color:#10b981; margin-right:4px;"></i>${sf.name} (<code>${sf.goid}</code>, ${sf.count}/${data.reference_profiles.length} 일치)`;
+            funcContainer.appendChild(badge);
+        });
+    }
+    if (data.shared_ec_prefixes && data.shared_ec_prefixes.length > 0) {
+        data.shared_ec_prefixes.forEach(ec => {
+            const badge = document.createElement("span");
+            badge.style.cssText = "background:#fef3c7; border:1px solid #fde68a; color:#92400e; padding:4px 9px; border-radius:6px; font-size:11px; font-weight:600;";
+            badge.innerHTML = `<i class="fa-solid fa-flask" style="color:#f59e0b; margin-right:4px;"></i>효소 분류: EC ${ec}.-`;
+            funcContainer.appendChild(badge);
+        });
+    }
+}
+
+function renderCandidateScatterChart(data, wtMaxCutoff, mutMinCutoff) {
+    const chartDiv = document.getElementById("cand-scatter-chart");
+    if (!chartDiv) return;
+
+    const pool = data.pool_genes || [];
+    const candMap = new Map((data.candidates || []).map((c, idx) => [c.locus_tag, { ...c, rank: idx + 1 }]));
+    const ctrlName = data.control_name || "WT";
+    const treatName = data.treated_name || "Mutant";
+
+    if (pool.length === 0 && (!data.candidates || data.candidates.length === 0)) {
+        chartDiv.innerHTML = `<div style="text-align:center; color:#94a3b8;">조건에 부합하는 유전자가 없습니다. 필터 임계값을 완화해보세요.</div>`;
+        return;
+    }
+
+    const onSwitchPts = [];
+    const topCandPts = [];
+    const refPts = [];
+    const bgPts = [];
+
+    pool.forEach(g => {
+        const xVal = Math.log10((g.wt_val || 0) + 1.0);
+        const yVal = Math.log10((g.mutant_val || 0) + 1.0);
+        const cObj = candMap.get(g.locus_tag) || g;
+        const labelSym = g.is_unnamed_orf && g.ncbi_id ? `${g.locus_tag} (NCBI:${g.ncbi_id})` : g.gene_symbol;
+        const pt = { x: xVal, y: yVal, label: labelSym, gene: cObj };
+
+        if (g.is_reference) {
+            refPts.push(pt);
+        } else if (g.is_de_novo_on || g.is_de_novo_off) {
+            onSwitchPts.push(pt);
+        } else if (candMap.has(g.locus_tag)) {
+            topCandPts.push(pt);
+        } else {
+            bgPts.push(pt);
+        }
+    });
+
+    const makeTrace = (pts, name, color, size, symbol, showText = false) => ({
+        x: pts.map(p => p.x),
+        y: pts.map(p => p.y),
+        mode: showText ? "markers+text" : "markers",
+        type: "scatter",
+        name: name,
+        text: pts.map(p => p.label),
+        textposition: "top center",
+        textfont: { size: 11, color: "#0f172a", family: "Inter, sans-serif" },
+        hovertemplate: pts.map(p =>
+            `<b>${p.label}</b> (${p.gene.locus_tag})<br>` +
+            `${ctrlName}: ${p.gene.wt_val} (백분위 ${p.gene.wt_pct}%)<br>` +
+            `${treatName}: ${p.gene.mutant_val} (백분위 ${p.gene.mut_pct}%)<br>` +
+            `Log2FC: ${p.gene.log2fc > 0 ? '+' : ''}${p.gene.log2fc}<br>` +
+            `${p.gene.func_summary.substring(0, 70)}<extra></extra>`
+        ),
+        marker: {
+            size: size,
+            color: color,
+            symbol: symbol,
+            line: { color: "#ffffff", width: 1.2 }
+        },
+        customdata: pts.map(p => p.gene)
+    });
+
+    const traces = [];
+    if (bgPts.length > 0) traces.push(makeTrace(bgPts, "동일 기능군 기타 유전자", "rgba(148, 163, 184, 0.55)", 7, "circle", false));
+    if (topCandPts.length > 0) traces.push(makeTrace(topCandPts, "⚡ 발현 증가 후보", "#f59e0b", 10, "circle", topCandPts.length <= 12));
+    if (refPts.length > 0) traces.push(makeTrace(refPts, "📌 기준(Reference) 유전자", "#3b82f6", 12, "diamond", true));
+    if (onSwitchPts.length > 0) traces.push(makeTrace(onSwitchPts, "🔥 De novo On/Off 스위치", "#ef4444", 14, "star", true));
+
+    const allX = pool.map(g => Math.log10((g.wt_val || 0) + 1.0));
+    const allY = pool.map(g => Math.log10((g.mutant_val || 0) + 1.0));
+    const maxCoord = Math.max(3.0, ...allX, ...allY) * 1.08;
+
+    const xCut = Math.log10((wtMaxCutoff || 5.0) + 1.0);
+    const yCut = Math.log10((mutMinCutoff || 10.0) + 1.0);
+
+    const layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "#ffffff",
+        margin: { l: 55, r: 20, t: 30, b: 50 },
+        xaxis: {
+            title: `${ctrlName} 발현량 — Log10(Expr + 1)`,
+            range: [-0.15, maxCoord],
+            gridcolor: "#f1f5f9",
+            zerolinecolor: "#cbd5e1"
+        },
+        yaxis: {
+            title: `${treatName} 발현량 — Log10(Expr + 1)`,
+            range: [-0.15, maxCoord],
+            gridcolor: "#f1f5f9",
+            zerolinecolor: "#cbd5e1"
+        },
+        legend: { orientation: "h", y: 1.12, x: 0, font: { size: 11 } },
+        hovermode: "closest",
+        shapes: [
+            // y = x diagonal line
+            {
+                type: "line",
+                x0: 0, y0: 0, x1: maxCoord, y1: maxCoord,
+                line: { color: "#94a3b8", width: 1, dash: "dot" }
+            },
+            // Highlight box for De novo On-Switch zone (WT <= wtMaxCutoff & Mutant >= mutMinCutoff)
+            {
+                type: "rect",
+                x0: -0.12, x1: xCut,
+                y0: yCut, y1: maxCoord * 0.98,
+                fillcolor: "rgba(239, 68, 68, 0.06)",
+                line: { color: "rgba(239, 68, 68, 0.35)", width: 1, dash: "dash" }
+            }
+        ],
+        annotations: [
+            {
+                x: xCut / 2,
+                y: maxCoord * 0.93,
+                text: "🔥 On-Switch 구역",
+                showarrow: false,
+                font: { size: 10, color: "#dc2626" }
+            }
+        ]
+    };
+
+    chartDiv.innerHTML = "";
+    const plotEl = document.createElement("div");
+    plotEl.style.width = "100%";
+    plotEl.style.height = "100%";
+    chartDiv.appendChild(plotEl);
+
+    Plotly.newPlot(plotEl, traces, layout, { responsive: true });
+
+    plotEl.on("plotly_click", (clickData) => {
+        if (clickData.points && clickData.points[0] && clickData.points[0].customdata) {
+            const gObj = clickData.points[0].customdata;
+            renderCandidateDetailBox(gObj, ctrlName, treatName);
+        }
+    });
+}
+
+function renderCandidateDetailBox(gene, ctrlName = "WT", treatName = "Mutant") {
+    const box = document.getElementById("cand-selected-detail-box");
+    if (!box || !gene) return;
+
+    const uniprotUrl = getUniprotUrl(gene);
+    const sgdUrl = `https://www.yeastgenome.org/locus/${encodeURIComponent(gene.locus_tag)}`;
+    const fcSign = gene.log2fc > 0 ? "+" : "";
+    const fcColor = gene.log2fc >= 0.5 ? "#dc2626" : (gene.log2fc <= -0.5 ? "#2563eb" : "#334155");
+
+    const unnamedAlert = gene.is_unnamed_orf
+        ? `<div style="background:#fffbeb; border:1px solid #fde68a; color:#92400e; padding:6px 10px; border-radius:6px; font-size:11px; margin-bottom:10px;">
+               <i class="fa-solid fa-lightbulb" style="color:#f59e0b; margin-right:4px;"></i>
+               <b>숨겨진 후보 알림:</b> 이 유전자는 표준 3글자 심볼이 부여되지 않아 체계명(<code>${gene.locus_tag}</code>${gene.ncbi_id ? ` / NCBI: <code>${gene.ncbi_id}</code>` : ""})으로만 표기되므로 기존 주요 유전자 위주 검토에서 누락되기 쉬운 <b>Known-function 미명명 ORF</b>입니다.
+           </div>`
+        : "";
+
+    const mfTags = (gene.mol_functions || []).map(x => `<span style="background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; padding:2px 7px; border-radius:4px; font-size:11px; font-weight:600;">${x.name} (${x.goid})</span>`).join(" ");
+    const ecTags = (gene.ec_numbers || []).map(ec => `<span style="background:#fef3c7; color:#92400e; border:1px solid #fde68a; padding:2px 7px; border-radius:4px; font-size:11px; font-weight:600;">EC ${ec}</span>`).join(" ");
+    const bpTags = (gene.bio_processes || []).map(x => `<span style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:2px 7px; border-radius:4px; font-size:11px;">${x.name}</span>`).join(" ");
+    const ccTags = (gene.cell_components || []).map(x => `<span style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; padding:2px 7px; border-radius:4px; font-size:11px;">📍 ${x.name}</span>`).join(" ");
+
+    const safeNoteKO = `${treatName} 특이 발현 우회 효소 후보 (${ctrlName}:${gene.wt_val} -> ${treatName}:${gene.mutant_val}, Log2FC:${fcSign}${gene.log2fc})`.replace(/'/g, "");
+    const safeNoteOE = `${treatName} 과발현 검증 타겟 (${ctrlName}:${gene.wt_val} -> ${treatName}:${gene.mutant_val}, Log2FC:${fcSign}${gene.log2fc})`.replace(/'/g, "");
+    const targetSymbol = (gene.gene_symbol && !gene.gene_symbol.match(/^\d+$/)) ? gene.gene_symbol : gene.locus_tag;
+
+    box.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:10px; height:100%; justify-content:space-between;">
+            <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span style="font-size:18px; font-weight:800; color:#0f172a;">${targetSymbol}</span>
+                            <code style="font-size:12px; background:#e2e8f0; padding:2px 6px; border-radius:4px; color:#334155;">${gene.locus_tag}</code>
+                            ${gene.ncbi_id ? `<span style="font-size:11px; color:#64748b;">(NCBI ID: ${gene.ncbi_id})</span>` : ""}
+                            ${gene.candidate_score ? `<span style="background:#4f46e5; color:#ffffff; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700;">Score: ${gene.candidate_score}</span>` : ""}
+                        </div>
+                        <div style="margin-top:4px; font-size:11px; font-weight:600; color:#dc2626;">${gene.switch_label || ""}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        ${gCurrentSpecies === "sce" ? `<a href="${sgdUrl}" target="_blank" class="btn btn-secondary btn-sm" style="padding:3px 8px; font-size:11px; text-decoration:none;">SGD DB ↗</a>` : ""}
+                        <a href="${uniprotUrl}" target="_blank" class="btn btn-secondary btn-sm" style="padding:3px 8px; font-size:11px; text-decoration:none;">UniProt ↗</a>
+                    </div>
+                </div>
+
+                ${unnamedAlert}
+
+                <!-- Expression Comparison Box -->
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;">
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px; text-align:center;">
+                        <div style="font-size:10px; color:#64748b; font-weight:600;">${ctrlName} (대조군)</div>
+                        <div style="font-size:15px; font-weight:800; color:#1e293b; margin-top:2px;">${gene.wt_val}</div>
+                        <div style="font-size:10px; color:#94a3b8;">백분위 ${gene.wt_pct}%</div>
+                    </div>
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px; text-align:center;">
+                        <div style="font-size:10px; color:#64748b; font-weight:600;">${treatName} (실험군)</div>
+                        <div style="font-size:15px; font-weight:800; color:#dc2626; margin-top:2px;">${gene.mutant_val}</div>
+                        <div style="font-size:10px; color:#94a3b8;">백분위 ${gene.mut_pct}% (${gene.pct_jump >= 0 ? "+" : ""}${gene.pct_jump}%p)</div>
+                    </div>
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px; text-align:center;">
+                        <div style="font-size:10px; color:#64748b; font-weight:600;">Log2 FC / FDR</div>
+                        <div style="font-size:15px; font-weight:800; color:${fcColor}; margin-top:2px;">${fcSign}${gene.log2fc}</div>
+                        <div style="font-size:10px; color:#94a3b8;">FDR: ${gene.fdr !== null && gene.fdr !== undefined ? gene.fdr : "-"}</div>
+                    </div>
+                </div>
+
+                <!-- Functional Annotations -->
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; font-size:11px; line-height:1.6;">
+                    <div style="margin-bottom:6px;">
+                        <strong style="color:#1e293b;">🧪 분자 기능 & EC 번호:</strong>
+                        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:3px;">
+                            ${mfTags || `<span style="color:#94a3b8;">등록된 분자 기능 없음</span>`}
+                            ${ecTags}
+                        </div>
+                    </div>
+                    <div style="margin-bottom:6px;">
+                        <strong style="color:#1e293b;">🔄 연관 대사 과정 & 세포 내 위치:</strong>
+                        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:3px;">
+                            ${bpTags || `<span style="color:#94a3b8;">미등록</span>`}
+                            ${ccTags}
+                        </div>
+                    </div>
+                    ${gene.engineering_note ? `<div style="margin-top:6px; padding-top:6px; border-top:1px dashed #e2e8f0; color:#334155;"><b>💡 대사공학 진단:</b> ${gene.engineering_note}</div>` : ""}
+                </div>
+            </div>
+
+            <!-- Action Buttons: Register to Target Engineering List -->
+            <div style="display:flex; gap:8px; padding-top:8px; border-top:1px solid #e2e8f0;">
+                <button type="button" class="btn btn-primary btn-sm" style="flex:1; background:#2563eb; border:none; padding:8px 10px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="registerCandidateAsTarget('${targetSymbol}', 'KO', '${safeNoteKO}')">
+                    <i class="fa-solid fa-scissors"></i> 결손(KO) 타겟 리스트 등록
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" style="flex:1; background:#ef4444; border:none; padding:8px 10px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="registerCandidateAsTarget('${targetSymbol}', 'OE', '${safeNoteOE}')">
+                    <i class="fa-solid fa-arrow-up"></i> 과발현(OE) 타겟 리스트 등록
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function renderCandidateResultsTable(data) {
+    const tbody = document.getElementById("cand-results-tbody");
+    const countBadge = document.getElementById("cand-result-count-badge");
+    if (!tbody) return;
+
+    const candidates = data.candidates || [];
+    if (countBadge) countBadge.textContent = `${data.total_candidates || candidates.length}개`;
+
+    const ctrlName = data.control_name || "WT";
+    const treatName = data.treated_name || "Mutant";
+
+    if (candidates.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; padding:45px 0;">설정된 필터 조건에 부합하는 후보 유전자가 없습니다. [실험군 최소 발현량]이나 [On/Off 전환 필터] 조건을 완화해 보세요.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = "";
+    candidates.forEach((cand, idx) => {
+        const tr = document.createElement("tr");
+        tr.style.cursor = "pointer";
+        if (cand.is_de_novo_on) {
+            tr.style.background = "rgba(254, 242, 242, 0.55)";
+        }
+
+        const targetSymbol = (cand.gene_symbol && !cand.gene_symbol.match(/^\d+$/)) ? cand.gene_symbol : cand.locus_tag;
+        const symbolHtml = cand.is_unnamed_orf
+            ? `<strong>${cand.locus_tag}</strong><br><span style="font-size:10px; color:#d97706; font-weight:600;">[미명명 ORF${cand.ncbi_id ? ` / NCBI:${cand.ncbi_id}` : ""}]</span>`
+            : `<strong>${cand.gene_symbol}</strong> <code style="font-size:11px; color:#64748b;">(${cand.locus_tag})</code>`;
+
+        let switchBadgeStyle = "background:#f1f5f9; color:#475569;";
+        if (cand.switch_type === "ON_SWITCH") switchBadgeStyle = "background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; font-weight:700;";
+        else if (cand.switch_type === "OFF_SWITCH") switchBadgeStyle = "background:#dbeafe; color:#1d4ed8; border:1px solid #93c5fd; font-weight:700;";
+        else if (cand.switch_type === "HIGH_UP") switchBadgeStyle = "background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-weight:600;";
+
+        const fcSign = cand.log2fc > 0 ? "+" : "";
+        const fcClass = cand.log2fc >= 0 ? "up-text" : "down-text";
+
+        const mfList = (cand.mol_functions || []).map(x => x.name).join(", ");
+        const ecList = (cand.ec_numbers || []).length > 0 ? ` [EC ${cand.ec_numbers.join(", ")}]` : "";
+        const bpList = (cand.bio_processes || []).slice(0, 2).map(x => x.name).join(", ");
+        const funcDisplay = (mfList || bpList || cand.func_summary) + ecList;
+
+        const safeNoteKO = `${treatName} 우회 효소 결실 후보 (${ctrlName}:${cand.wt_val}->${treatName}:${cand.mutant_val})`.replace(/'/g, "");
+        const safeNoteOE = `${treatName} 과발현 후보 (${ctrlName}:${cand.wt_val}->${treatName}:${cand.mutant_val})`.replace(/'/g, "");
+
+        tr.innerHTML = `
+            <td style="text-align:center; font-weight:700; color:#334155;">#${idx + 1}</td>
+            <td style="text-align:center;">
+                <span style="background:${cand.candidate_score >= 70 ? '#4f46e5' : '#64748b'}; color:#ffffff; padding:2px 8px; border-radius:10px; font-weight:700; font-size:11px;">
+                    ${cand.candidate_score}
+                </span>
+            </td>
+            <td>${symbolHtml}</td>
+            <td><span style="display:inline-block; padding:2px 7px; border-radius:6px; font-size:11px; ${switchBadgeStyle}">${cand.switch_label}</span></td>
+            <td style="text-align:right;"><b>${cand.wt_val}</b> <span style="font-size:10px; color:#94a3b8;">(${cand.wt_pct}%)</span></td>
+            <td style="text-align:right;"><b>${cand.mutant_val}</b> <span style="font-size:10px; color:#64748b;">(${cand.mut_pct}%)</span></td>
+            <td style="text-align:right; font-weight:700;" class="${fcClass}">${fcSign}${cand.log2fc}</td>
+            <td style="text-align:right; color:#64748b;">${cand.fdr !== null && cand.fdr !== undefined ? cand.fdr : "-"}</td>
+            <td style="font-size:11px; color:#334155; line-height:1.4;">${funcDisplay}</td>
+            <td style="text-align:center;" onclick="event.stopPropagation();">
+                <div style="display:inline-flex; gap:4px;">
+                    <button type="button" class="btn btn-secondary btn-sm" style="padding:2px 7px; font-size:10px; font-weight:700; color:#1d4ed8; border-color:#bfdbfe; background:#eff6ff;" title="결손(KO) 타겟 리스트에 추가" onclick="registerCandidateAsTarget('${targetSymbol}', 'KO', '${safeNoteKO}')">+KO</button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="padding:2px 7px; font-size:10px; font-weight:700; color:#b91c1c; border-color:#fecaca; background:#fef2f2;" title="과발현(OE) 타겟 리스트에 추가" onclick="registerCandidateAsTarget('${targetSymbol}', 'OE', '${safeNoteOE}')">+OE</button>
+                </div>
+            </td>
+        `;
+
+        tr.addEventListener("click", () => {
+            renderCandidateDetailBox(cand, ctrlName, treatName);
+        });
+
+        tbody.appendChild(tr);
+    });
+}
+
+function registerCandidateAsTarget(symbol, strategy, note) {
+    // Ensure pathwayMapsStore[currentMapId] is initialized even if user hasn't opened the Custom Pathway tab yet
+    if (!pathwayMapsStore || !pathwayMapsStore[currentMapId]) {
+        const savedStore = localStorage.getItem("pathway_maps_store");
+        if (savedStore) {
+            try { pathwayMapsStore = JSON.parse(savedStore); } catch (e) {}
+        }
+        if (!pathwayMapsStore[currentMapId]) {
+            pathwayMapsStore[currentMapId] = {
+                name: "Yeast GSH Pathway (S. cerevisiae)",
+                species: gCurrentSpecies || "sce",
+                width: 1024,
+                height: 580,
+                nodes: [],
+                arrows: []
+            };
+        }
+    }
+    addTargetGene(symbol, strategy, note);
+}
+
+function exportCandidateTargetsToCSV() {
+    if (!gLastCandidateScanData || !gLastCandidateScanData.candidates || gLastCandidateScanData.candidates.length === 0) {
+        showGshToast("먼저 타겟 후보 발굴을 실행해주세요.");
+        return;
+    }
+    const ctrlName = gLastCandidateScanData.control_name || "WT";
+    const treatName = gLastCandidateScanData.treated_name || "Mutant";
+    const headers = ["Rank", "Score", "Locus_Tag", "Gene_Symbol", "NCBI_ID", "Switch_Type", `${ctrlName}_Expr`, `${ctrlName}_Pct`, `${treatName}_Expr`, `${treatName}_Pct`, "Log2FC", "FDR", "EC_Numbers", "Molecular_Functions", "Biological_Processes"];
+    const rows = gLastCandidateScanData.candidates.map((c, idx) => [
+        idx + 1,
+        c.candidate_score,
+        c.locus_tag,
+        c.gene_symbol,
+        c.ncbi_id || "",
+        c.switch_type,
+        c.wt_val,
+        c.wt_pct,
+        c.mutant_val,
+        c.mut_pct,
+        c.log2fc,
+        c.fdr !== null && c.fdr !== undefined ? c.fdr : "",
+        `"${(c.ec_numbers || []).join("; ")}"`,
+        `"${(c.mol_functions || []).map(x => x.name).join("; ")}"`,
+        `"${(c.bio_processes || []).map(x => x.name).join("; ")}"`
+    ]);
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `candidate_target_genes_${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 // Custom GSH Pathway Mapped Overlay & Interactive Editor Logic
@@ -5663,8 +6308,14 @@ function calculateArrowPath(arrow, nodesMap) {
     const endX = toNode ? p2.x - ux * (toNode.w / 2 + endMargin) : p2.x - ux * endMargin;
     const endY = toNode ? p2.y - uy * (toNode.h / 2 + endMargin) : p2.y - uy * endMargin;
     
+    let cx = (startX + endX) / 2;
+    let cy = (startY + endY) / 2;
+    let midX = cx;
+    let midY = cy;
+
     // If straight line
     if (arrow.type !== 'curved') {
+        arrow._calculated = { startX, startY, endX, endY, cx, cy, midX, midY, ux, uy, nx, ny };
         return `M ${startX.toFixed(1)} ${startY.toFixed(1)} L ${endX.toFixed(1)} ${endY.toFixed(1)}`;
     }
     
@@ -5673,10 +6324,16 @@ function calculateArrowPath(arrow, nodesMap) {
     const my = (startY + endY) / 2;
     const curvx = -uy;
     const curvy = ux;
-    const curvature = arrow.curvature || 35;
+    const curvature = arrow.curvature !== undefined && arrow.curvature !== null ? arrow.curvature : 35;
     
-    const cx = mx + curvx * curvature;
-    const cy = my + curvy * curvature;
+    cx = mx + curvx * curvature;
+    cy = my + curvy * curvature;
+    
+    // Exact midpoint of quadratic bezier curve at t=0.5: B(0.5) = (start + 2*ctrl + end) / 4
+    midX = (startX + 2 * cx + endX) / 4;
+    midY = (startY + 2 * cy + endY) / 4;
+    
+    arrow._calculated = { startX, startY, endX, endY, cx, cy, midX, midY, ux, uy, nx, ny, curvature };
     
     return `M ${startX.toFixed(1)} ${startY.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
 }
@@ -5816,6 +6473,12 @@ function renderGSHPathway() {
                         renderGSHPathway();
                     }
                 });
+
+                // Double click arrow to open Gene Search Modal directly
+                path.addEventListener("dblclick", (e) => {
+                    e.stopPropagation();
+                    openGeneSearchModal(arrow.id);
+                });
             }
             
             // If arrow is selected and edit mode is active, render start & end anchor drag handles
@@ -5893,6 +6556,73 @@ function renderGSHPathway() {
                 
                 createAnchor(pStart, 'start');
                 createAnchor(pEnd, 'end');
+
+                // Curved arrow interactive curvature control handle
+                if (arrow.type === 'curved' && arrow._calculated) {
+                    const ctrlPt = { x: arrow._calculated.cx, y: arrow._calculated.cy };
+                    const curveCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    curveCircle.setAttribute("cx", ctrlPt.x);
+                    curveCircle.setAttribute("cy", ctrlPt.y);
+                    curveCircle.setAttribute("r", "6");
+                    curveCircle.setAttribute("class", "arrow-curve-handle");
+                    curveCircle.setAttribute("title", "드래그하여 화살표 곡률(휘어짐) 조절");
+                    
+                    curveCircle.addEventListener("mousedown", (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (e.button !== 0) return;
+                        
+                        let isDraggingCurve = true;
+                        const startMouseX = e.clientX;
+                        const startMouseY = e.clientY;
+                        const initialCurvature = arrow.curvature !== undefined && arrow.curvature !== null ? arrow.curvature : 35;
+                        const calc = arrow._calculated;
+                        
+                        const handleCurveMove = (mvEvent) => {
+                            if (!isDraggingCurve) return;
+                            const dx = (mvEvent.clientX - startMouseX) / gshZoomScale;
+                            const dy = (mvEvent.clientY - startMouseY) / gshZoomScale;
+                            
+                            // Project delta onto normal vector (nx, ny)
+                            const deltaCurv = dx * calc.nx + dy * calc.ny;
+                            arrow.curvature = Math.round(initialCurvature + deltaCurv);
+                            renderGSHPathway();
+                        };
+                        
+                        const handleCurveUp = () => {
+                            isDraggingCurve = false;
+                            document.removeEventListener("mousemove", handleCurveMove);
+                            document.removeEventListener("mouseup", handleCurveUp);
+                            saveAllPathwayMaps();
+                            pushGshHistory();
+                        };
+                        
+                        document.addEventListener("mousemove", handleCurveMove);
+                        document.addEventListener("mouseup", handleCurveUp);
+                    });
+                    
+                    g.appendChild(curveCircle);
+                }
+
+                // Quick "+ 유전자" badge on selected arrow
+                if (arrow._calculated) {
+                    const foBtn = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+                    foBtn.setAttribute("x", (arrow._calculated.midX - 35).toFixed(1));
+                    foBtn.setAttribute("y", (arrow._calculated.midY - 26).toFixed(1));
+                    foBtn.setAttribute("width", "72");
+                    foBtn.setAttribute("height", "24");
+                    foBtn.setAttribute("style", "overflow: visible; pointer-events: auto;");
+                    
+                    const btnDiv = document.createElement("div");
+                    btnDiv.className = "arrow-gene-add-btn";
+                    btnDiv.innerHTML = `<button style="background: linear-gradient(135deg, #ec4899, #f43f5e); color: white; border: none; border-radius: 12px; font-size: 10px; font-weight: 700; padding: 2px 8px; cursor: pointer; display: flex; align-items: center; gap: 3px; box-shadow: 0 2px 5px rgba(236,72,153,0.4);"><i class="fa-solid fa-plus"></i>유전자</button>`;
+                    btnDiv.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        openGeneSearchModal(arrow.id);
+                    });
+                    foBtn.appendChild(btnDiv);
+                    g.appendChild(foBtn);
+                }
             }
             
             arrowsLayer.appendChild(g);
@@ -5965,6 +6695,34 @@ function renderGSHPathway() {
             
             g.appendChild(rect);
             g.appendChild(text);
+
+            // 4 Anchor Ports for easy Drag-to-Connect (Edit mode)
+            if (isGshEditMode) {
+                const ports = [
+                    { id: 'top', x: node.x + node.w / 2, y: node.y },
+                    { id: 'right', x: node.x + node.w, y: node.y + node.h / 2 },
+                    { id: 'bottom', x: node.x + node.w / 2, y: node.y + node.h },
+                    { id: 'left', x: node.x, y: node.y + node.h / 2 }
+                ];
+                
+                ports.forEach(pt => {
+                    const portCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    portCircle.setAttribute("cx", pt.x);
+                    portCircle.setAttribute("cy", pt.y);
+                    portCircle.setAttribute("r", "4.5");
+                    portCircle.setAttribute("class", `gsh-node-anchor-port port-${pt.id}`);
+                    portCircle.setAttribute("title", "드래그하여 다른 노드로 화살표 연결 (Drag-to-Connect)");
+                    
+                    portCircle.addEventListener("mousedown", (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (e.button !== 0) return;
+                        startPortConnection(node.id, pt, e);
+                    });
+                    
+                    g.appendChild(portCircle);
+                });
+            }
             
             // Edit Mode: Node Drag & Drop
             if (isGshEditMode) {
@@ -5993,7 +6751,6 @@ function renderGSHPathway() {
                                 }
                                 if (arrow.to === node.id) {
                                     const pathStr = calculateArrowPath(arrow, nodesMap);
-                                    // Calculate target center coords fallback
                                     arrow.toCoords = { x: node.x + node.w / 2, y: node.y + node.h / 2 };
                                     arrow.to = null;
                                 }
@@ -6300,6 +7057,7 @@ function renderGSHPathwayOverlay(results) {
             symbol: cg.symbol,
             x: cg.x,
             y: cg.y,
+            arrowId: cg.arrowId || null,
             rep_log2fc: cg.rep_log2fc || 0.0,
             genes: cg.genes || [],
             isCustom: true
@@ -6316,8 +7074,17 @@ function renderGSHPathwayOverlay(results) {
         const resolvedGenes = dynamicGene ? [dynamicGene] : (item.genes && item.genes.length ? item.genes : []);
         
         // Convert coords based on dynamic map dimensions
-        const baseX = (item.x * mapWidth) / 100;
-        const baseY = (item.y * mapHeight) / 100;
+        let baseX = (item.x * mapWidth) / 100;
+        let baseY = (item.y * mapHeight) / 100;
+
+        // If attached to an arrow, dynamically compute base position from arrow's calculated midpoint!
+        if (item.arrowId && currentMap.arrows) {
+            const attachedArrow = currentMap.arrows.find(a => a.id === item.arrowId);
+            if (attachedArrow && attachedArrow._calculated) {
+                baseX = attachedArrow._calculated.midX;
+                baseY = attachedArrow._calculated.midY - 14;
+            }
+        }
         
         const offset = savedOffsets[key] || { dx: 0, dy: 0 };
         const finalX = baseX + offset.dx;
@@ -7121,6 +7888,51 @@ function initGSHHotkeyBindings() {
         const currentMap = pathwayMapsStore[currentMapId];
         if (!currentMap) return;
         
+        // Tab key: Automatically create next connected node to the right
+        if (e.key === "Tab") {
+            if (selectedNodes.size === 1) {
+                e.preventDefault();
+                const curId = Array.from(selectedNodes)[0];
+                const nodesMap = getNodesMap();
+                const curNode = nodesMap[curId];
+                if (curNode) {
+                    const newId = `node_${Date.now()}`;
+                    const newNode = {
+                        id: newId,
+                        label: "Next_Node",
+                        x: Math.round(curNode.x + 130),
+                        y: curNode.y,
+                        w: curNode.w || 80,
+                        h: curNode.h || 24,
+                        rx: 12,
+                        type: "standard"
+                    };
+                    currentMap.nodes.push(newNode);
+                    
+                    // Create connecting arrow
+                    const selectedType = document.querySelector('input[name="arrow-type"]:checked')?.value || 'straight';
+                    const selectedDir = document.querySelector('input[name="arrow-dir"]:checked')?.value || 'forward';
+                    const newArrow = {
+                        id: `arr_${curId}_${newId}_${Date.now()}`,
+                        from: curId,
+                        to: newId,
+                        type: selectedType,
+                        direction: selectedDir
+                    };
+                    currentMap.arrows.push(newArrow);
+                    
+                    // Switch selection to new node
+                    selectedNodes.clear();
+                    selectedNodes.add(newId);
+                    
+                    saveAllPathwayMaps();
+                    pushGshHistory();
+                    renderGSHPathway();
+                    showGshToast("⏩ 다음 노드가 자동 생성 및 연결되었습니다 (Tab)");
+                }
+            }
+        }
+
         // Delete Selection
         if (e.key === "Delete" || e.key === "Backspace") {
             e.preventDefault();
@@ -7558,89 +8370,62 @@ function initGSHEditorBindings() {
         if (btn) {
             btn.addEventListener("click", () => {
                 const tool = toolButtons[btnId];
-                if (activeGshTool === tool) {
+                if (tool === 'add-gene') {
+                    openGeneSearchModal();
+                    setGshActiveTool(null);
+                } else if (activeGshTool === tool) {
                     setGshActiveTool(null);
                 } else {
                     setGshActiveTool(tool);
+                    if (tool === 'add-node') {
+                        showGshToast("💡 캔버스 빈 곳을 클릭하거나 더블클릭하면 대사산물 노드가 생성됩니다.");
+                    } else if (tool === 'add-arrow') {
+                        showGshToast("💡 노드 가장자리의 4개 점을 드래그해서 다른 노드로 끌어놓아도 화살표가 연결됩니다.");
+                    }
                 }
             });
         }
     });
+
+    // Reaction Wizard Button
+    const btnReactionWizard = document.getElementById("btn-reaction-wizard");
+    if (btnReactionWizard) {
+        btnReactionWizard.addEventListener("click", () => {
+            openReactionWizardModal();
+        });
+    }
     
+    // Canvas click handler for node/gene tools
     svgEl.addEventListener("click", (e) => {
         if (!isGshEditMode || !activeGshTool) return;
         
         // Prevent action if clicking on existing nodes, arrows, or gene badges
-        if (e.target.closest(".gsh-pathway-node-group") || e.target.closest(".gsh-pathway-arrow-group") || e.target.closest(".gsh-gene-badge-group")) {
+        if (e.target.closest(".gsh-pathway-node-group") || e.target.closest(".gsh-pathway-arrow-group") || e.target.closest(".gsh-gene-badge-group") || e.target.closest(".gsh-node-anchor-port")) {
             return;
         }
         
         const currentMap = pathwayMapsStore[currentMapId];
         if (!currentMap) return;
         
-        const mapWidth = currentMap.width || 1024;
-        const mapHeight = currentMap.height || 580;
-        
         const clickPt = getSvgCoords(e.clientX, e.clientY);
-        const clickX = clickPt.x;
-        const clickY = clickPt.y;
         
         if (activeGshTool === 'add-node') {
-            const name = prompt("새로운 대사산물 이름을 입력하세요:");
-            if (name && name.trim() !== "") {
-                const newId = `node_${Date.now()}`;
-                const newNode = {
-                    id: newId,
-                    label: name.trim(),
-                    x: Math.round(clickX - 40),
-                    y: Math.round(clickY - 12),
-                    w: 80,
-                    h: 24,
-                    rx: 12,
-                    type: "standard"
-                };
-                currentMap.nodes.push(newNode);
-                saveAllPathwayMaps();
-                pushGshHistory();
-                setGshActiveTool(null);
-                renderGSHPathway();
-            }
+            showInlineNodeCreator(clickPt.x, clickPt.y, e.clientX, e.clientY);
+            setGshActiveTool(null);
         } else if (activeGshTool === 'add-gene') {
-            const name = prompt("새로운 유전자 심볼(예: MET2)을 입력하세요:");
-            if (name && name.trim() !== "") {
-                const symbol = name.trim().toUpperCase();
-                
-                let repLog2fc = 0.0;
-                let geneIsoforms = [];
-                if (gGenes && gGenes.length > 0) {
-                    const match = gGenes.find(g => (g.gene_symbol && g.gene_symbol.toUpperCase() === symbol) || (g.locus_tag && g.locus_tag.toUpperCase() === symbol));
-                    if (match) {
-                        repLog2fc = parseFloat(match.log2fc) || 0.0;
-                        geneIsoforms = [match];
-                    }
-                }
-                
-                const percentX = (clickX / mapWidth) * 100;
-                const percentY = (clickY / mapHeight) * 100;
-                
-                const custom = getGshCustomGenes(currentMapId);
-                const newGeneId = `gene_${Date.now()}_${Math.round(Math.random() * 1000)}`;
-                custom.push({
-                    id: newGeneId,
-                    symbol: symbol,
-                    x: percentX,
-                    y: percentY,
-                    rep_log2fc: repLog2fc,
-                    genes: geneIsoforms
-                });
-                setGshCustomGenes(currentMapId, custom);
-                saveAllPathwayMaps();
-                pushGshHistory();
-                
-                setGshActiveTool(null);
-                renderGSHPathway(); // Render immediately using local memory store to bypass REST loading delays
-            }
+            openGeneSearchModal(null, { x: clickPt.x, y: clickPt.y });
+            setGshActiveTool(null);
         }
+    });
+
+    // Canvas double click handler: Quick Create Node directly without tool selection!
+    svgEl.addEventListener("dblclick", (e) => {
+        if (!isGshEditMode) return;
+        if (e.target.closest(".gsh-pathway-node-group") || e.target.closest(".gsh-pathway-arrow-group") || e.target.closest(".gsh-gene-badge-group") || e.target.closest(".gsh-node-anchor-port")) {
+            return;
+        }
+        const clickPt = getSvgCoords(e.clientX, e.clientY);
+        showInlineNodeCreator(clickPt.x, clickPt.y, e.clientX, e.clientY);
     });
     
     // Node Align Tool Handlers
@@ -7796,6 +8581,585 @@ function initGSHEditorBindings() {
     if (btnCopyList) {
         btnCopyList.addEventListener("click", () => {
             copyTargetGenesToClipboard();
+        });
+    }
+
+    // Initialize Advanced Editor Modules
+    initInlineNodeCreator();
+    initGeneSearchModal();
+    initReactionWizard();
+}
+
+// ----------------------------------------------------------------------
+// 1. Port Drag-to-Connect Arrow Implementation
+// ----------------------------------------------------------------------
+let isPortConnecting = false;
+
+function startPortConnection(sourceNodeId, startPt, initialEvent) {
+    if (isPortConnecting) return;
+    isPortConnecting = true;
+    
+    const arrowsLayer = document.getElementById("gsh-pathway-arrows");
+    const currentMap = pathwayMapsStore[currentMapId];
+    if (!arrowsLayer || !currentMap) {
+        isPortConnecting = false;
+        return;
+    }
+    
+    // Create temporary drag preview arrow
+    const tempPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    tempPath.setAttribute("stroke", "#6366f1");
+    tempPath.setAttribute("stroke-width", "2.5");
+    tempPath.setAttribute("stroke-dasharray", "5, 4");
+    tempPath.setAttribute("fill", "none");
+    tempPath.setAttribute("marker-end", "url(#arrowhead)");
+    tempPath.setAttribute("d", `M ${startPt.x} ${startPt.y} L ${startPt.x} ${startPt.y}`);
+    arrowsLayer.appendChild(tempPath);
+    
+    let hoveredNodeId = null;
+    
+    const handlePortMove = (mvEvent) => {
+        const curPt = getSvgCoords(mvEvent.clientX, mvEvent.clientY);
+        tempPath.setAttribute("d", `M ${startPt.x} ${startPt.y} L ${curPt.x} ${curPt.y}`);
+        
+        // Find if cursor is over a candidate target node
+        const elementsUnderCursor = document.elementsFromPoint(mvEvent.clientX, mvEvent.clientY);
+        let foundNodeEl = null;
+        for (const el of elementsUnderCursor) {
+            const nodeGroup = el.closest(".gsh-pathway-node-group");
+            if (nodeGroup && nodeGroup.getAttribute("data-id") !== sourceNodeId) {
+                foundNodeEl = nodeGroup;
+                break;
+            }
+        }
+        
+        document.querySelectorAll(".gsh-node-drop-target").forEach(el => el.classList.remove("gsh-node-drop-target"));
+        
+        if (foundNodeEl) {
+            hoveredNodeId = foundNodeEl.getAttribute("data-id");
+            foundNodeEl.classList.add("gsh-node-drop-target");
+        } else {
+            hoveredNodeId = null;
+        }
+    };
+    
+    const handlePortUp = (upEvent) => {
+        isPortConnecting = false;
+        document.removeEventListener("mousemove", handlePortMove);
+        document.removeEventListener("mouseup", handlePortUp);
+        tempPath.remove();
+        
+        document.querySelectorAll(".gsh-node-drop-target").forEach(el => el.classList.remove("gsh-node-drop-target"));
+        
+        if (hoveredNodeId && hoveredNodeId !== sourceNodeId) {
+            // Create arrow connection!
+            const selectedType = document.querySelector('input[name="arrow-type"]:checked')?.value || 'straight';
+            const selectedDir = document.querySelector('input[name="arrow-dir"]:checked')?.value || 'forward';
+            
+            const newArrow = {
+                id: `arr_${sourceNodeId}_${hoveredNodeId}_${Date.now()}`,
+                from: sourceNodeId,
+                to: hoveredNodeId,
+                type: selectedType,
+                direction: selectedDir
+            };
+            
+            currentMap.arrows.push(newArrow);
+            saveAllPathwayMaps();
+            pushGshHistory();
+            renderGSHPathway();
+            showGshToast("✨ 화살표가 성공적으로 연결되었습니다.");
+        }
+    };
+    
+    document.addEventListener("mousemove", handlePortMove);
+    document.addEventListener("mouseup", handlePortUp);
+}
+
+// ----------------------------------------------------------------------
+// 2. Inline Node Creator Popup
+// ----------------------------------------------------------------------
+let inlineNodeSvgCoords = { x: 100, y: 100 };
+
+function showInlineNodeCreator(svgX, svgY, clientX, clientY) {
+    const creator = document.getElementById("gsh-inline-node-creator");
+    const input = document.getElementById("gsh-inline-node-input");
+    const wrapper = document.querySelector(".gsh-pathway-wrapper");
+    if (!creator || !input || !wrapper) return;
+    
+    inlineNodeSvgCoords = { x: svgX, y: svgY };
+    
+    const wrapRect = wrapper.getBoundingClientRect();
+    const relX = clientX - wrapRect.left;
+    const relY = clientY - wrapRect.top;
+    
+    creator.style.left = `${Math.min(relX, wrapRect.width - 240)}px`;
+    creator.style.top = `${Math.min(relY, wrapRect.height - 50)}px`;
+    creator.style.display = "flex";
+    
+    input.value = "";
+    setTimeout(() => input.focus(), 50);
+}
+
+function hideInlineNodeCreator() {
+    const creator = document.getElementById("gsh-inline-node-creator");
+    if (creator) creator.style.display = "none";
+}
+
+function submitInlineNode() {
+    const input = document.getElementById("gsh-inline-node-input");
+    if (!input) return;
+    const val = input.value.trim();
+    if (!val) {
+        hideInlineNodeCreator();
+        return;
+    }
+    
+    const currentMap = pathwayMapsStore[currentMapId];
+    if (currentMap) {
+        if (!currentMap.nodes) currentMap.nodes = [];
+        const newId = `node_${Date.now()}`;
+        const newNode = {
+            id: newId,
+            label: val,
+            x: Math.round(inlineNodeSvgCoords.x - 40),
+            y: Math.round(inlineNodeSvgCoords.y - 12),
+            w: 80,
+            h: 24,
+            rx: 12,
+            type: "standard"
+        };
+        currentMap.nodes.push(newNode);
+        saveAllPathwayMaps();
+        pushGshHistory();
+        renderGSHPathway();
+        showGshToast(`대사산물 '${val}' 노드가 생성되었습니다.`);
+    }
+    hideInlineNodeCreator();
+}
+
+function initInlineNodeCreator() {
+    const btnSubmit = document.getElementById("btn-inline-node-submit");
+    const btnCancel = document.getElementById("btn-inline-node-cancel");
+    const input = document.getElementById("gsh-inline-node-input");
+    
+    if (btnSubmit) btnSubmit.addEventListener("click", submitInlineNode);
+    if (btnCancel) btnCancel.addEventListener("click", hideInlineNodeCreator);
+    if (input) {
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                submitInlineNode();
+            } else if (e.key === "Escape") {
+                hideInlineNodeCreator();
+            }
+        });
+    }
+}
+
+// ----------------------------------------------------------------------
+// 3. Smart Gene Search & Autocomplete Modal
+// ----------------------------------------------------------------------
+let currentGeneTargetArrowId = null;
+let currentGeneTargetCoords = null;
+
+function openGeneSearchModal(targetArrowId = null, coords = null) {
+    currentGeneTargetArrowId = targetArrowId;
+    currentGeneTargetCoords = coords;
+    
+    const modal = document.getElementById("gsh-gene-search-modal");
+    const input = document.getElementById("gsh-gene-modal-input");
+    const suggestions = document.getElementById("gsh-gene-modal-suggestions");
+    const attachContainer = document.getElementById("gsh-gene-attach-arrow-container");
+    const targetArrowName = document.getElementById("gsh-target-arrow-name");
+    const attachCheck = document.getElementById("gsh-gene-attach-arrow-check");
+    
+    if (!modal || !input) return;
+    
+    input.value = "";
+    if (suggestions) {
+        suggestions.innerHTML = "";
+        suggestions.style.display = "none";
+    }
+    
+    if (targetArrowId) {
+        if (attachContainer) attachContainer.style.display = "block";
+        if (attachCheck) attachCheck.checked = true;
+        
+        const currentMap = pathwayMapsStore[currentMapId];
+        const nodesMap = getNodesMap();
+        const arrow = currentMap && currentMap.arrows ? currentMap.arrows.find(a => a.id === targetArrowId) : null;
+        if (arrow && targetArrowName) {
+            const fromLabel = arrow.from && nodesMap[arrow.from] ? nodesMap[arrow.from].label : "시작";
+            const toLabel = arrow.to && nodesMap[arrow.to] ? nodesMap[arrow.to].label : "끝";
+            targetArrowName.innerText = `${fromLabel} ➔ ${toLabel}`;
+        }
+    } else {
+        if (attachContainer) attachContainer.style.display = "none";
+    }
+    
+    modal.style.display = "flex";
+    setTimeout(() => input.focus(), 50);
+}
+
+function closeGeneSearchModal() {
+    const modal = document.getElementById("gsh-gene-search-modal");
+    if (modal) modal.style.display = "none";
+    currentGeneTargetArrowId = null;
+    currentGeneTargetCoords = null;
+}
+
+function initGeneSearchModal() {
+    const btnClose = document.getElementById("btn-close-gene-modal");
+    const btnCancel = document.getElementById("btn-gene-modal-cancel");
+    const btnSubmit = document.getElementById("btn-gene-modal-submit");
+    const input = document.getElementById("gsh-gene-modal-input");
+    const suggestions = document.getElementById("gsh-gene-modal-suggestions");
+    const attachCheck = document.getElementById("gsh-gene-attach-arrow-check");
+    
+    if (btnClose) btnClose.addEventListener("click", closeGeneSearchModal);
+    if (btnCancel) btnCancel.addEventListener("click", closeGeneSearchModal);
+    
+    if (input && suggestions) {
+        input.addEventListener("input", () => {
+            const val = input.value;
+            // Get current word after last comma
+            const parts = val.split(",");
+            const query = parts[parts.length - 1].trim().toUpperCase();
+            
+            if (!query || query.length === 0 || !window.gGenes || window.gGenes.length === 0) {
+                suggestions.style.display = "none";
+                return;
+            }
+            
+            // Search matches in session genes
+            const matched = [];
+            for (const g of window.gGenes) {
+                const sym = (g.gene_symbol || "").toUpperCase();
+                const locus = (g.locus_tag || "").toUpperCase();
+                if (sym.includes(query) || locus.includes(query)) {
+                    matched.push(g);
+                    if (matched.length >= 12) break;
+                }
+            }
+            
+            if (matched.length === 0) {
+                suggestions.style.display = "none";
+                return;
+            }
+            
+            suggestions.innerHTML = "";
+            matched.forEach(g => {
+                const li = document.createElement("li");
+                li.className = "gene-autocomplete-item";
+                
+                const fc = parseFloat(g.log2fc);
+                const fcColor = !isNaN(fc) ? (fc > 0.5 ? '#ef4444' : (fc < -0.5 ? '#3b82f6' : '#64748b')) : '#94a3b8';
+                const fcBg = !isNaN(fc) ? (fc > 0.5 ? '#fee2e2' : (fc < -0.5 ? '#dbeafe' : '#f1f5f9')) : '#f1f5f9';
+                const fcSign = !isNaN(fc) && fc > 0 ? '+' : '';
+                
+                li.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <strong style="font-size: 13px; color: #0f172a;">${g.gene_symbol || g.locus_tag}</strong>
+                        ${g.gene_symbol && g.locus_tag ? `<span style="font-size: 11px; color: #64748b;">(${g.locus_tag})</span>` : ''}
+                    </div>
+                    <div>
+                        ${!isNaN(fc) ? `<span style="font-size: 11px; font-weight: 700; color: ${fcColor}; background: ${fcBg}; padding: 1px 6px; border-radius: 4px;">FC: ${fcSign}${fc.toFixed(2)}</span>` : ''}
+                    </div>
+                `;
+                
+                li.addEventListener("click", () => {
+                    const pickedSym = (g.gene_symbol || g.locus_tag).trim();
+                    parts[parts.length - 1] = " " + pickedSym;
+                    input.value = parts.join(",").replace(/^[\s,]+/, "") + ", ";
+                    suggestions.style.display = "none";
+                    input.focus();
+                });
+                
+                suggestions.appendChild(li);
+            });
+            
+            suggestions.style.display = "block";
+        });
+        
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                if (suggestions.style.display === "block" && suggestions.firstElementChild) {
+                    suggestions.firstElementChild.click();
+                } else {
+                    submitGeneSearchModal();
+                }
+            } else if (e.key === "Escape") {
+                if (suggestions.style.display === "block") {
+                    suggestions.style.display = "none";
+                } else {
+                    closeGeneSearchModal();
+                }
+            }
+        });
+    }
+    
+    const submitGeneSearchModal = () => {
+        if (!input) return;
+        const raw = input.value.trim();
+        if (!raw) {
+            closeGeneSearchModal();
+            return;
+        }
+        
+        const currentMap = pathwayMapsStore[currentMapId];
+        if (!currentMap) return;
+        
+        const mapWidth = currentMap.width || 1024;
+        const mapHeight = currentMap.height || 580;
+        
+        // Parse comma or slash separated symbols
+        const rawSymbols = raw.split(/[\/,]+/).map(s => s.trim().toUpperCase()).filter(Boolean);
+        if (rawSymbols.length === 0) {
+            closeGeneSearchModal();
+            return;
+        }
+        
+        const custom = getGshCustomGenes(currentMapId);
+        const shouldAttachToArrow = attachCheck && attachCheck.checked && currentGeneTargetArrowId;
+        
+        // Calculate base coords
+        let targetX = 50;
+        let targetY = 50;
+        
+        if (currentGeneTargetCoords) {
+            targetX = (currentGeneTargetCoords.x / mapWidth) * 100;
+            targetY = (currentGeneTargetCoords.y / mapHeight) * 100;
+        } else if (shouldAttachToArrow && currentMap.arrows) {
+            const arrow = currentMap.arrows.find(a => a.id === currentGeneTargetArrowId);
+            if (arrow && arrow._calculated) {
+                targetX = (arrow._calculated.midX / mapWidth) * 100;
+                targetY = ((arrow._calculated.midY - 14) / mapHeight) * 100;
+            }
+        }
+        
+        rawSymbols.forEach((sym, idx) => {
+            let repLog2fc = 0.0;
+            let geneIsoforms = [];
+            if (window.gGenes && window.gGenes.length > 0) {
+                const match = window.gGenes.find(g => (g.gene_symbol && g.gene_symbol.toUpperCase() === sym) || (g.locus_tag && g.locus_tag.toUpperCase() === sym));
+                if (match) {
+                    repLog2fc = parseFloat(match.log2fc) || 0.0;
+                    geneIsoforms = [match];
+                }
+            }
+            
+            const newGeneId = `gene_${Date.now()}_${Math.round(Math.random() * 1000)}_${idx}`;
+            custom.push({
+                id: newGeneId,
+                symbol: sym,
+                x: targetX,
+                y: targetY,
+                arrowId: shouldAttachToArrow ? currentGeneTargetArrowId : null,
+                rep_log2fc: repLog2fc,
+                genes: geneIsoforms
+            });
+        });
+        
+        setGshCustomGenes(currentMapId, custom);
+        saveAllPathwayMaps();
+        pushGshHistory();
+        closeGeneSearchModal();
+        renderGSHPathway();
+        showGshToast(`✨ ${rawSymbols.join(", ")} 유전자 배지가 추가되었습니다.`);
+    };
+    
+    if (btnSubmit) btnSubmit.addEventListener("click", submitGeneSearchModal);
+}
+
+// ----------------------------------------------------------------------
+// 4. Reaction Wizard (Text-to-Pathway Builder)
+// ----------------------------------------------------------------------
+function openReactionWizardModal() {
+    const modal = document.getElementById("gsh-reaction-wizard-modal");
+    const textarea = document.getElementById("reaction-wizard-input");
+    if (!modal) return;
+    
+    modal.style.display = "flex";
+    if (textarea) setTimeout(() => textarea.focus(), 50);
+}
+
+function closeReactionWizardModal() {
+    const modal = document.getElementById("gsh-reaction-wizard-modal");
+    if (modal) modal.style.display = "none";
+}
+
+function initReactionWizard() {
+    const btnClose = document.getElementById("btn-close-reaction-wizard");
+    const btnCancel = document.getElementById("btn-wizard-cancel");
+    const btnApply = document.getElementById("btn-wizard-apply");
+    const btnSample = document.getElementById("btn-wizard-load-sample");
+    const textarea = document.getElementById("reaction-wizard-input");
+    const checkReuse = document.getElementById("wizard-reuse-existing-nodes");
+    
+    if (btnClose) btnClose.addEventListener("click", closeReactionWizardModal);
+    if (btnCancel) btnCancel.addEventListener("click", closeReactionWizardModal);
+    
+    if (btnSample && textarea) {
+        btnSample.addEventListener("click", () => {
+            textarea.value = `Glucose -> Glucose-6P : GLK1, HXK2
+Glucose-6P <-> Fructose-6P : PGI1
+Fructose-6P -> F1,6BP : PFK1, PFK2
+F1,6BP <-> DHAP : FBA1
+DHAP <-> Glycerol-3P : GPD1, GPD2
+Glycerol-3P -> Glycerol : GPP1, GPP2`;
+        });
+    }
+    
+    if (btnApply && textarea) {
+        btnApply.addEventListener("click", () => {
+            const rawText = textarea.value.trim();
+            if (!rawText) {
+                alert("반응식을 한 줄 이상 입력해주세요.");
+                return;
+            }
+            
+            const currentMap = pathwayMapsStore[currentMapId];
+            if (!currentMap) return;
+            
+            if (!currentMap.nodes) currentMap.nodes = [];
+            if (!currentMap.arrows) currentMap.arrows = [];
+            
+            const custom = getGshCustomGenes(currentMapId);
+            const reuseExisting = checkReuse ? checkReuse.checked : true;
+            
+            const lines = rawText.split("\n").map(l => l.trim()).filter(l => l && !l.startsWith("#"));
+            if (lines.length === 0) {
+                alert("유효한 반응식이 없습니다.");
+                return;
+            }
+            
+            const nodesMapByName = {};
+            currentMap.nodes.forEach(n => {
+                nodesMapByName[n.label.toUpperCase()] = n;
+            });
+            
+            // Layout baseline cursor coordinates
+            let curStartX = 60;
+            let curStartY = 60;
+            
+            // If existing nodes exist, position new cluster below
+            if (currentMap.nodes.length > 0) {
+                let maxY = 0;
+                currentMap.nodes.forEach(n => {
+                    if (n.y > maxY) maxY = n.y;
+                });
+                curStartY = Math.max(60, maxY + 100);
+            }
+            
+            let reactionsCreated = 0;
+            let genesCreated = 0;
+            
+            lines.forEach((line, lineIdx) => {
+                const match = line.match(/^([^<>\-:;]+)\s*(<->|->|<-)\s*([^:;]+)(?:\s*[:]\s*(.+))?$/);
+                if (!match) return;
+                
+                const subName = match[1].trim();
+                const arrowOp = match[2].trim();
+                const prodName = match[3].trim();
+                const rawGenes = match[4] ? match[4].trim() : "";
+                
+                const subKey = subName.toUpperCase();
+                const prodKey = prodName.toUpperCase();
+                
+                // 1. Get or Create Substrate Node
+                let subNode = reuseExisting ? nodesMapByName[subKey] : null;
+                if (!subNode) {
+                    subNode = {
+                        id: `node_${Date.now()}_sub_${lineIdx}_${Math.round(Math.random()*100)}`,
+                        label: subName,
+                        x: curStartX,
+                        y: curStartY,
+                        w: 90,
+                        h: 26,
+                        rx: 12,
+                        type: "standard"
+                    };
+                    currentMap.nodes.push(subNode);
+                    nodesMapByName[subKey] = subNode;
+                }
+                
+                // 2. Get or Create Product Node
+                let prodNode = reuseExisting ? nodesMapByName[prodKey] : null;
+                if (!prodNode) {
+                    prodNode = {
+                        id: `node_${Date.now()}_prod_${lineIdx}_${Math.round(Math.random()*100)}`,
+                        label: prodName,
+                        x: subNode.x + 160,
+                        y: subNode.y,
+                        w: 90,
+                        h: 26,
+                        rx: 12,
+                        type: "standard"
+                    };
+                    currentMap.nodes.push(prodNode);
+                    nodesMapByName[prodKey] = prodNode;
+                }
+                
+                // 3. Create Arrow
+                let arrowFrom = subNode.id;
+                let arrowTo = prodNode.id;
+                let arrowDir = "forward";
+                
+                if (arrowOp === "<->") {
+                    arrowDir = "both";
+                } else if (arrowOp === "<-") {
+                    arrowFrom = prodNode.id;
+                    arrowTo = subNode.id;
+                }
+                
+                const arrowId = `arr_${arrowFrom}_${arrowTo}_${Date.now()}_${lineIdx}`;
+                const newArrow = {
+                    id: arrowId,
+                    from: arrowFrom,
+                    to: arrowTo,
+                    type: "straight",
+                    direction: arrowDir
+                };
+                currentMap.arrows.push(newArrow);
+                reactionsCreated++;
+                
+                // 4. Attach Genes if present
+                if (rawGenes) {
+                    const geneSymbols = rawGenes.split(/[\/,]+/).map(s => s.trim().toUpperCase()).filter(Boolean);
+                    geneSymbols.forEach((sym, gIdx) => {
+                        let repLog2fc = 0.0;
+                        let geneIsoforms = [];
+                        if (window.gGenes && window.gGenes.length > 0) {
+                            const found = window.gGenes.find(g => (g.gene_symbol && g.gene_symbol.toUpperCase() === sym) || (g.locus_tag && g.locus_tag.toUpperCase() === sym));
+                            if (found) {
+                                repLog2fc = parseFloat(found.log2fc) || 0.0;
+                                geneIsoforms = [found];
+                            }
+                        }
+                        
+                        custom.push({
+                            id: `gene_wiz_${Date.now()}_${lineIdx}_${gIdx}`,
+                            symbol: sym,
+                            x: ((subNode.x + prodNode.x) / 2 / (currentMap.width || 1024)) * 100,
+                            y: (subNode.y / (currentMap.height || 580)) * 100,
+                            arrowId: arrowId,
+                            rep_log2fc: repLog2fc,
+                            genes: geneIsoforms
+                        });
+                        genesCreated++;
+                    });
+                }
+                
+                // Shift layout Y down for next step
+                curStartY += 65;
+            });
+            
+            setGshCustomGenes(currentMapId, custom);
+            saveAllPathwayMaps();
+            pushGshHistory();
+            closeReactionWizardModal();
+            renderGSHPathway();
+            showGshToast(`🎉 마법사로 ${reactionsCreated}개 반응 및 ${genesCreated}개 유전자가 생성되었습니다!`);
         });
     }
 }

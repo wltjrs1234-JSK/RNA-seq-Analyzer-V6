@@ -3837,6 +3837,607 @@ def generate_report(payload: dict = Body(...)):
 # Pathway Maps backup & restore endpoint
 PATHWAY_MAPS_FILE = os.path.join("data", "custom_pathway_maps.json")
 
+# ----------------------------------------------------------------------
+# 6. Candidate Target & Bypass Enzyme Finder API
+# ----------------------------------------------------------------------
+_FUNC_ANNOT_CACHE = {}
+
+def get_gene_functional_annotations(species: str = "sce") -> dict:
+    """Build and cache comprehensive per-gene functional annotations (GO Slim, EC numbers, UniProt, KEGG)."""
+    if species in _FUNC_ANNOT_CACHE:
+        return _FUNC_ANNOT_CACHE[species]
+
+    annot_map = {}
+
+    # 1. Load GO Slim mapping
+    df_go = get_go_data(species)
+    if not df_go.empty:
+        for _, row in df_go.iterrows():
+            locus = str(row.get("locus_tag", "")).strip().upper()
+            if not locus or locus.startswith("CPX-"):
+                continue
+            if locus not in annot_map:
+                annot_map[locus] = {
+                    "locus_tag": locus,
+                    "sgd_symbol": "",
+                    "feature_type": "",
+                    "mol_functions": [],
+                    "bio_processes": [],
+                    "cell_components": [],
+                    "ec_numbers": [],
+                    "tcdb_numbers": [],
+                    "uniprot_id": "",
+                    "ncbi_id": "",
+                    "kegg_pathways": []
+                }
+            entry = annot_map[locus]
+            sym = str(row.get("symbol", "")).strip()
+            if sym and sym.lower() != "nan" and sym.upper() != locus:
+                entry["sgd_symbol"] = sym
+            ft = str(row.get("feature_type", "")).strip()
+            if ft and ft.lower() != "nan":
+                entry["feature_type"] = ft
+
+            aspect = str(row.get("aspect", "")).strip().upper()
+            goid = str(row.get("goid", "")).strip()
+            tname = str(row.get("term_name", "")).strip()
+            if not goid or not tname or tname.lower() == "nan":
+                continue
+            # Skip generic root terms
+            if goid in ["GO:0003674", "GO:0008150", "GO:0005575"]:
+                continue
+
+            term_obj = {"goid": goid, "name": tname}
+            if aspect == "F":
+                if not any(x["goid"] == goid for x in entry["mol_functions"]):
+                    entry["mol_functions"].append(term_obj)
+            elif aspect == "P":
+                if not any(x["goid"] == goid for x in entry["bio_processes"]):
+                    entry["bio_processes"].append(term_obj)
+            elif aspect == "C":
+                if not any(x["goid"] == goid for x in entry["cell_components"]):
+                    entry["cell_components"].append(term_obj)
+
+    # 2. For S. cerevisiae, parse EC numbers, TCDB, UniProtKB, and NCBI IDs from dbxref.tab (with JSON cache)
+    if species == "sce":
+        ec_cache_file = os.path.join(CACHE_DIR, "yeast_ec_uniprot_cache.json")
+        ec_data = {}
+        if os.path.exists(ec_cache_file):
+            try:
+                with open(ec_cache_file, "r", encoding="utf-8") as f:
+                    ec_data = json.load(f)
+            except Exception:
+                ec_data = {}
+
+        if not ec_data:
+            dbxref_path = os.path.join(CACHE_DIR, "dbxref.tab")
+            if os.path.exists(dbxref_path):
+                try:
+                    with open(dbxref_path, "r", encoding="utf-8", errors="ignore") as f:
+                        for line in f:
+                            if line.startswith("#") or not line.strip():
+                                continue
+                            parts = line.strip().split("\t")
+                            if len(parts) >= 4:
+                                ref_id = parts[0].strip()
+                                source = parts[1].strip()
+                                ref_type = parts[2].strip() if len(parts) > 2 else ""
+                                locus = parts[3].strip().upper()
+                                sym = parts[5].strip() if len(parts) > 5 else ""
+                                if not locus:
+                                    continue
+                                if locus not in ec_data:
+                                    ec_data[locus] = {"ec": [], "tcdb": [], "uniprot": "", "ncbi": "", "symbol": ""}
+                                if sym and not ec_data[locus]["symbol"]:
+                                    ec_data[locus]["symbol"] = sym
+                                if source == "ExPASy" and ref_type == "EC number":
+                                    if ref_id not in ec_data[locus]["ec"]:
+                                        ec_data[locus]["ec"].append(ref_id)
+                                elif source == "TCDB":
+                                    if ref_id not in ec_data[locus]["tcdb"]:
+                                        ec_data[locus]["tcdb"].append(ref_id)
+                                elif source in ["UniProtKB", "EBI"] and not ec_data[locus]["uniprot"]:
+                                    ec_data[locus]["uniprot"] = ref_id
+                                elif source == "NCBI" and ref_type == "Gene ID" and not ec_data[locus]["ncbi"]:
+                                    ec_data[locus]["ncbi"] = ref_id
+                    with open(ec_cache_file, "w", encoding="utf-8") as f:
+                        json.dump(ec_data, f)
+                except Exception as e:
+                    print(f"Error building EC/UniProt cache: {e}")
+
+        for locus, info in ec_data.items():
+            if locus not in annot_map:
+                annot_map[locus] = {
+                    "locus_tag": locus,
+                    "sgd_symbol": info.get("symbol", ""),
+                    "feature_type": "",
+                    "mol_functions": [],
+                    "bio_processes": [],
+                    "cell_components": [],
+                    "ec_numbers": [],
+                    "tcdb_numbers": [],
+                    "uniprot_id": "",
+                    "ncbi_id": "",
+                    "kegg_pathways": []
+                }
+            entry = annot_map[locus]
+            if not entry["sgd_symbol"] and info.get("symbol"):
+                entry["sgd_symbol"] = info["symbol"]
+            entry["ec_numbers"] = info.get("ec", [])
+            entry["tcdb_numbers"] = info.get("tcdb", [])
+            entry["uniprot_id"] = info.get("uniprot", "")
+            entry["ncbi_id"] = info.get("ncbi", "")
+
+    # 3. Map KEGG Pathways
+    pathways = get_kegg_pathways(species)
+    gene_to_pathways = get_kegg_gene_mapping(species)
+    for path_id, p_genes in gene_to_pathways.items():
+        p_desc = pathways.get(path_id, path_id)
+        for g in p_genes:
+            g_up = g.upper()
+            if g_up not in annot_map:
+                annot_map[g_up] = {
+                    "locus_tag": g_up,
+                    "sgd_symbol": "",
+                    "feature_type": "",
+                    "mol_functions": [],
+                    "bio_processes": [],
+                    "cell_components": [],
+                    "ec_numbers": [],
+                    "tcdb_numbers": [],
+                    "uniprot_id": "",
+                    "ncbi_id": "",
+                    "kegg_pathways": []
+                }
+            if not any(x["id"] == path_id for x in annot_map[g_up]["kegg_pathways"]):
+                annot_map[g_up]["kegg_pathways"].append({"id": path_id, "name": p_desc})
+
+    _FUNC_ANNOT_CACHE[species] = annot_map
+    return annot_map
+
+
+@app.get("/api/candidate_targets/categories")
+def get_candidate_target_categories(session_id: str = None, species: str = None):
+    """Return available functional categories (Molecular Function & Biological Process) and session group names."""
+    if not species:
+        species = get_session_species(session_id)
+    sample_meta = get_session_sample_metadata(session_id) or {}
+    control_name = sample_meta.get("control_name") or "WT (Control)"
+    treated_name = sample_meta.get("treated_name") or "Mutant (Treated)"
+
+    annot_map = get_gene_functional_annotations(species)
+    mf_counts = {}
+    bp_counts = {}
+
+    for locus, info in annot_map.items():
+        for mf in info.get("mol_functions", []):
+            key = mf["goid"]
+            if key not in mf_counts:
+                mf_counts[key] = {"goid": key, "name": mf["name"], "aspect": "F", "count": 0}
+            mf_counts[key]["count"] += 1
+        for bp in info.get("bio_processes", []):
+            key = bp["goid"]
+            if key not in bp_counts:
+                bp_counts[key] = {"goid": key, "name": bp["name"], "aspect": "P", "count": 0}
+            bp_counts[key]["count"] += 1
+
+    mf_list = sorted(mf_counts.values(), key=lambda x: x["count"], reverse=True)
+    bp_list = sorted(bp_counts.values(), key=lambda x: x["count"], reverse=True)
+
+    return {
+        "success": True,
+        "species": species,
+        "control_name": control_name,
+        "treated_name": treated_name,
+        "mol_functions": mf_list,
+        "bio_processes": bp_list
+    }
+
+
+@app.post("/api/candidate_targets")
+def find_candidate_targets(payload: dict = Body(...)):
+    """
+    Discover candidate target genes / bypass enzymes / strain-specific On-Off switch genes.
+    Modes:
+      - 'reference': Reverse-trace shared catalytic activities (GO MF, EC class, GO BP) from reference genes (e.g., ISN1, SDT1, PHO8)
+      - 'activity': Scan by Molecular Function / Biological Process / EC / Keyword (e.g., phosphatase, hydrolase, transporter)
+      - 'on_off': Genome-wide scan for strain-specific De novo On-Switch / Off-Switch genes
+    """
+    session_id = payload.get("session_id")
+    species = payload.get("species") or get_session_species(session_id)
+    genes = get_session_genes(session_id)
+    if not genes:
+        raise HTTPException(status_code=400, detail="먼저 RNA-seq 데이터를 업로드해주세요.")
+
+    sample_meta = get_session_sample_metadata(session_id) or {}
+    control_name = sample_meta.get("control_name") or "WT"
+    treated_name = sample_meta.get("treated_name") or "Mutant"
+
+    mode = payload.get("mode", "reference")  # 'reference', 'activity', 'on_off'
+    raw_ref_genes = str(payload.get("reference_genes", "")).strip()
+    activity_goid = str(payload.get("activity_goid", "all")).strip()
+    keyword = str(payload.get("keyword", "")).strip().lower()
+    direction = str(payload.get("direction", "up")).strip().lower()  # 'up', 'down', 'both'
+    only_on_switch = bool(payload.get("only_on_switch", False))
+    wt_max_cutoff = float(payload.get("wt_max_cutoff", 5.0))
+    mut_min_cutoff = float(payload.get("mut_min_cutoff", 15.0))
+    min_abs_log2fc = float(payload.get("min_abs_log2fc", 0.5))
+
+    annot_map = get_gene_functional_annotations(species)
+
+    # Build lookup index for dataset genes
+    locus_to_gene = {}
+    symbol_to_locus = {}
+    for g in genes:
+        loc = str(g.get("locus_tag", "")).strip().upper()
+        if not loc:
+            continue
+        locus_to_gene[loc] = g
+        sym = str(g.get("gene_symbol", "")).strip().upper()
+        if sym and sym != loc:
+            symbol_to_locus[sym] = loc
+        annot = annot_map.get(loc)
+        if annot and annot.get("sgd_symbol"):
+            symbol_to_locus[annot["sgd_symbol"].upper()] = loc
+
+    # Calculate expression percentiles across dataset
+    wt_vals_all = np.array([float(g.get("wt_val", 0.0) or 0.0) for g in genes])
+    mut_vals_all = np.array([float(g.get("mutant_val", 0.0) or 0.0) for g in genes])
+    wt_q25 = float(np.percentile(wt_vals_all, 25)) if len(wt_vals_all) > 0 else 5.0
+    mut_median = float(np.percentile(mut_vals_all, 50)) if len(mut_vals_all) > 0 else 20.0
+
+    # Precompute rank percentiles
+    wt_ranks = stats.rankdata(wt_vals_all, method="average") / max(1, len(wt_vals_all)) * 100.0
+    mut_ranks = stats.rankdata(mut_vals_all, method="average") / max(1, len(mut_vals_all)) * 100.0
+    locus_to_pct = {}
+    for idx, g in enumerate(genes):
+        loc = str(g.get("locus_tag", "")).strip().upper()
+        locus_to_pct[loc] = (round(float(wt_ranks[idx]), 1), round(float(mut_ranks[idx]), 1))
+
+    def enrich_gene_record(g_obj):
+        loc = str(g_obj.get("locus_tag", "")).strip().upper()
+        raw_sym = str(g_obj.get("gene_symbol", "")).strip()
+        annot = annot_map.get(loc, {})
+        sgd_sym = annot.get("sgd_symbol", "")
+
+        # Check if raw_sym is just an NCBI numeric ID (e.g. "856873" for YER134C)
+        is_numeric_sym = raw_sym.isdigit()
+        if sgd_sym:
+            display_sym = sgd_sym
+            is_unnamed_orf = False
+        elif not raw_sym or is_numeric_sym or raw_sym.upper() == loc:
+            display_sym = loc
+            is_unnamed_orf = True
+        else:
+            display_sym = raw_sym
+            is_unnamed_orf = False
+
+        ncbi_id = annot.get("ncbi_id") or (raw_sym if is_numeric_sym else "")
+        wt_v = float(g_obj.get("wt_val", 0.0) or 0.0)
+        mut_v = float(g_obj.get("mutant_val", 0.0) or 0.0)
+        fc = float(g_obj.get("log2fc", 0.0) or 0.0)
+        pval = g_obj.get("pvalue")
+        fdr = g_obj.get("fdr")
+        wt_pct, mut_pct = locus_to_pct.get(loc, (0.0, 0.0))
+        pct_jump = round(mut_pct - wt_pct, 1)
+
+        mfs = annot.get("mol_functions", [])
+        bps = annot.get("bio_processes", [])
+        ccs = annot.get("cell_components", [])
+        ecs = annot.get("ec_numbers", [])
+        keggs = annot.get("kegg_pathways", [])
+        ftype = annot.get("feature_type", "")
+
+        # Determine Switch Type
+        is_de_novo_on = (wt_v <= wt_max_cutoff) and (mut_v >= mut_min_cutoff) and (fc >= 1.5)
+        is_de_novo_off = (mut_v <= wt_max_cutoff) and (wt_v >= mut_min_cutoff) and (fc <= -1.5)
+
+        if is_de_novo_on:
+            switch_type = "ON_SWITCH"
+            switch_label = "🔥 De novo On-Switch (신규 발현 전환)"
+        elif is_de_novo_off:
+            switch_type = "OFF_SWITCH"
+            switch_label = "❄️ Off-Switch (발현 소실)"
+        elif fc >= 1.0 and mut_v >= mut_median:
+            switch_type = "HIGH_UP"
+            switch_label = "⚡ 고발현 증폭 (High-Flux Up)"
+        elif fc >= 0.5:
+            switch_type = "MOD_UP"
+            switch_label = "📈 발현 상향 (Upregulated)"
+        elif fc <= -0.8:
+            switch_type = "DOWN"
+            switch_label = "📉 발현 억제 (Repressed)"
+        else:
+            switch_type = "BASAL"
+            switch_label = "➖ 기저 유지 (Maintained)"
+
+        # Build human-readable functional summary even when uploaded description is blank
+        desc_raw = str(g_obj.get("description", "")).strip()
+        if not desc_raw or desc_raw == "-":
+            parts_summary = []
+            if mfs:
+                parts_summary.append("활성: " + ", ".join(x["name"] for x in mfs))
+            if ecs:
+                parts_summary.append("EC: " + ", ".join(ecs))
+            if bps:
+                parts_summary.append("경로: " + ", ".join(x["name"] for x in bps[:2]))
+            if ccs:
+                parts_summary.append("위치: " + ", ".join(x["name"] for x in ccs[:2]))
+            func_summary = " | ".join(parts_summary) if parts_summary else "기능 주석 미등록 (Uncharacterized ORF)"
+        else:
+            func_summary = desc_raw
+
+        return {
+            "locus_tag": loc,
+            "gene_symbol": display_sym,
+            "raw_symbol": raw_sym,
+            "ncbi_id": ncbi_id,
+            "uniprot_id": annot.get("uniprot_id", ""),
+            "is_unnamed_orf": is_unnamed_orf,
+            "feature_type": ftype,
+            "wt_val": round(wt_v, 2),
+            "mutant_val": round(mut_v, 2),
+            "wt_pct": wt_pct,
+            "mut_pct": mut_pct,
+            "pct_jump": pct_jump,
+            "log2fc": round(fc, 3),
+            "pvalue": round(float(pval), 6) if pval is not None else None,
+            "fdr": round(float(fdr), 6) if fdr is not None else None,
+            "mol_functions": mfs,
+            "bio_processes": bps,
+            "cell_components": ccs,
+            "ec_numbers": ecs,
+            "kegg_pathways": keggs,
+            "func_summary": func_summary,
+            "switch_type": switch_type,
+            "switch_label": switch_label,
+            "is_de_novo_on": is_de_novo_on,
+            "is_de_novo_off": is_de_novo_off
+        }
+
+    # 1. Mode == 'reference': Parse reference genes and extract shared functional signatures
+    reference_profiles = []
+    ref_loci_set = set()
+    shared_mf_goids = {}
+    shared_bp_goids = {}
+    shared_ec_prefixes = set()
+
+    if mode == "reference" and raw_ref_genes:
+        tokens = [t.strip().upper() for t in re.split(r"[,;\s/]+", raw_ref_genes) if t.strip()]
+        for tok in tokens:
+            resolved_loc = None
+            if tok in locus_to_gene:
+                resolved_loc = tok
+            elif tok in symbol_to_locus:
+                resolved_loc = symbol_to_locus[tok]
+            else:
+                # Partial match fallback
+                for sym_k, loc_v in symbol_to_locus.items():
+                    if tok == sym_k or tok in sym_k:
+                        resolved_loc = loc_v
+                        break
+            if resolved_loc and resolved_loc not in ref_loci_set and resolved_loc in locus_to_gene:
+                ref_loci_set.add(resolved_loc)
+                prof = enrich_gene_record(locus_to_gene[resolved_loc])
+                prof["is_reference"] = True
+                reference_profiles.append(prof)
+
+                for mf in prof["mol_functions"]:
+                    gid = mf["goid"]
+                    if gid not in shared_mf_goids:
+                        shared_mf_goids[gid] = {"goid": gid, "name": mf["name"], "count": 0, "genes": []}
+                    shared_mf_goids[gid]["count"] += 1
+                    shared_mf_goids[gid]["genes"].append(prof["gene_symbol"])
+
+                for bp in prof["bio_processes"]:
+                    gid = bp["goid"]
+                    if gid not in shared_bp_goids:
+                        shared_bp_goids[gid] = {"goid": gid, "name": bp["name"], "count": 0, "genes": []}
+                    shared_bp_goids[gid]["count"] += 1
+                    shared_bp_goids[gid]["genes"].append(prof["gene_symbol"])
+
+                for ec in prof["ec_numbers"]:
+                    ec_parts = ec.split(".")
+                    if len(ec_parts) >= 3:
+                        shared_ec_prefixes.add(".".join(ec_parts[:3]))
+
+    # Identify primary specific MF terms (prefer specific catalytic terms over very broad ones like hydrolase/ion binding if specific ones exist)
+    broad_mf_goids = {"GO:0043167", "GO:0016787", "GO:0003677", "GO:0003723", "GO:0005198"}
+    specific_mf_goids = {gid for gid in shared_mf_goids if gid not in broad_mf_goids}
+    target_mf_goids = specific_mf_goids if specific_mf_goids else set(shared_mf_goids.keys())
+
+    # 2. Scan candidate pool across dataset
+    candidates = []
+    all_pool_genes = []  # All genes in the functional group for scatter plot comparison
+
+    for g in genes:
+        loc = str(g.get("locus_tag", "")).strip().upper()
+        if not loc:
+            continue
+
+        rec = enrich_gene_record(g)
+        rec["is_reference"] = (loc in ref_loci_set)
+
+        # Check functional match according to mode
+        matched_reasons = []
+        func_specificity_bonus = 0.0
+
+        if mode == "reference":
+            if not ref_loci_set:
+                continue
+            gene_mfs = {x["goid"]: x["name"] for x in rec["mol_functions"]}
+            gene_bps = {x["goid"]: x["name"] for x in rec["bio_processes"]}
+            gene_ec_prefixes = {".".join(ec.split(".")[:3]) for ec in rec["ec_numbers"] if len(ec.split(".")) >= 3}
+
+            # Match specific MF (e.g. phosphatase activity GO:0016791)
+            matched_spec_mf = [gene_mfs[gid] for gid in target_mf_goids if gid in gene_mfs]
+            matched_ec = [ec for ec in rec["ec_numbers"] if ".".join(ec.split(".")[:3]) in shared_ec_prefixes]
+            matched_bp = [gene_bps[gid] for gid in shared_bp_goids if gid in gene_bps]
+
+            if matched_spec_mf:
+                matched_reasons.append(f"동일 촉매 활성 ({', '.join(matched_spec_mf)})")
+                func_specificity_bonus += 25.0
+            if matched_ec:
+                matched_reasons.append(f"동일 효소 분류 (EC {', '.join(matched_ec)})")
+                func_specificity_bonus += 20.0
+            if matched_bp and (matched_spec_mf or matched_ec):
+                matched_reasons.append(f"공통 대사 과정 ({', '.join(matched_bp[:2])})")
+                func_specificity_bonus += 10.0
+
+            # If user also typed a keyword filter in reference mode, enforce it
+            if keyword:
+                searchable = (
+                    f"{rec['locus_tag']} {rec['gene_symbol']} {rec['func_summary']} "
+                    + " ".join(x["name"] for x in rec["mol_functions"]) + " "
+                    + " ".join(x["name"] for x in rec["bio_processes"]) + " "
+                    + " ".join(rec["ec_numbers"])
+                ).lower()
+                if keyword not in searchable:
+                    continue
+
+            if not matched_reasons and not rec["is_reference"]:
+                continue
+
+        elif mode == "activity":
+            gene_mfs = {x["goid"]: x["name"] for x in rec["mol_functions"]}
+            gene_bps = {x["goid"]: x["name"] for x in rec["bio_processes"]}
+
+            if activity_goid and activity_goid != "all":
+                if activity_goid in gene_mfs:
+                    matched_reasons.append(f"분자 기능: {gene_mfs[activity_goid]} ({activity_goid})")
+                    func_specificity_bonus += 20.0
+                elif activity_goid in gene_bps:
+                    matched_reasons.append(f"생물학적 과정: {gene_bps[activity_goid]} ({activity_goid})")
+                    func_specificity_bonus += 20.0
+                else:
+                    continue
+
+            if keyword:
+                searchable = (
+                    f"{rec['locus_tag']} {rec['gene_symbol']} {rec['func_summary']} "
+                    + " ".join(x["name"] for x in rec["mol_functions"]) + " "
+                    + " ".join(x["name"] for x in rec["bio_processes"]) + " "
+                    + " ".join(rec["ec_numbers"]) + " "
+                    + " ".join(x["name"] for x in rec["kegg_pathways"])
+                ).lower()
+                if keyword in searchable:
+                    matched_reasons.append(f"키워드 일치 ('{keyword}')")
+                    func_specificity_bonus += 15.0
+                else:
+                    continue
+
+            if not matched_reasons:
+                if rec["mol_functions"]:
+                    matched_reasons.append("분자 기능 보유: " + ", ".join(x["name"] for x in rec["mol_functions"][:2]))
+                else:
+                    matched_reasons.append("전체 유전자 스캔")
+
+        elif mode == "on_off":
+            if keyword:
+                searchable = (
+                    f"{rec['locus_tag']} {rec['gene_symbol']} {rec['func_summary']} "
+                    + " ".join(x["name"] for x in rec["mol_functions"]) + " "
+                    + " ".join(x["name"] for x in rec["bio_processes"]) + " "
+                    + " ".join(rec["ec_numbers"])
+                ).lower()
+                if keyword not in searchable:
+                    continue
+            if rec["mol_functions"]:
+                matched_reasons.append("기능: " + ", ".join(x["name"] for x in rec["mol_functions"][:2]))
+                func_specificity_bonus += 15.0
+            elif rec["bio_processes"]:
+                matched_reasons.append("과정: " + ", ".join(x["name"] for x in rec["bio_processes"][:2]))
+                func_specificity_bonus += 10.0
+            else:
+                matched_reasons.append("미규명/기타 ORF")
+
+        rec["matched_reasons"] = matched_reasons
+
+        # Add to functional pool for scatter visualization (so user can see all phosphatases including reference genes)
+        all_pool_genes.append(rec)
+
+        if rec["is_reference"]:
+            continue
+
+        # Apply expression filters for candidate table
+        fc = rec["log2fc"]
+        if direction == "up" and fc < min_abs_log2fc:
+            continue
+        elif direction == "down" and fc > -min_abs_log2fc:
+            continue
+        elif direction == "both" and abs(fc) < min_abs_log2fc:
+            continue
+
+        if mode == "on_off" or only_on_switch:
+            if direction == "up" and not rec["is_de_novo_on"]:
+                continue
+            elif direction == "down" and not rec["is_de_novo_off"]:
+                continue
+            elif direction == "both" and not (rec["is_de_novo_on"] or rec["is_de_novo_off"]):
+                continue
+        else:
+            # Ensure minimum expression in the active state so noise (0.01 -> 0.2) is deprioritized/filtered
+            if direction == "up" and rec["mutant_val"] < mut_min_cutoff:
+                continue
+            elif direction == "down" and rec["wt_val"] < mut_min_cutoff:
+                continue
+
+        # Compute Candidate Priority Score (0 - 99.9)
+        active_expr = rec["mutant_val"] if fc >= 0 else rec["wt_val"]
+        expr_score = min(25.0, float(np.log10(active_expr + 1.0)) * 9.5)
+        fc_score = min(30.0, abs(fc) * 4.5)
+        switch_bonus = 25.0 if (rec["is_de_novo_on"] or rec["is_de_novo_off"]) else (12.0 if abs(rec["pct_jump"]) >= 30 else 0.0)
+        stat_bonus = 10.0 if (rec["fdr"] is not None and rec["fdr"] <= 0.05) else 0.0
+
+        raw_total = expr_score + fc_score + switch_bonus + min(20.0, func_specificity_bonus) + stat_bonus
+        rec["candidate_score"] = round(min(99.8, max(10.0, raw_total)), 1)
+
+        # Build actionable engineering recommendation
+        if rec["is_de_novo_on"]:
+            rec["recommended_strategy"] = "KO"
+            rec["engineering_note"] = (
+                f"{control_name}에서는 침묵({rec['wt_val']}) 상태였다가 {treated_name}에서 특이적으로 강하게 켜진({rec['mutant_val']}, Log2FC +{rec['log2fc']}) "
+                f"신규 활성 유전자입니다. 우회 반응(Bypass) 주원인 검증을 위해 최우선 결실(KO) 타겟으로 추천합니다."
+            )
+        elif fc >= 0.8:
+            rec["recommended_strategy"] = "KO"
+            rec["engineering_note"] = (
+                f"{treated_name} 균주에서 발현량이 {rec['wt_val']} → {rec['mutant_val']} (Log2FC +{rec['log2fc']})로 유의하게 상승한 동위효소/대체 후보입니다. "
+                f"우회 활성 차단을 위한 추가 결실(KO) 또는 과생산 기여도 검증(OE) 후보입니다."
+            )
+        elif fc <= -0.8:
+            rec["recommended_strategy"] = "OE"
+            rec["engineering_note"] = (
+                f"{treated_name} 균주에서 발현이 {rec['wt_val']} → {rec['mutant_val']} (Log2FC {rec['log2fc']})로 억제된 유전자입니다. "
+                f"해당 기능 복원 시 과발현(OE) 타겟으로 활용할 수 있습니다."
+            )
+        else:
+            rec["recommended_strategy"] = "KO"
+            rec["engineering_note"] = f"동일 기능군 내 발현 유지/증가 유전자 ({control_name}: {rec['wt_val']} → {treated_name}: {rec['mutant_val']})."
+
+        candidates.append(rec)
+
+    # Sort candidates by Candidate Score descending, then Log2FC magnitude
+    candidates.sort(key=lambda x: (x["is_de_novo_on"], x["candidate_score"], abs(x["log2fc"])), reverse=True)
+
+    shared_functions_list = sorted(shared_mf_goids.values(), key=lambda x: x["count"], reverse=True)
+    shared_processes_list = sorted(shared_bp_goids.values(), key=lambda x: x["count"], reverse=True)
+
+    return {
+        "success": True,
+        "mode": mode,
+        "control_name": control_name,
+        "treated_name": treated_name,
+        "reference_profiles": reference_profiles,
+        "shared_functions": shared_functions_list,
+        "shared_processes": shared_processes_list,
+        "shared_ec_prefixes": sorted(list(shared_ec_prefixes)),
+        "candidates": candidates[:100],
+        "total_candidates": len(candidates),
+        "pool_genes": all_pool_genes[:250]
+    }
+
+
 @app.get("/api/pathway_maps")
 def get_saved_pathway_maps():
     if os.path.exists(PATHWAY_MAPS_FILE):
