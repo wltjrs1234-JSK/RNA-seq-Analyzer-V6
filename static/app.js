@@ -8887,7 +8887,10 @@ function applyTransform() {
     }
 }
 
-// Keyboard Hotkey Bindings (Delete, Copy Ctrl+C, Paste Ctrl+V)
+// Keyboard Hotkey Bindings (Delete, Copy Ctrl+C, Paste Ctrl+V, Arrow Keys Nudge)
+let gshNudgeTimer = null;
+let gshIsNudging = false;
+
 function initGSHHotkeyBindings() {
     document.addEventListener("keydown", (e) => {
         if (!isGshEditMode) return;
@@ -8900,6 +8903,100 @@ function initGSHHotkeyBindings() {
         
         const currentMap = pathwayMapsStore[currentMapId];
         if (!currentMap) return;
+
+        // Arrow Keys Nudge: Move selected nodes, genes, zones, or arrows with pixel precision
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+            const hasSelection = (selectedNodes && selectedNodes.size > 0) ||
+                                  (selectedGenes && selectedGenes.size > 0) ||
+                                  (selectedZones && selectedZones.size > 0) ||
+                                  (selectedArrows && selectedArrows.size > 0);
+            if (hasSelection) {
+                e.preventDefault();
+
+                // If starting a new nudge sequence, push snapshot before movement so Undo reverts back cleanly
+                if (!gshIsNudging) {
+                    pushGshHistory();
+                    gshIsNudging = true;
+                }
+
+                // Step size: 2px default, 10px with Shift key
+                const step = e.shiftKey ? 10 : 2;
+                let dx = 0;
+                let dy = 0;
+                if (e.key === "ArrowLeft") dx = -step;
+                else if (e.key === "ArrowRight") dx = step;
+                else if (e.key === "ArrowUp") dy = -step;
+                else if (e.key === "ArrowDown") dy = step;
+
+                // 1. Move Selected Nodes
+                if (selectedNodes.size > 0) {
+                    const nodesMap = getNodesMap();
+                    selectedNodes.forEach(nid => {
+                        const node = nodesMap[nid];
+                        if (node) {
+                            node.x += dx;
+                            node.y += dy;
+                        }
+                    });
+                }
+
+                // 2. Move Selected Genes (offsets)
+                if (selectedGenes.size > 0) {
+                    const savedOffsets = getGshGeneOffsets(currentMapId);
+                    selectedGenes.forEach(gKey => {
+                        const curOff = savedOffsets[gKey] || { dx: 0, dy: 0 };
+                        savedOffsets[gKey] = {
+                            dx: Math.round((curOff.dx + dx) * 10) / 10,
+                            dy: Math.round((curOff.dy + dy) * 10) / 10
+                        };
+                    });
+                    setGshGeneOffsets(currentMapId, savedOffsets);
+                }
+
+                // 3. Move Selected Zones
+                if (selectedZones.size > 0 && Array.isArray(currentMap.zones)) {
+                    currentMap.zones.forEach(z => {
+                        if (selectedZones.has(z.id)) {
+                            z.x += dx;
+                            z.y += dy;
+                        }
+                    });
+                }
+
+                // 4. Move Selected Arrows (independent endpoints or custom waypoints)
+                if (selectedArrows.size > 0 && Array.isArray(currentMap.arrows)) {
+                    currentMap.arrows.forEach(arr => {
+                        if (selectedArrows.has(arr.id)) {
+                            if (arr.fromCoords) {
+                                arr.fromCoords.x += dx;
+                                arr.fromCoords.y += dy;
+                            }
+                            if (arr.toCoords) {
+                                arr.toCoords.x += dx;
+                                arr.toCoords.y += dy;
+                            }
+                            if (Array.isArray(arr.waypoints)) {
+                                arr.waypoints.forEach(wp => {
+                                    wp.x += dx;
+                                    wp.y += dy;
+                                });
+                            }
+                        }
+                    });
+                }
+
+                renderGSHPathway();
+
+                // Debounce saving & final history snapshot so continuous key holding doesn't flood undo stack
+                clearTimeout(gshNudgeTimer);
+                gshNudgeTimer = setTimeout(() => {
+                    saveAllPathwayMaps();
+                    pushGshHistory();
+                    gshIsNudging = false;
+                }, 350);
+                return;
+            }
+        }
         
         // Tab key: Automatically create next connected node to the right
         if (e.key === "Tab") {
