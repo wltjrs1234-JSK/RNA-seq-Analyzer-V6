@@ -1486,6 +1486,20 @@
                                         <button class="node-color-btn" data-color="gray" title="회색" style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #64748b; background: #f8fafc; cursor: pointer; padding: 0;"></button>
                                     </div>
                                     
+                                    <!-- Zone Title Position Control (visible when zone is selected) -->
+                                    <div id="zone-title-pos-panel" style="display: none; align-items: center; gap: 4px; background: #eff6ff; padding: 2px 7px; border-radius: 5px; border: 1px solid #bfdbfe;" title="선택한 대사 구역의 이름 표시 위치를 변경합니다">
+                                        <i class="fa-solid fa-heading" style="color: #2563eb; font-size: 10px;"></i>
+                                        <span style="color: #1e40af; font-size: 11px; font-weight: 600;">구역 제목:</span>
+                                        <select id="zone-title-pos-select" style="font-size: 11px; height: 22px; padding: 0 4px; border: 1px solid #93c5fd; border-radius: 4px; background: #ffffff; color: #1e3a8a; font-weight: 500; cursor: pointer;">
+                                            <option value="top-left">좌측 상단</option>
+                                            <option value="top-center">상단 중앙</option>
+                                            <option value="top-right">우측 상단</option>
+                                            <option value="bottom-left">좌측 하단</option>
+                                            <option value="bottom-center">하단 중앙</option>
+                                            <option value="bottom-right">우측 하단</option>
+                                        </select>
+                                    </div>
+                                    
                                     <span style="height: 16px; width: 1px; background: var(--border-color); margin: 0 4px;"></span>
                                     
                                     <!-- Canvas size input controls -->

@@ -5580,6 +5580,8 @@ function clearSelection() {
     selectedArrows.clear();
     selectedGenes.clear();
     selectedZones.clear();
+    const zonePosPanel = document.getElementById("zone-title-pos-panel");
+    if (zonePosPanel) zonePosPanel.style.display = "none";
 }
 
 function saveAllPathwayMaps() {
@@ -6549,10 +6551,63 @@ function computeNodeSmartSnap(draggedNode, rawX, rawY, currentMap) {
     return { x: snappedX, y: snappedY, guides };
 }
 
+function getZoneTitleCoordinates(zone, headerW, headerH = 22) {
+    const pos = zone.titlePos || "top-left";
+    let bx = zone.x + 14;
+    let by = zone.y - 11;
+    
+    if (pos === "top-center") {
+        bx = Math.round(zone.x + zone.w / 2 - headerW / 2);
+        by = zone.y - 11;
+    } else if (pos === "top-right") {
+        bx = Math.round(zone.x + zone.w - headerW - 14);
+        by = zone.y - 11;
+    } else if (pos === "bottom-left") {
+        bx = zone.x + 14;
+        by = Math.round(zone.y + zone.h - 11);
+    } else if (pos === "bottom-center") {
+        bx = Math.round(zone.x + zone.w / 2 - headerW / 2);
+        by = Math.round(zone.y + zone.h - 11);
+    } else if (pos === "bottom-right") {
+        bx = Math.round(zone.x + zone.w - headerW - 14);
+        by = Math.round(zone.y + zone.h - 11);
+    }
+    
+    const off = zone.titleOffset || { dx: 0, dy: 0 };
+    return {
+        x: Math.round(bx + (off.dx || 0)),
+        y: Math.round(by + (off.dy || 0)),
+        w: headerW,
+        h: headerH
+    };
+}
+
+function syncZonePosPanel(currentMap) {
+    const zonePosPanel = document.getElementById("zone-title-pos-panel");
+    const zonePosSelect = document.getElementById("zone-title-pos-select");
+    if (!zonePosPanel) return;
+    
+    if (isGshEditMode && selectedZones.size > 0 && currentMap && currentMap.zones) {
+        zonePosPanel.style.display = "inline-flex";
+        if (selectedZones.size === 1 && zonePosSelect) {
+            const curZid = Array.from(selectedZones)[0];
+            const curZ = currentMap.zones.find(z => z.id === curZid);
+            if (curZ) {
+                zonePosSelect.value = curZ.titlePos || "top-left";
+            }
+        }
+    } else {
+        zonePosPanel.style.display = "none";
+    }
+}
+
 function renderPathwayZones(currentMap, zonesLayer) {
     if (!zonesLayer) return;
     zonesLayer.innerHTML = "";
-    if (!showGshZones || !currentMap.zones || !Array.isArray(currentMap.zones)) return;
+    if (!showGshZones || !currentMap.zones || !Array.isArray(currentMap.zones)) {
+        syncZonePosPanel(currentMap);
+        return;
+    }
 
     currentMap.zones.forEach(zone => {
         const theme = ZONE_COLOR_THEMES[zone.color] || ZONE_COLOR_THEMES.blue;
@@ -6577,31 +6632,163 @@ function renderPathwayZones(currentMap, zonesLayer) {
         rect.setAttribute("stroke-dasharray", "6, 4");
         g.appendChild(rect);
 
-        // Header label pill at top-left
+        // Header label pill with flexible / draggable placement
         const labelText = zone.label || "Pathway Zone";
         const headerW = Math.max(90, Math.round(labelText.length * 6.6 + 22));
+        const headerH = 22;
+        const titleCoords = getZoneTitleCoordinates(zone, headerW, headerH);
+
+        const pillGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        pillGroup.setAttribute("class", "gsh-zone-title-pill");
+        pillGroup.setAttribute("data-zone-id", zone.id);
+        pillGroup.style.cursor = isGshEditMode ? "grab" : "default";
+
         const headerRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        headerRect.setAttribute("x", zone.x + 14);
-        headerRect.setAttribute("y", zone.y - 11);
+        headerRect.setAttribute("class", "gsh-zone-header-rect");
+        headerRect.setAttribute("x", titleCoords.x);
+        headerRect.setAttribute("y", titleCoords.y);
         headerRect.setAttribute("width", headerW);
-        headerRect.setAttribute("height", "22");
+        headerRect.setAttribute("height", headerH);
         headerRect.setAttribute("rx", "6");
         headerRect.setAttribute("fill", theme.headerBg);
         headerRect.setAttribute("stroke", theme.stroke);
         headerRect.setAttribute("stroke-width", "1.2");
-        g.appendChild(headerRect);
+        headerRect.setAttribute("style", "filter: drop-shadow(0 1px 2px rgba(0,0,0,0.06)); pointer-events: auto;");
+        pillGroup.appendChild(headerRect);
 
         const titleEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        titleEl.setAttribute("x", zone.x + 24);
-        titleEl.setAttribute("y", zone.y + 4);
+        titleEl.setAttribute("class", "gsh-zone-header-text");
+        titleEl.setAttribute("x", titleCoords.x + 10);
+        titleEl.setAttribute("y", titleCoords.y + 15);
         titleEl.setAttribute("font-size", "11");
         titleEl.setAttribute("font-weight", "700");
         titleEl.setAttribute("fill", theme.text);
         titleEl.setAttribute("text-anchor", "start");
+        titleEl.setAttribute("style", "pointer-events: none; user-select: none;");
         titleEl.textContent = labelText;
-        g.appendChild(titleEl);
+        pillGroup.appendChild(titleEl);
+
+        // Quick Position Cycle button badge when zone is selected
+        let posBadge = null;
+        if (isGshEditMode && selectedZones.has(zone.id)) {
+            posBadge = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            posBadge.setAttribute("class", "gsh-zone-pos-badge");
+            posBadge.setAttribute("transform", `translate(${titleCoords.x + headerW + 4}, ${titleCoords.y + 1})`);
+            posBadge.setAttribute("style", "cursor: pointer; pointer-events: auto;");
+            posBadge.setAttribute("title", "클릭하여 제목 위치 전환 (좌상 ➔ 상중 ➔ 우상 ➔ 우하 ➔ 하중 ➔ 좌하)");
+
+            const badgeRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            badgeRect.setAttribute("x", "0");
+            badgeRect.setAttribute("y", "0");
+            badgeRect.setAttribute("width", "52");
+            badgeRect.setAttribute("height", "20");
+            badgeRect.setAttribute("rx", "4");
+            badgeRect.setAttribute("fill", "#ffffff");
+            badgeRect.setAttribute("stroke", "#3b82f6");
+            badgeRect.setAttribute("stroke-width", "1");
+            posBadge.appendChild(badgeRect);
+
+            const badgeText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            badgeText.setAttribute("x", "26");
+            badgeText.setAttribute("y", "13");
+            badgeText.setAttribute("font-size", "9.5");
+            badgeText.setAttribute("font-weight", "700");
+            badgeText.setAttribute("fill", "#2563eb");
+            badgeText.setAttribute("text-anchor", "middle");
+            badgeText.textContent = "⇄ 위치";
+            posBadge.appendChild(badgeText);
+
+            posBadge.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const presets = ["top-left", "top-center", "top-right", "bottom-right", "bottom-center", "bottom-left"];
+                const curIdx = presets.indexOf(zone.titlePos || "top-left");
+                const nextPos = presets[(curIdx + 1) % presets.length];
+                zone.titlePos = nextPos;
+                delete zone.titleOffset; // Reset custom drag offset so it snaps cleanly to preset
+                saveAllPathwayMaps();
+                pushGshHistory();
+                renderGSHPathway();
+                const posNames = {
+                    "top-left": "좌측 상단",
+                    "top-center": "상단 중앙",
+                    "top-right": "우측 상단",
+                    "bottom-right": "우측 하단",
+                    "bottom-center": "하단 중앙",
+                    "bottom-left": "좌측 하단"
+                };
+                showGshToast(`📍 구역 제목 위치: ${posNames[nextPos]}`);
+            });
+            pillGroup.appendChild(posBadge);
+        }
+
+        g.appendChild(pillGroup);
 
         if (isGshEditMode) {
+            // Drag title pill directly to custom coordinate offset
+            pillGroup.addEventListener("mousedown", (e) => {
+                if (activeGshTool === 'add-arrow' || activeGshTool === 'add-node' || activeGshTool === 'add-zone' || activeGshTool === 'delete') return;
+                e.stopPropagation();
+                if (e.button !== 0) return;
+
+                if (!selectedZones.has(zone.id)) {
+                    if (!e.ctrlKey && !e.shiftKey) clearSelection();
+                    selectedZones.add(zone.id);
+                    renderGSHPathway();
+                }
+
+                let isDraggingTitle = true;
+                pillGroup.style.cursor = "grabbing";
+                const startMouseX = e.clientX;
+                const startMouseY = e.clientY;
+                const initOff = zone.titleOffset || { dx: 0, dy: 0 };
+
+                const onTitleMove = (mv) => {
+                    if (!isDraggingTitle) return;
+                    const dx = (mv.clientX - startMouseX) / gshZoomScale;
+                    const dy = (mv.clientY - startMouseY) / gshZoomScale;
+                    zone.titleOffset = {
+                        dx: Math.round(initOff.dx + dx),
+                        dy: Math.round(initOff.dy + dy)
+                    };
+                    const curCoords = getZoneTitleCoordinates(zone, headerW, headerH);
+                    headerRect.setAttribute("x", curCoords.x);
+                    headerRect.setAttribute("y", curCoords.y);
+                    titleEl.setAttribute("x", curCoords.x + 10);
+                    titleEl.setAttribute("y", curCoords.y + 15);
+                    if (posBadge) {
+                        posBadge.setAttribute("transform", `translate(${curCoords.x + headerW + 4}, ${curCoords.y + 1})`);
+                    }
+                };
+
+                const onTitleUp = () => {
+                    if (isDraggingTitle) {
+                        isDraggingTitle = false;
+                        pillGroup.style.cursor = "grab";
+                        document.removeEventListener("mousemove", onTitleMove);
+                        document.removeEventListener("mouseup", onTitleUp);
+                        saveAllPathwayMaps();
+                        pushGshHistory();
+                        renderGSHPathway();
+                    }
+                };
+
+                document.addEventListener("mousemove", onTitleMove);
+                document.addEventListener("mouseup", onTitleUp);
+            });
+
+            // Double click on title pill to rename
+            pillGroup.addEventListener("dblclick", (e) => {
+                e.stopPropagation();
+                const newTitle = prompt("대사 구역(Zone) 제목을 입력하세요:", zone.label);
+                if (newTitle !== null && newTitle.trim() !== "") {
+                    zone.label = newTitle.trim();
+                    saveAllPathwayMaps();
+                    pushGshHistory();
+                    renderGSHPathway();
+                }
+            });
+
+            // Drag zone box
             g.addEventListener("mousedown", (e) => {
                 if (activeGshTool === 'add-arrow' || activeGshTool === 'add-node' || activeGshTool === 'add-zone') return;
                 e.stopPropagation();
@@ -6629,7 +6816,7 @@ function renderPathwayZones(currentMap, zonesLayer) {
                     renderGSHPathway();
                 }
 
-                // Drag zone position
+                // Drag entire zone box position
                 let isDraggingZone = true;
                 const startX = e.clientX;
                 const startY = e.clientY;
@@ -6661,7 +6848,7 @@ function renderPathwayZones(currentMap, zonesLayer) {
 
             g.addEventListener("dblclick", (e) => {
                 e.stopPropagation();
-                const newTitle = prompt("구역(Zone) 제목을 입력하세요:", zone.label);
+                const newTitle = prompt("대사 구역(Zone) 제목을 입력하세요:", zone.label);
                 if (newTitle !== null && newTitle.trim() !== "") {
                     zone.label = newTitle.trim();
                     saveAllPathwayMaps();
@@ -6719,6 +6906,8 @@ function renderPathwayZones(currentMap, zonesLayer) {
 
         zonesLayer.appendChild(g);
     });
+
+    syncZonePosPanel(currentMap);
 }
 
 // Comprehensive rendering function for both background template (zones/nodes/arrows) and DEG overlay
@@ -9166,6 +9355,35 @@ function initGSHEditorBindings() {
         });
     }
 
+    // Zone Title Position Toolbar Select Handler
+    const zonePosSelect = document.getElementById("zone-title-pos-select");
+    if (zonePosSelect) {
+        zonePosSelect.addEventListener("change", (e) => {
+            if (!isGshEditMode || selectedZones.size === 0) return;
+            const currentMap = pathwayMapsStore[currentMapId];
+            if (!currentMap || !currentMap.zones) return;
+            const newPos = e.target.value;
+            currentMap.zones.forEach(z => {
+                if (selectedZones.has(z.id)) {
+                    z.titlePos = newPos;
+                    delete z.titleOffset;
+                }
+            });
+            saveAllPathwayMaps();
+            pushGshHistory();
+            renderGSHPathway();
+            const posNames = {
+                "top-left": "좌측 상단",
+                "top-center": "상단 중앙",
+                "top-right": "우측 상단",
+                "bottom-left": "좌측 하단",
+                "bottom-center": "하단 중앙",
+                "bottom-right": "우측 하단"
+            };
+            showGshToast(`📍 구역 제목 위치가 '${posNames[newPos] || newPos}'(으)로 변경되었습니다.`);
+        });
+    }
+
     // Reaction Wizard Button
     const btnReactionWizard = document.getElementById("btn-reaction-wizard");
     if (btnReactionWizard) {
@@ -10200,7 +10418,7 @@ function exportCustomPathwayImage(format = "png") {
     if (cloneGrid) cloneGrid.remove();
     const cloneGuides = cloneSvg.querySelector("#gsh-smart-guides");
     if (cloneGuides) cloneGuides.remove();
-    cloneSvg.querySelectorAll(".gsh-node-anchor-port, .gsh-zone-resize-handle").forEach(el => el.remove());
+    cloneSvg.querySelectorAll(".gsh-node-anchor-port, .gsh-zone-resize-handle, .gsh-zone-pos-badge, .arrow-gene-add-btn").forEach(el => el.remove());
     
     // Replace <foreignObject> gene badges with pure vector SVG <g> capsules so PNG/SVG export is 100% crisp and never taints Canvas
     const cloneOverlay = cloneSvg.querySelector("#gsh-pathway-overlay");

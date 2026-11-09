@@ -9,7 +9,8 @@
             "y": 145,
             "w": 518,
             "h": 800,
-            "color": "amber"
+            "color": "amber",
+            "titlePos": "top-left"
         },
         {
             "id": "zone_gsh_core",
@@ -18,7 +19,8 @@
             "y": 50,
             "w": 604,
             "h": 522,
-            "color": "emerald"
+            "color": "emerald",
+            "titlePos": "top-left"
         },
         {
             "id": "zone_gsh_tca",
@@ -27,7 +29,8 @@
             "y": 592,
             "w": 604,
             "h": 430,
-            "color": "violet"
+            "color": "violet",
+            "titlePos": "top-center"
         },
         {
             "id": "zone_gsh_ppp",
@@ -36,7 +39,8 @@
             "y": 172,
             "w": 312,
             "h": 118,
-            "color": "cyan"
+            "color": "cyan",
+            "titlePos": "top-left"
         },
         {
             "id": "zone_gsh_ferm",
@@ -45,7 +49,8 @@
             "y": 335,
             "w": 312,
             "h": 595,
-            "color": "rose"
+            "color": "rose",
+            "titlePos": "top-left"
         },
         {
             "id": "zone_gsh_glycolysis",
@@ -54,7 +59,8 @@
             "y": 24,
             "w": 297,
             "h": 906,
-            "color": "blue"
+            "color": "blue",
+            "titlePos": "top-left"
         }
     ],
     "nodes": [

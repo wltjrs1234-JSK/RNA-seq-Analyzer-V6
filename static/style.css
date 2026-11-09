@@ -4,24 +4,36 @@
 */
 
 :root {
-    --bg-main: #f1f5f9;         /* Slate 100 - Clean light background */
-    --bg-sidebar: #ffffff;      /* White sidebar */
-    --bg-card: #ffffff;         /* White cards */
-    --border-color: #cbd5e1;    /* Slate 300 - Clean subtle border */
-    --border-active: #3b82f6;   /* Blue 500 */
-    
-    --text-primary: #0f172a;    /* Slate 900 */
-    --text-secondary: #475569;  /* Slate 600 */
-    --text-muted: #94a3b8;      /* Slate 400 */
-    
-    --accent-cyan: #0891b2;     /* Cyan 600 */
-    --accent-blue: #2563eb;     /* Blue 600 */
-    --up-red: #ef4444;          /* Red 500 */
-    --down-blue: #3b82f6;       /* Blue 500 */
-    
+    --bg-main: #f1f5f9;
+    /* Slate 100 - Clean light background */
+    --bg-sidebar: #ffffff;
+    /* White sidebar */
+    --bg-card: #ffffff;
+    /* White cards */
+    --border-color: #cbd5e1;
+    /* Slate 300 - Clean subtle border */
+    --border-active: #3b82f6;
+    /* Blue 500 */
+
+    --text-primary: #0f172a;
+    /* Slate 900 */
+    --text-secondary: #475569;
+    /* Slate 600 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
+
+    --accent-cyan: #0891b2;
+    /* Cyan 600 */
+    --accent-blue: #2563eb;
+    /* Blue 600 */
+    --up-red: #ef4444;
+    /* Red 500 */
+    --down-blue: #3b82f6;
+    /* Blue 500 */
+
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-heading: 'Outfit', sans-serif;
-    
+
     --transition-speed: 0.3s;
 }
 
@@ -77,8 +89,13 @@ body {
 }
 
 @keyframes rotateHelix {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .logo-text {
@@ -208,9 +225,17 @@ body {
 }
 
 @keyframes pulse {
-    0% { opacity: 0.4; }
-    50% { opacity: 1; }
-    100% { opacity: 0.4; }
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
 }
 
 /* Tab Container */
@@ -229,8 +254,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Cards (Glassmorphism) */
@@ -301,7 +333,8 @@ body {
     gap: 16px;
 }
 
-.dropzone:hover, .dropzone.dragover {
+.dropzone:hover,
+.dropzone.dragover {
     border-color: var(--accent-cyan);
     background-color: rgba(6, 182, 212, 0.03);
     box-shadow: 0 0 15px rgba(6, 182, 212, 0.1) inset;
@@ -518,7 +551,9 @@ body {
     color: var(--text-secondary);
 }
 
-.input-number, .input-text, .input-select {
+.input-number,
+.input-text,
+.input-select {
     background-color: #ffffff;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -529,7 +564,9 @@ body {
     transition: all 0.2s ease;
 }
 
-.input-number:focus, .input-text:focus, .input-select:focus {
+.input-number:focus,
+.input-text:focus,
+.input-select:focus {
     border-color: var(--border-active);
     outline: none;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
@@ -892,11 +929,11 @@ body {
     border-radius: 50%;
 }
 
-.toggle-switch input:checked + label {
+.toggle-switch input:checked+label {
     background-color: var(--accent-cyan);
 }
 
-.toggle-switch input:checked + label:before {
+.toggle-switch input:checked+label:before {
     transform: translateX(30px);
 }
 
@@ -1007,19 +1044,30 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.up-box { background-color: #ff8080; }
-.down-box { background-color: #8080ff; }
-.no-box { background-color: #e0e0e0; }
+.up-box {
+    background-color: #ff8080;
+}
+
+.down-box {
+    background-color: #8080ff;
+}
+
+.no-box {
+    background-color: #e0e0e0;
+}
 
 .map-body-container {
     flex: 1;
     overflow: auto;
     position: relative;
-    display: block; /* Flexbox center overflow clipping 버그 방지 */
-    background-color: #ffffff; /* KEGG maps have a white background, so we must match it */
+    display: block;
+    /* Flexbox center overflow clipping 버그 방지 */
+    background-color: #ffffff;
+    /* KEGG maps have a white background, so we must match it */
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    padding: 24px; /* 스크롤 가장자리 짤림 방지용 충분한 패딩 */
+    padding: 24px;
+    /* 스크롤 가장자리 짤림 방지용 충분한 패딩 */
 }
 
 .no-pathway-selected {
@@ -1030,7 +1078,8 @@ body {
     color: var(--text-muted);
     text-align: center;
     gap: 12px;
-    background-color: var(--bg-main); /* Match main background when empty */
+    background-color: var(--bg-main);
+    /* Match main background when empty */
     width: 100%;
     height: 100%;
     min-height: 500px;
@@ -1118,8 +1167,15 @@ body {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .close-btn {
@@ -1284,6 +1340,7 @@ body {
         transform: scale(1.0);
         box-shadow: 0 0 8px #ff3366, 0 0 15px #ff3366;
     }
+
     100% {
         transform: scale(1.06);
         box-shadow: 0 0 18px #ff3366, 0 0 35px #ff3366;
@@ -1364,9 +1421,11 @@ body {
     border-bottom: 1px dashed #e2e8f0;
     font-size: 12px;
 }
+
 .tf-gene-row:last-child {
     border-bottom: none;
 }
+
 .tf-gene-row:hover {
     background-color: #f1f5f9;
 }
@@ -1379,14 +1438,17 @@ body {
     border-radius: 4px;
     display: inline-block;
 }
+
 .badge-comp-cytosol {
     background-color: #e0e7ff;
     color: #4f46e5;
 }
+
 .badge-comp-mitochondria {
     background-color: #ffedd5;
     color: #d97706;
 }
+
 .badge-comp-extracellular {
     background-color: #dcfce7;
     color: #15803d;
@@ -1496,6 +1558,29 @@ body {
     cursor: nwse-resize;
 }
 
+.gsh-zone-title-pill {
+    cursor: default;
+    transition: filter 0.15s ease;
+}
+
+.edit-mode-active .gsh-zone-title-pill {
+    cursor: grab;
+}
+
+.edit-mode-active .gsh-zone-title-pill:active {
+    cursor: grabbing;
+}
+
+.gsh-zone-pos-badge {
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.gsh-zone-pos-badge:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.35));
+}
+
 .gsh-gene-overlay-container:hover .gsh-gene-indicator {
     transform: scale(1.35);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
@@ -1513,9 +1598,11 @@ body {
     0% {
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65);
     }
+
     70% {
         box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
     }
@@ -1525,9 +1612,11 @@ body {
     0% {
         box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.65);
     }
+
     70% {
         box-shadow: 0 0 0 5px rgba(99, 102, 241, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
     }
@@ -1553,9 +1642,12 @@ body {
 
 /* Image rendering optimization for crisp zoomed text */
 #gsh-pathway-bg {
-    image-rendering: -webkit-optimize-contrast; /* Safari, Chrome */
-    image-rendering: crisp-edges;               /* Firefox */
-    image-rendering: pixelated;                 /* Chromium based browsers */
+    image-rendering: -webkit-optimize-contrast;
+    /* Safari, Chrome */
+    image-rendering: crisp-edges;
+    /* Firefox */
+    image-rendering: pixelated;
+    /* Chromium based browsers */
 }
 
 .gsh-pathway-tooltip strong {
@@ -1565,220 +1657,221 @@ body {
 
 /* Switch toggle styling */
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 34px;
-  height: 18px;
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 18px;
 }
 
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #cbd5e1;
-  transition: .3s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 12px;
-  width: 12px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .3s;
-  border-radius: 50%;
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
 }
 
-input:checked + .slider {
-  background-color: #4f46e5;
+input:checked+.slider {
+    background-color: #4f46e5;
 }
 
-input:checked + .slider:before {
-  transform: translateX(16px);
+input:checked+.slider:before {
+    transform: translateX(16px);
 }
 
 .slider.round {
-  border-radius: 18px;
+    border-radius: 18px;
 }
 
 /* Edit Tool Active States */
 .edit-tool-btn.active {
-  background-color: #cbd5e1 !important;
-  border-color: #94a3b8 !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+    background-color: #cbd5e1 !important;
+    border-color: #94a3b8 !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Editable Node & Path cursors */
 .edit-mode-active .gsh-pathway-node-group {
-  cursor: move !important;
+    cursor: move !important;
 }
 
 .edit-mode-active .gsh-pathway-arrow-group {
-  cursor: pointer !important;
+    cursor: pointer !important;
 }
 
 /* Delete badge styles inside SVG */
 .node-delete-badge {
-  fill: #ef4444;
-  cursor: pointer;
-  transition: fill 0.15s ease;
+    fill: #ef4444;
+    cursor: pointer;
+    transition: fill 0.15s ease;
 }
 
 .node-delete-badge:hover {
-  fill: #dc2626;
+    fill: #dc2626;
 }
 
 .node-delete-text {
-  fill: #ffffff;
-  font-family: sans-serif;
-  font-size: 10px;
-  font-weight: bold;
-  pointer-events: none;
+    fill: #ffffff;
+    font-family: sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    pointer-events: none;
 }
 
 /* Selected states for connection tool */
 .node-connection-selected rect {
-  stroke: #6366f1 !important;
-  stroke-width: 2px !important;
-  stroke-dasharray: 4 2 !important;
-  animation: strokePulse 1.5s infinite linear;
+    stroke: #6366f1 !important;
+    stroke-width: 2px !important;
+    stroke-dasharray: 4 2 !important;
+    animation: strokePulse 1.5s infinite linear;
 }
 
 @keyframes strokePulse {
-  to {
-    stroke-dashoffset: -6;
-  }
+    to {
+        stroke-dashoffset: -6;
+    }
 }
 
 /* Edit tool indicators */
 .edit-mode-active .gsh-pathway-node-group:hover rect {
-  stroke: #4f46e5 !important;
-  stroke-width: 1.5px !important;
+    stroke: #4f46e5 !important;
+    stroke-width: 1.5px !important;
 }
 
 .edit-mode-active .gsh-pathway-arrow-group:hover path {
-  stroke: #ef4444 !important;
-  stroke-width: 2.5px !important;
+    stroke: #ef4444 !important;
+    stroke-width: 2.5px !important;
 }
 
 #pathway-map-select {
-  cursor: pointer;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    cursor: pointer;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
 #pathway-map-select:focus {
-  border-color: #a5b4fc;
-  outline: 0;
-  box-shadow: 0 0 0 0.15rem rgba(99, 102, 241, 0.25);
+    border-color: #a5b4fc;
+    outline: 0;
+    box-shadow: 0 0 0 0.15rem rgba(99, 102, 241, 0.25);
 }
 
 /* Selected Element Outlines (Edit Mode) */
 .edit-mode-active .gsh-pathway-node-group.element-selected rect {
-  stroke: #3b82f6 !important;
-  stroke-width: 2.5px !important;
-  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.6)) !important;
+    stroke: #3b82f6 !important;
+    stroke-width: 2.5px !important;
+    filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.6)) !important;
 }
 
 .edit-mode-active .gsh-gene-overlay-container.element-selected {
-  outline: 2px solid #3b82f6 !important;
-  outline-offset: 3px !important;
-  border-radius: 4px !important;
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6) !important;
+    outline: 2px solid #3b82f6 !important;
+    outline-offset: 3px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.6) !important;
 }
 
 .edit-mode-active .gsh-pathway-arrow-group.element-selected path {
-  stroke: #3b82f6 !important;
-  stroke-width: 3px !important;
+    stroke: #3b82f6 !important;
+    stroke-width: 3px !important;
 }
 
 /* Selection Marquee Box */
 #selection-marquee {
-  position: absolute;
-  border: 1.5px dashed #3b82f6;
-  background-color: rgba(59, 130, 246, 0.12);
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 2px;
+    position: absolute;
+    border: 1.5px dashed #3b82f6;
+    background-color: rgba(59, 130, 246, 0.12);
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 2px;
 }
 
 /* High-DPI Vector Crisp Rendering for GSH Pathway SVG */
 #gsh-pathway-svg {
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #gsh-pathway-viewport text {
-  text-rendering: geometricPrecision;
+    text-rendering: geometricPrecision;
 }
 
 #gsh-pathway-viewport path,
 #gsh-pathway-viewport rect {
-  shape-rendering: geometricPrecision;
+    shape-rendering: geometricPrecision;
 }
 
 /* IP Target Discovery Badges & Neon Glow Visuals */
 .badge-oe {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .badge-ko {
-  background: linear-gradient(135deg, #f43f5e, #e11d48);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .ip-score-pill {
-  background: #ede9fe;
-  color: #6d28d9;
-  border: 1px solid #c4b5fd;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
+    background: #ede9fe;
+    color: #6d28d9;
+    border: 1px solid #c4b5fd;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
 }
 
 .pred-func-tag {
-  display: inline-block;
-  background: #f1f5f9;
-  color: #475569;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-right: 4px;
-  margin-bottom: 4px;
-  border: 1px solid #e2e8f0;
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    border: 1px solid #e2e8f0;
 }
 
 .ip-card-box {
-  background: linear-gradient(135deg, #f8fafc, #ef444405);
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 14px;
+    background: linear-gradient(135deg, #f8fafc, #ef444405);
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
 }
 
 /* ==========================================================================
@@ -1787,6 +1880,7 @@ input:checked + .slider:before {
 .gap-12 {
     gap: 12px;
 }
+
 .align-center {
     align-items: center;
 }
@@ -1837,7 +1931,8 @@ input:checked + .slider:before {
     background-size: 14px;
 }
 
-.session-select-dropdown:hover, .session-select-dropdown:focus {
+.session-select-dropdown:hover,
+.session-select-dropdown:focus {
     border-color: var(--accent-blue);
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
@@ -1945,8 +2040,13 @@ input:checked + .slider:before {
     margin-top: 4px;
 }
 
-.session-stat-up { color: var(--up-red); }
-.session-stat-down { color: var(--down-blue); }
+.session-stat-up {
+    color: var(--up-red);
+}
+
+.session-stat-down {
+    color: var(--down-blue);
+}
 
 .session-card-actions {
     display: flex;
@@ -2068,7 +2168,7 @@ input:checked + .slider:before {
     font-weight: 800;
     padding: 1px 4px;
     border-radius: 3px;
-    box-shadow: 0 0 6px rgba(239, 68, 68, 0.8), 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.8), 0 1px 2px rgba(0, 0, 0, 0.3);
     border: 1px solid #ffffff;
     line-height: 1;
     margin-left: 2px;
@@ -2082,7 +2182,7 @@ input:checked + .slider:before {
     font-weight: 800;
     padding: 1px 4px;
     border-radius: 3px;
-    box-shadow: 0 0 6px rgba(59, 130, 246, 0.8), 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.8), 0 1px 2px rgba(0, 0, 0, 0.3);
     border: 1px solid #ffffff;
     line-height: 1;
     margin-left: 2px;
@@ -2099,10 +2199,12 @@ input:checked + .slider:before {
         transform: scale(1.0);
         filter: drop-shadow(0 0 0px #eab308);
     }
+
     50% {
         transform: scale(1.35);
         filter: drop-shadow(0 0 16px #eab308) drop-shadow(0 0 30px #f59e0b);
     }
+
     100% {
         transform: scale(1.0);
         filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.6));
@@ -2208,6 +2310,7 @@ input:checked + .slider:before {
         opacity: 0;
         transform: scale(0.92);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -2267,6 +2370,7 @@ input:checked + .slider:before {
         opacity: 0;
         transform: translateY(16px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2369,3 +2473,4 @@ input:checked + .slider:before {
     filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.6));
 }
 
+ㅇ
